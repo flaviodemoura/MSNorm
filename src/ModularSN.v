@@ -535,31 +535,23 @@ Qed.
 Inductive SN_ind {A:Type} (red: Red A) (a:A): Prop :=
   | sn_acc: (forall b, red a b -> SN_ind red b) -> SN_ind red a.
 
-Inductive SN_ind' {A:Type} (red: Red A) (a:A): Prop :=
-| sn_acc': forall b, red a b -> SN_ind' red b -> SN_ind' red a.
-
-Lemma SN_ind_eq_SN_ind' {A:Type}: forall a (R: Red A), SN_ind R a <-> SN_ind' R a. 
-Proof.
-  intros a R. split.
-  - intro HSN_ind.
-    inversion HSN_ind.
-    generalize dependent H.
-    induction HSN_ind.
-    intro H'.
-    apply sn_acc'.
-    admit.
-  - intro HSN'.
-    induction HSN'.
-    apply sn_acc.
-    intros b' HR.
-  
 Definition NF {A:Type} (R : Red A) (t : A) := forall t', ~ R t t'.
                
 Inductive SNalt {A:Type} (R : Red A) (t : A) : Prop :=
 | SN_nf : NF R t -> SNalt R t 
 | SN_acc : (forall t', R t t' -> SNalt R t') -> SNalt R t.
 
-Theorem SNaltEquivSN {A:Type} (R: Red A): forall t, SNalt R t <-> SN R t.
+Lemma SN_indEquivSNalt {A:Type} {R : Red A} : forall t, SN_ind R t <-> SNalt R t.
+Proof.
+ split; intro H; induction H. 
+ - apply SN_acc; assumption.
+ - constructor. intros t' H1.
+   unfold NF in H. apply H in H1.
+   inversion H1.
+ - constructor. assumption.
+Qed.    
+
+Theorem SNaltEquivSN {A:Type} {R: Red A}: forall t, SNalt R t <-> SN R t.
 Proof.
  split; intro H. 
  - inversion H.
@@ -567,13 +559,15 @@ Proof.
      apply H0 in HRtt'. inversion HRtt'.
   + eapply SNind. 
     * intros a H' HSN. apply HSN.
-    * Admitted. (* apply SNpatriarchal. *)
+    * apply SNpatriarchal.
+      Admitted.
 (*       apply H'. *)
 (* assumption. *)
 (*  - eapply NT.SNind. *)
 (*   + intros. apply SNaltPat. apply H0. *)
 (*   + assumption. *)
       (* Qed. *)
+
       
 Lemma SN_ind_is_SN {A} {red:Red A}: forall a, SN_ind red a -> SN red a.
 Proof.
