@@ -1,0 +1,23 @@
+#+TITLE: Modular Strong Normalisation Theorem
+#+AUTHOR: Flávio Leonardo Cavalcanti de Moura
+#+EMAIL: contato@flaviomoura.mat.br
+
+#+STARTUP: overview
+#+STARTUP: hidestars
+
+#+latex_class: article
+#+OPTIONS: toc:nil num:nil ^:nil author:t email:t date:nil
+
+* References
+
+** cite:terese03
+
+*** PROGRESS Chapter 5
+
+** cite:LengrandPhD (Normalisation Theory)
+
+*** The difference between a stable and a patriarchal subset is not clear.
+
+** cite:raamsdonk99:_perpet_reduc_calcul (perpetual reductions in lambda-calculus)
+
+

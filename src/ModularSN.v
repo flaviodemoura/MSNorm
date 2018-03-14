@@ -1,5 +1,3 @@
-(** * Introduction *)
-
 (* begin hide *)
 
 (** * Reduction theory *)
@@ -532,6 +530,8 @@ Proof.
     assumption. 
 Qed.
 
+(* end hide *)
+
 Inductive SN_ind {A:Type} (red: Red A) (a:A): Prop :=
   | sn_acc: (forall b, red a b -> SN_ind red b) -> SN_ind red a.
 
@@ -550,6 +550,8 @@ Proof.
    inversion H1.
  - constructor. assumption.
 Qed.    
+
+(* begin hide *)
 
 Theorem SNaltEquivSN {A:Type} {R: Red A}: forall t, SNalt R t <-> SN R t.
 Proof.
@@ -835,8 +837,4 @@ Admitted.
 (* end hide *)
 
 
-(** * Conclusion *)
-
-(** We conclude
-*)
 

@@ -11,3 +11,5 @@
 *.synctex.gz
 *~
 latex/auto/*
+*.pdf
+/.DS_Store
