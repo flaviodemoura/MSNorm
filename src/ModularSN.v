@@ -3,7 +3,7 @@
 * normalisation theorem.         					   *
 *                                                                          *
 * Flavio L. C. de Moura & Daniel L. Ventura &                              * 
-* Fabrício & Rapahel Soares, 2018                                          *
+* Fabrício & Raphael Soares, 2018                                          *
 ***************************************************************************)
 
 Require NormalisationTheory. Module NT := NormalisationTheory.
