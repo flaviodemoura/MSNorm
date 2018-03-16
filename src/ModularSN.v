@@ -6,7 +6,7 @@
 * Fabrício & Raphael Soares, 2018                                          *
 ***************************************************************************)
 
-Require NormalisationTheory. Module NT := NormalisationTheory.
+Require Import NormalisationTheory.
 
 (* begin hide *)
 (* Union of reduction relations *)
@@ -280,21 +280,22 @@ Proof.
   generalize dependent b.
   induction HSN.
   intros b' Hyp.
-  assert (H': (redA \un red'A) a b).
-  {
-    admit.
-  }
-  apply sn_acc with b.
-  - assumption.
-  - apply IHHSN with b'.
-    intro Hrefl.
-    apply Hyp.
-    assert (Hcomp: redA a b ->  (refltrans redA # red'A) b b' -> (refltrans redA # red'A) a b').
-    {
-      admit.
-    }
-    apply Hcomp; assumption.
-Admitted.
+  Admitted.
+(*   assert (H': (redA \un red'A) a b). *)
+(*   { *)
+(*     admit. *)
+(*   } *)
+(*   apply sn_acc with b. *)
+(*   - assumption. *)
+(*   - apply IHHSN with b'. *)
+(*     intro Hrefl. *)
+(*     apply Hyp. *)
+(*     assert (Hcomp: redA a b ->  (refltrans redA # red'A) b b' -> (refltrans redA # red'A) a b'). *)
+(*     { *)
+(*       admit. *)
+(*     } *)
+(*     apply Hcomp; assumption. *)
+(* Admitted. *)
 
 Lemma SNinclUnion {A} {redA red'A: Red A}: forall a, (forall b, SN redA a -> red'A a b -> SN redA b) -> (SN ((refltrans redA) # red'A) a) -> (SN redA a) -> (SN (redA \un red'A) a).
       Proof.
