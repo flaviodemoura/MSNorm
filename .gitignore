@@ -13,3 +13,5 @@
 latex/auto/*
 *.pdf
 /.DS_Store
+*.glob
+*.vo

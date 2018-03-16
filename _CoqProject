@@ -1,3 +1,4 @@
 -R . MSNorm
+src/NormalisationTheory
 src/ModularSN
 
