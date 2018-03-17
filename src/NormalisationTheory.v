@@ -1,11 +1,12 @@
-(* begin hide *)
 
-(* Reduction theory *)
+(** * Reduction theory 
 
-(* Type of relations *)
+ The type of relations is defined as follows: *)
 Definition Rel (A B:Type) := A -> B -> Prop.
 (* Type of reduction relations *)
 Definition Red (A:Type) := Rel A A.
+
+(* begin hide *)
 
 (* Inclusion of a relation in another relation *)
 Definition Sub {A B} (R1 R2: Rel A B) : Prop := forall a b, R1 a b -> R2 a b.
@@ -452,3 +453,5 @@ Proof.
     + assumption.
     + assumption.
 Qed.
+
+(* end hide *)

@@ -1,14 +1,7 @@
-(***************************************************************************
-* A formalisation of a constructive proof of the modular strong            *
-* normalisation theorem.         					   *
-*                                                                          *
-* Flavio L. C. de Moura & Daniel L. Ventura &                              * 
-* Fabrício & Raphael Soares, 2018                                          *
-***************************************************************************)
+(* begin hide *)
 
 Require Import NormalisationTheory.
 
-(* begin hide *)
 (* Union of reduction relations *)
 Inductive union {A} (red1: Red A)(red2: Red A) : Red A :=
  | union_left: forall a b,  red1 a b -> union red1 red2 a b

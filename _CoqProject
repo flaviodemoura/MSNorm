@@ -1,4 +1,6 @@
 -R . MSNorm
--I src
+-I .
 
+src/NormalisationTheory.v
+src/MSNorm.v
 
