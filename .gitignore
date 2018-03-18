@@ -15,3 +15,11 @@ latex/auto/*
 /.DS_Store
 *.glob
 *.vo
+/Makefile.coq
+/Makefile.coq.conf
+/latex/Conclusion.v.tex
+/latex/Intro.v.tex
+/latex/MSNorm.v.tex
+/latex/NormalisationTheory.v.tex
+/src/Conclusion.v.d
+*.v.d
