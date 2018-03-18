@@ -2,13 +2,13 @@
 \usepackage[]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage{fullpage}
+%\usepackage{fullpage}
 \usepackage{coqdoc}
 \usepackage{amsmath,amssymb}
 \usepackage{url}
 \usepackage{hyperref}
 
-\title{A Formal Proof of the Modular Strong Normalisation Theorem for Term Rewriting Systems}
+\title{Formalising a constructive proof of the Modular Strong Normalisation Theorem}
 \author{TBD}
 
 \makeindex
@@ -17,7 +17,9 @@
 
 \maketitle
 
+\begin{abstract}
 This report presents a formalisation of the modular strong normalisation theorem.
+\end{abstract}
 
 \begin{center} \url{http://flaviomoura.mat.br} \end{center}
 
@@ -27,16 +29,15 @@ This report presents a formalisation of the modular strong normalisation theorem
 %\phantomsection
 %\tableofcontents
 
-\section{Introduction}
-
-\include{../src/ModularSN.v}
-
-\section{Conclusion}
+\include{Intro.v}
+\include{NormalisationTheory.v}
+\include{MSNorm.v}
+\include{Conclusion.v}
 
 \clearpage
 %\addcontentsline{toc}{chapter}{Bibliography}
 \bibliographystyle{plain}
-\bibliography{/homedir/Dropbox/bibliography/references}
+%\bibliography{/homedir/Dropbox/bibliography/references.bib}
 
 % \clearpage
 % \addcontentsline{toc}{chapter}{Index}

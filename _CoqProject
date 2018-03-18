@@ -1,3 +1,6 @@
 -R . MSNorm
-src/ModularSN
+-I .
+
+src/NormalisationTheory.v
+src/MSNorm.v
 
