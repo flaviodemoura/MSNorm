@@ -1,9 +1,13 @@
 
 (** * Reduction theory 
 
- The type of relations is defined as follows: *)
+ The type of relations is defined as follows: 
+
+*)
+
 Definition Rel (A B:Type) := A -> B -> Prop.
-(* Type of reduction relations *)
+
+(** Reduction relations are relations over a given set $A$: *)
 Definition Red (A:Type) := Rel A A.
 
 (* begin hide *)

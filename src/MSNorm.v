@@ -152,8 +152,6 @@ Proof.
       
 Lemma SN_ind_is_SN {A} {red:Red A}: forall a, SN_ind red a -> SN red a.
 Proof.
-  intros a HSNind.
-  unfold SN.
 Admitted.
 
 Lemma SN_is_SN_ind {A} {red:Red A}: forall a, SN red a -> SN_ind red a.
@@ -257,23 +255,23 @@ Proof.
       * apply inverseof. apply identity.
 Qed.
 
-Lemma inclUnion {A} {redA red'A: Red A}: forall a b, (SN redA a) -> ((((refltrans redA) # red'A) a b) -> SN (redA \un red'A) b) -> (SN (redA \un red'A) a).
+Lemma inclUnion {A} {redA red'A: Red A}: forall a, (SN redA a) -> (forall b, (((refltrans redA) # red'A) a b) -> SN (redA \un red'A) b) -> (SN (redA \un red'A) a).
 Proof.
   intros a b HSN Hyp.
   apply SN_ind_is_SN.
-  apply SN_is_SN_ind in HSN.
-  assert (Hyp' : (refltrans redA # red'A) a b -> SN_ind (redA \un red'A) b).
-  { 
-    intro Hrefl.
-    apply SN_is_SN_ind.
-    apply Hyp; assumption.
-  }
-  clear Hyp.
-  generalize dependent Hyp'.
-  generalize dependent b.
-  induction HSN.
-  intros b' Hyp.
   Admitted.
+  (* apply SN_is_SN_ind in HSN. *)
+  (* assert (Hyp' : (refltrans redA # red'A) a b -> SN_ind (redA \un red'A) b). *)
+  (* {  *)
+  (*   intro Hrefl. *)
+  (*   apply SN_is_SN_ind. *)
+  (*   apply Hyp; assumption. *)
+  (* } *)
+  (* clear Hyp. *)
+  (* generalize dependent Hyp'. *)
+  (* generalize dependent b. *)
+  (* induction HSN. *)
+  (* intros b' Hyp. *)
 (*   assert (H': (redA \un red'A) a b). *)
 (*   { *)
 (*     admit. *)
@@ -290,7 +288,7 @@ Proof.
 (*     apply Hcomp; assumption. *)
 (* Admitted. *)
 
-Lemma SNinclUnion {A} {redA red'A: Red A}: forall a, (forall b, SN redA a -> red'A a b -> SN redA b) -> (SN ((refltrans redA) # red'A) a) -> (SN redA a) -> (SN (redA \un red'A) a).
+Lemma SNinclUnion {A} {redA red'A: Red A}: forall a, (forall b c, SN redA b -> red'A b c -> SN redA c) -> (SN ((refltrans redA) # red'A) a) -> (SN redA a) -> (SN (redA \un red'A) a).
       Proof.
         Admitted.
     (* intros a HSNcomp HSN. *)
