@@ -120,6 +120,24 @@ Inductive SNalt {A:Type} (R : Red A) (t : A) : Prop :=
 | SN_nf : NF R t -> SNalt R t 
 | SN_acc : (forall t', R t t' -> SNalt R t') -> SNalt R t.
 
+Lemma SNaltPat {A:Type} {R: Red A} : patriarchal R (SNalt R).
+Proof.
+  unfold patriarchal. intros x H. apply SN_acc. assumption.
+Qed.
+
+Theorem SNindP {A:Type} {R: Red A} {P: A -> Prop}
+: (forall t, (forall t', R t t' -> P t') -> SNalt R t -> P t)
+  -> (forall t, SNalt R t -> P t).
+Proof.
+  intros IH t Ht. induction Ht.
+  - apply IH. 
+   + intros. apply H in H0. inversion H0.
+   + constructor; assumption.
+  - apply IH.  
+   + assumption.
+   + apply SN_acc. assumption.
+Qed.
+
 Lemma SN_indEquivSNalt {A:Type} {R : Red A} : forall t, SN_ind R t <-> SNalt R t.
 Proof.
  split; intro H; induction H. 
@@ -138,17 +156,13 @@ Proof.
  - inversion H.
    + apply toSN. intros t' HRtt'.
      apply H0 in HRtt'. inversion HRtt'.
-  + eapply SNind. 
-    * intros a H' HSN. apply HSN.
-    * apply SNpatriarchal.
-      Admitted.
-(*       apply H'. *)
-(* assumption. *)
-(*  - eapply NT.SNind. *)
-(*   + intros. apply SNaltPat. apply H0. *)
-(*   + assumption. *)
-      (* Qed. *)
-
+   + eapply SNindP.
+     * intros. apply SNpatriarchal. apply H1.
+     * assumption.
+ - eapply SNind.
+   + intros. apply SNaltPat. apply H0.
+   + assumption.
+Qed.
       
 Lemma SN_ind_is_SN {A} {red:Red A}: forall a, SN_ind red a -> SN red a.
 Proof.
