@@ -378,19 +378,28 @@ Theorem LexSimul {A B} {redA: Red A} {red'A: Red A} {redB: Red B} {R: Rel A B}:
   (forall b: A, SN redA b) ->
   forall a, Image (inverse R) (SN redB) a -> SN (redA \un red'A) a.
 Proof.
-  intros H1 H2 H3 a H4.
-  unfold StrongSimul in H1; unfold WeakSimul in H2.
-  unfold Sub in *.
-  assert(H': StrongSimul (refltrans redA # red'A) (redB) R).
-  { unfold StrongSimul; unfold Sub.
+  intros Hstrong Hweak HSN a HImage.
+  assert(H_Lemma23: SN (redA \un red'A) a <->
+                    SN (refltrans redA # red'A) a /\ SN redA a).
+  {
+    apply SNunion.
     intros.
-    inversion H; subst.
-    inversion H5; subst.
-    admit.
+    apply HSN.
   }
-Admitted.
+  destruct H_Lemma23.
+  clear H.
+  apply H0.
+  split.
+  - assert(HSNSimul: StrongSimul (refltrans redA # red'A) redB R ->
+                   forall a : A, Image (inverse R) (SN redB) a ->
+                                 SN (refltrans redA # red'A) a).
+  {
+   apply SNbySimul.
+  }
+  apply HSNSimul.
+  + apply RCSimul; assumption.
+  + assumption.
+  - apply HSN.
+Qed.
 
 (* end hide *)
-
-
-
