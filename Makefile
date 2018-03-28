@@ -1,9 +1,7 @@
-MODULES_PROSE := Intro
-MODULES_CODE  := NormalisationTheory MSNorm
-MODULES       := $(MODULES_PROSE) $(MODULES_CODE) Conclusion
+MODULES  := MSNorm
 VS            := $(MODULES:%=src/%.v)
 TEX           := $(MODULES:%=latex/%.v.tex)
-VS_DOC        := $(MODULES_DOC:%=%.v)
+VS_DOC        := $(MODULES:%=%.v)
 
 .PHONY: coq clean doc html pdf
 
