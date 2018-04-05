@@ -1,12 +1,18 @@
-\documentclass[12pt]{llncs}
-\usepackage[]{inputenc}
+\documentclass[a4paper]{llncs}
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage[british]{babel}
 \usepackage{lmodern}
 %\usepackage{fullpage}
 \usepackage{coqdoc}
 \usepackage{amsmath,amssymb}
+\usepackage{amsfonts, color}
 \usepackage{url}
 \usepackage{hyperref}
+\usepackage[backend=bibtex,style=numeric-comp,sorting=none,firstinits=true]{biblatex}
+\bibliography{MSNorm.bib}
+
+\newcommand{\flavio}[1]{{\color{red} #1}}
 
 \title{Formalising a constructive proof of the Modular Strong Normalisation Theorem}
 \author{TBD}
@@ -27,18 +33,17 @@
 %\phantomsection
 %\tableofcontents
 
-\include{Intro.v}
-\include{NormalisationTheory.v}
 \include{MSNorm.v}
-\include{Conclusion.v}
 
-\clearpage
+%\clearpage
 %\addcontentsline{toc}{chapter}{Bibliography}
-\bibliographystyle{plain}
-%\bibliography{/homedir/Dropbox/bibliography/references.bib}
+%\bibliographystyle{plain}
+%\bibliography{MSNorm.bib}
 
 % \clearpage
 % \addcontentsline{toc}{chapter}{Index}
 % \printindex
+
+\printbibliography
 
 \end{document}

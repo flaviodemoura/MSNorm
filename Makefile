@@ -19,7 +19,7 @@ clean:: Makefile.coq
 	rm -f Makefile.coq .depend 
 	cd latex; rm -f *.sty *.log *.aux *.dvi *.v.tex *.toc *.bbl *.blg *.idx *.ilg *.pdf *.ind *.out *.fls *.gz *.fdb_latexmk
 
-doc: latex/MSNorm.pdf html
+doc: latex/MSNorm.pdf 
 
 COQDOC = coqdoc -R . MSNorm
 
