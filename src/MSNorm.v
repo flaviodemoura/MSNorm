@@ -340,6 +340,48 @@ Proof.
       apply HStable with b0; assumption.
 Qed.
 
+Lemma SNTrans {A} {red: Red A}: forall a, SN_ind red a -> SN_ind (trans red) a.
+Proof.
+  induction 1; apply sn_acc. intros b HTans. induction HTans.
+  - apply H0. assumption.
+  - apply IHHTans.
+    + intros. apply H in H1. destruct H1. apply H1. assumption.
+    + intros. apply H0 in H1. destruct H1. apply H1. apply singl. assumption.
+Qed.
+
+Theorem SNbySimul {A B} {redA: Red A} {redB: Red B} {R: Rel A B}:
+StrongSimul redA redB R -> forall a, Image (inverse R) (SN_ind redB) a -> SN_ind redA a.
+(* begin hide *)
+Proof.
+  intros Hstrong a Hinv.
+  inversion Hinv; subst. clear Hinv.
+  inversion H0; subst. clear H0. 
+  assert (HSNTrans: SN_ind (trans redB) a0).
+  {
+    apply SNTrans; assumption.
+  }  
+  clear H.
+  generalize dependent a.
+  induction HSNTrans.
+  unfold StrongSimul in Hstrong.
+  unfold Sub in Hstrong.
+  intros a' HR.
+  apply sn_acc.
+  intros a'' Hred.
+  assert (Hcomp: (inverse R # redA) a a'').
+  {
+    apply compose with a'.
+    apply inverseof; assumption.
+    assumption.
+  }
+  apply Hstrong in Hcomp.
+  inversion Hcomp; subst. clear Hcomp.
+  apply H0 with b.
+  - assumption.
+  - inversion H2; subst. clear H2.
+    assumption.
+Qed.
+
 Lemma SNunion {A} {redA red'A: Red A}: 
   (forall a b, SN redA a -> red'A a b -> SN redA b) ->
   forall c, (SN (redA \un red'A) c) <-> (SN ((refltrans redA) # red'A) c) /\ ((SN redA) c).
