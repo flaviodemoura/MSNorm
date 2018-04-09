@@ -340,6 +340,16 @@ Proof.
       apply HStable with b0; assumption.
 Qed.
 
+Lemma SNTrans {A} {red: Red A}: forall a, SN_ind red a -> SN_ind (trans red) a.
+Proof.
+  induction 1 as [? IHr IHTr]; apply sn_acc; intros ? HTans;
+    induction HTans as [ ? ? ? | ? ? ? Hr Htr IHtr].
+  - auto.
+  - apply IHtr; intros; auto.
+    + apply IHr in Hr; destruct Hr; auto.
+    + apply IHTr in Hr; destruct Hr as [Hr]; apply Hr; constructor; auto.
+Qed.
+
 Lemma SNunion {A} {redA red'A: Red A}: 
   (forall a b, SN redA a -> red'A a b -> SN redA b) ->
   forall c, (SN (redA \un red'A) c) <-> (SN ((refltrans redA) # red'A) c) /\ ((SN redA) c).
