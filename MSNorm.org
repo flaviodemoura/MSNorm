@@ -13,18 +13,11 @@ bibliography:~/Dropbox/bibliography/references.bib
 * Some ideas for further developments
 ** Prove other modular results concerning SN (see cite:terese03 p.163)
 * References
-
+** cite:DK08
 ** cite:terese03
-
-*** PROGRESS Chapter 5
-
-** cite:LengrandPhD 
-
-*** cite:lengSNInd05
-
-*** The difference between a stable and a patriarchal subset is not clear.
-
-** cite:raamsdonk99:_perpet_reduc_calcul (perpetual reductions in lambda-calculus)
+** cite:LengrandPhD
+** cite:lengSNInd05
+** cite:raamsdonk99:_perpet_reduc_calcul 
 ** cite:GirardPT 
 ** cite:kes09
 ** cite:BN98 

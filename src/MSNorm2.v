@@ -645,6 +645,20 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma SNTransStable {A} {red: Red A}: forall a, SN_ind red a -> forall b, (trans red) a b -> SN_ind red b.
+(* begin hide *)
+Proof.
+  intros a HSN b Htrans.
+  induction Htrans.
+  - apply SNstable with a; assumption.
+  - apply IHHtrans. apply SNstable with a; assumption.
+Qed.    
+(* end hide *)
+
+Lemma SNTrans {A} {red: Red A}: forall a, SN_ind red a -> SN_ind (trans red) a.
+Proof.
+Admitted.
+
 (** LENGRAND: Strong normalisation by simulation:
 Assume redA is strongly simulated by redB through R.
 If a is the image of some element that is SN for redB,
@@ -654,7 +668,34 @@ Theorem SNbySimul {A B} {redA: Red A} {redB: Red B} {R: Rel A B}:
 StrongSimul redA redB R -> forall a, Image (inverse R) (SN_ind redB) a -> SN_ind redA a.
 (* begin hide *)
 Proof.
-Admitted.
+  intros Hstrong a Hinv.
+  inversion Hinv; subst. clear Hinv.
+  inversion H0; subst. clear H0. 
+  assert (HSNTrans: SN_ind (trans redB) a0).
+  {
+    apply SNTrans; assumption.
+  }  
+  clear H.
+  generalize dependent a.
+  induction HSNTrans.
+  unfold StrongSimul in Hstrong.
+  unfold Sub in Hstrong.
+  intros a' HR.
+  apply sn_acc.
+  intros a'' Hred.
+  assert (Hcomp: (inverse R # redA) a a'').
+  {
+    apply compose with a'.
+    apply inverseof; assumption.
+    assumption.
+  }
+  apply Hstrong in Hcomp.
+  inversion Hcomp; subst. clear Hcomp.
+  apply H0 with b.
+  - assumption.
+  - inversion H2; subst. clear H2.
+    assumption.
+Qed.
 (* end hide *)
 
 (** [RCSimul] TBD *)
