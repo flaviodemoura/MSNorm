@@ -9,13 +9,21 @@
 \usepackage{amsfonts, color}
 \usepackage{url}
 \usepackage{hyperref}
+\usepackage{graphicx}
 \usepackage[backend=bibtex,style=numeric-comp,sorting=none,firstinits=true]{biblatex}
 \bibliography{MSNorm.bib}
 
 \newcommand{\flavio}[1]{{\color{red} #1}}
 
-\title{Formalising a constructive proof of the Modular Strong Normalisation Theorem}
-\author{TBD}
+\title{A constructive formal proof of the Modular Strong Normalisation Theorem}
+\author{Flávio L. C. de Moura\inst{1} \and Daniel L. Ventura\inst{2}
+Raphael S. Ramos\inst{1} \and Fabrício S. Paranhos\inst{2}}
+
+\institute{Departamento de Ciência da Computação, Universidade de Brasília, Brazil\\
+\email{flaviomoura@unb.br,raphael.soares.1996@gmail.com}
+\and
+Instituto de Informática, Universidade Federal de Goiás, Brazil \\
+\email{daniel@inf.ufg.br,paranhos.s.f@gmail.com}}
 
 \makeindex
 
@@ -26,13 +34,6 @@
 \begin{abstract}
   Modularity is a desirable property of rewriting systems because it allows a combined system to inherit the properties of its components. Termination is not modular, nevertheless under certain restrictions modularity can be recovered. In this work we present a formalisation of a proof of a modular strong normalisation theorem in the Coq proof assistant. The formalised proof is constructive unlikely the standard technique used in most strong normalising proofs.
 \end{abstract}
-
-\thispagestyle{empty}
-\mbox{}\vfill
-
-%\phantomsection
-%\tableofcontents
-
 \include{MSNorm.v}
 
 %\clearpage

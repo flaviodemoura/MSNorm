@@ -22,3 +22,6 @@ bibliography:~/Dropbox/bibliography/references.bib
 ** cite:kes09
 ** cite:BN98 
 ** cite:Let2008
+** cite:Gramlich12
+** cite:Ohlebusch94
+** cite:Paulin93
