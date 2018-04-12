@@ -31,12 +31,22 @@ Inductive SN_ind {A:Type} (red: Red A) (a:A): Prop :=
 ]]
 A few comments about Coq are at a place. In the above definition, [Inductive] is the reserved word for inductive definitions. It is followed by the name of the definition, which in our case is [SN_ind], and it has three arguments: [{A:Type}], [(red:Red A)] and [(a:A)]. The first argument appears between curly brackets, which means that it is  %{\it implicit}%. Implicit arguments are types of polymorphic functions that can be inferred from the context. The second argument corresponds to a reduction relation [red] over [A], and the third argument is an element of [A]. This definition has one constructor named [sn_acc] whose content corresponds exactly to the definition given in (%\ref{def:sn}%). In this way, in order to prove that a certain element [a:A] is strongly normalising w.r.t. a reduction relation $\to_r$, one has to build a proof of the formula $\forall b, a \to_r b \to SN\_ind \to_r b$.
 
-We use standard notation for the transitive (resp. reflexive transitive) closure of a given reduction relation $\to$, writen $\to^+$ (resp. $\to^*$). In addition, if $\to$ is a relation from [A] to [B] then $\leftarrow$ is the inverse relation from [B] to [A]. In order to present the Modular Strong Normalisation Theorem, we need to define the notions of strong and weak simulation.
+We use standard notation for the transitive (resp. reflexive transitive) closure of a given reduction relation $\to$, writen $\to^+$ (resp. $\to^*$). In addition, if $\to$ is a relation from [A] to [B] then $\leftarrow$ is the inverse relation from [B] to [A]. In order to present the Modular Strong Normalisation Theorem, we need to define the notions of strong and weak simulation:
 
-%\begin{definition}[Strong simulation]
-Let $\to$ be a relation from [A] to [B], respectively equipped with the reduction relations $\to_A$ and $\to_B$. The reduction relation $\to_B$ strongly simulates $\to_A$ through $\to_r$ if $(\leftarrow \cdot \to_A) \subseteq (\to_B^+ \cdot \leftarrow)$.
+%\begin{definition}
+Let $\to$ be a relation from [A] to [B], $\to_A$ be a reduction relation over [A]  and $\to_B$ be a reduction relation over [B]. The reduction relation $\to_B$ {\it strongly} (resp. {\it weakly}) simulates $\to_A$ through $\to$ if $(\leftarrow \cdot \to_A) \subseteq (\to_B^+ \cdot \leftarrow)$ (resp. $(\leftarrow \cdot \to_A) \subseteq (\to_B^* \cdot \leftarrow)$).
 \end{definition}%
 
+Now we are ready to state the Modular Strong Normalisation Theorem:
+%\begin{theorem}
+Let $\to$ be a relation from [A] to [B], $\to_1$ and $\to_2$ be two reduction relations over [A] and $\to_B$ be a reduction relation over $B$. Suppose that:
+\begin{enumerate}
+\item $\to_b$ strongly simulates $\to_1$ through $\to$;
+\item $\to_b$ weakly simulates $\to_2$ through $\to$;
+\item $A \subseteq {SN\_ind}^{\to_1}$
+\end{enumerate}
+Then $\leftarrow ({SN\_ind}^{\to_B}) \subseteq {SN\_ind}^{\to_1 \cup \to_2}$, i.e. if $a \to b$ and $b\in {SN\_ind}^{\to_B}$ then $a \in {SN\_ind}^{\to_1\cup \to_2}$.
+\end{theorem}%
 *)
 
 
