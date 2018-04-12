@@ -13,7 +13,27 @@ The main result of this paper is the formalisation of a constructive formal proo
 
 (* in  where a classical (i.e. non-constructive) proof can be found in %\cite{kes09}% (Theorem A.2). It uses the standard technique for proving termination using a reduction to absurdity: one assumes that termination does not hold, reaches a contradiction and conclude that termination must hold. *)
 
-(** * Basic definitions
+(** * The Modular Strong Normalisation Theorem *)
+
+(**
+In this section, we present the Modular Strong Normalisation Theorem whose formalisation will be detailed in the next section. This is an abstract theorem about termination of reduction relations through the well known simulation technique %\cite{BN98}%. We follow the proof of %\cite{LengrandPhD,lengSNInd05}% that developed a constructive normalisation theory for proving termination of reduction relations, i.e. binary relations from a set to itself, in a constructive way. In order to fix notation, let [A] be a set, and $\to$ be a reduction relation over [A], i.e. $\to \subseteq A\times A$. We write $a \to b$ instead of $(a,b) \in \to$, for all $a,b\in A$. In Lengrand's work, the set of $\to$-strongly normalising elements is defined as the intersection of all subsets of [A] that are patriarchal, where a subset [B] of [A] is %{\it patriarchal}% if $\forall a \in A, \to(a) \subseteq B$ then $a \in B$. 
+
+Instead of using the above definition of $SN^{\to}$, we decided to work directly with its standard inductive definition which is given by
+
+%\[
+a \in SN^{\to} \mbox{ iff } \forall b, (a \to b \mbox{ implies } b \in SN^{\to})
+\]%
+
+%\noindent% whose Coq code is given by
+[[
+Inductive SN_ind {A:Type} (red: Red A) (a:A): Prop :=
+  | sn_acc: (forall b, red a b -> SN_ind red b) -> SN_ind red a.
+]]
+A few comments about Coq are at a place.
+*)
+
+
+(** * The Formalisation
 
 Given two sets $A$ and $B$, a binary relation from $A$ to $B$ is a subset of the Cartesian product $A\times B$. In this way, if $R\subseteq A\times B$ then we usually write $R a b$ or $a R b$ to mean that $a$ is related to $b$ through $R$, i.e. $(a,b) \in R$. Alternatively, the membership relation can be represented by a type assignment so that an element $a$ belongs to the set $A$ ($a \in A$) corresponds to the fact the $a$ has type $A$ ($a:A$). So for instance, we can say that $n$ is a natural number by either writing $a\in \mathbb{N}$, i.e. that $a$ belongs to the set of natural numbers, if we are in the context of set theory, or $a:\mathbb{N}$, i.e that $a$ has the type of natural numbers, if we are in the context of type theory. In the rest of this section, we present a number of basic definitions in order to make clear the notation used in the other sections of this work. The definitions given in this section can be found in %\url{http://www.lix.polytechnique.fr/~lengrand/Work/HDR/Coq/First-order/NormalisationTheory.v}%. 
 
@@ -453,21 +473,13 @@ Inductive refltrans {A} (red: Red A) : Red A :=
 (* Proof. *)
 (*   Admitted. *)
 
-(** * Normalisation
-
-In this section, we
-Several properties concerning strong normalisation need to be proved by induction on the SN predicate ...
-
-*)
-
-(** Weak simulation TBD *)
+(** 
+In this section, we present the remaining notions needed in the proof of the Modular Strong Normalisation Theorem. The first one is known as weak simulation: *)
 
 Definition WeakSimul {A B} (redA: Red A) (redB: Red B) (R: Rel A B) := 
   ((inverse R) # redA) <# ((refltrans redB) # (inverse R)).
 
-(** If redA1 is weakely simulated by a relation 
-   and redA2 is strongly simulated by the same relation
-   then their composition is strongly simulated by the same relation. *)
+(** Now suppose that we have two reduction relations over [A], say [red1] and [red2], a relation [R] from [A] to [B] and a reduction relation [red] over [B]. If [red1] is weakly simulated by [red] through [R], and [red2] is strongly simulated by [red] through [R] then the composition [red1 # red2] is strongly simulated by [red] through [R]: *)
 
 Lemma WeakStrongSimul {A B} (redA1 redA2: Red A) (redB: Red B) (R: Rel A B):
   WeakSimul redA1 redB R
@@ -496,6 +508,7 @@ Proof.
     + apply tailtransit with b2; assumption.
     + assumption.
 Qed.  
+(* end hide *)
 
 Lemma refltailtransit {A red}: forall (b a c:A),
     refltrans red a b -> refltrans red b c -> refltrans red a c.
@@ -596,7 +609,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Strong Normalisation Equivalence *)
+(** ** Equivalence between different notions of SN *)
 
 Definition NF {A:Type} (R : Red A) (t : A) := forall t', ~ R t t'.
                
