@@ -20,16 +20,23 @@ In this section, we present the Modular Strong Normalisation Theorem whose forma
 
 Instead of using the above definition of $SN^{\to}$, we decided to work directly with its standard inductive definition which is given by
 
-%\[
+%\begin{equation}\label{def:sn}
 a \in SN^{\to} \mbox{ iff } \forall b, (a \to b \mbox{ implies } b \in SN^{\to})
-\]%
+\end{equation}%
 
 %\noindent% whose Coq code is given by
 [[
 Inductive SN_ind {A:Type} (red: Red A) (a:A): Prop :=
   | sn_acc: (forall b, red a b -> SN_ind red b) -> SN_ind red a.
 ]]
-A few comments about Coq are at a place.
+A few comments about Coq are at a place. In the above definition, [Inductive] is the reserved word for inductive definitions. It is followed by the name of the definition, which in our case is [SN_ind], and it has three arguments: [{A:Type}], [(red:Red A)] and [(a:A)]. The first argument appears between curly brackets, which means that it is  %{\it implicit}%. Implicit arguments are types of polymorphic functions that can be inferred from the context. The second argument corresponds to a reduction relation [red] over [A], and the third argument is an element of [A]. This definition has one constructor named [sn_acc] whose content corresponds exactly to the definition given in (%\ref{def:sn}%). In this way, in order to prove that a certain element [a:A] is strongly normalising w.r.t. a reduction relation $\to_r$, one has to build a proof of the formula $\forall b, a \to_r b \to SN\_ind \to_r b$.
+
+We use standard notation for the transitive (resp. reflexive transitive) closure of a given reduction relation $\to$, writen $\to^+$ (resp. $\to^*$). In addition, if $\to$ is a relation from [A] to [B] then $\leftarrow$ is the inverse relation from [B] to [A]. In order to present the Modular Strong Normalisation Theorem, we need to define the notions of strong and weak simulation.
+
+%\begin{definition}[Strong simulation]
+Let $\to$ be a relation from [A] to [B], respectively equipped with the reduction relations $\to_A$ and $\to_B$. The reduction relation $\to_B$ strongly simulates $\to_A$ through $\to_r$ if $(\leftarrow \cdot \to_A) \subseteq (\to_B^+ \cdot \leftarrow)$.
+\end{definition}%
+
 *)
 
 
