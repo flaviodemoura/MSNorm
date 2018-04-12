@@ -21,7 +21,7 @@ In this section, we present the Modular Strong Normalisation Theorem whose forma
 Instead of using the above definition of $SN^{\to}$, we decided to work directly with its standard inductive definition which is given by
 
 %\begin{equation}\label{def:sn}
-a \in SN^{\to} \mbox{ iff } \forall b, (a \to b \mbox{ implies } b \in SN^{\to})
+a \in {SN\_ind}^{\to} \mbox{ iff } \forall b, (a \to b \mbox{ implies } b \in {SN\_ind}^{\to})
 \end{equation}%
 
 %\noindent% whose Coq code is given by
@@ -34,12 +34,12 @@ A few comments about Coq are at a place. In the above definition, [Inductive] is
 We use standard notation for the transitive (resp. reflexive transitive) closure of a given reduction relation $\to$, writen $\to^+$ (resp. $\to^*$). In addition, if $\to$ is a relation from [A] to [B] then $\leftarrow$ is the inverse relation from [B] to [A]. In order to present the Modular Strong Normalisation Theorem, we need to define the notions of strong and weak simulation:
 
 %\begin{definition}
-Let $\to$ be a relation from [A] to [B], $\to_A$ be a reduction relation over [A]  and $\to_B$ be a reduction relation over [B]. The reduction relation $\to_B$ {\it strongly} (resp. {\it weakly}) simulates $\to_A$ through $\to$ if $(\leftarrow \cdot \to_A) \subseteq (\to_B^+ \cdot \leftarrow)$ (resp. $(\leftarrow \cdot \to_A) \subseteq (\to_B^* \cdot \leftarrow)$).
+Let $\to$ be a relation from $A$ to $B$, $\to_A$ be a reduction relation over $A$  and $\to_B$ be a reduction relation over $B$. The reduction relation $\to_B$ {\it strongly} (resp. {\it weakly}) simulates $\to_A$ through $\to$ if $(\leftarrow \cdot \to_A) \subseteq (\to_B^+ \cdot \leftarrow)$ (resp. $(\leftarrow \cdot \to_A) \subseteq (\to_B^* \cdot \leftarrow)$).
 \end{definition}%
 
 Now we are ready to state the Modular Strong Normalisation Theorem:
 %\begin{theorem}
-Let $\to$ be a relation from [A] to [B], $\to_1$ and $\to_2$ be two reduction relations over [A] and $\to_B$ be a reduction relation over $B$. Suppose that:
+Let $\to$ be a relation from $A$ to $B$, $\to_1$ and $\to_2$ be two reduction relations over $A$ and $\to_B$ be a reduction relation over $B$. Suppose that:
 \begin{enumerate}
 \item $\to_b$ strongly simulates $\to_1$ through $\to$;
 \item $\to_b$ weakly simulates $\to_2$ through $\to$;
@@ -47,8 +47,10 @@ Let $\to$ be a relation from [A] to [B], $\to_1$ and $\to_2$ be two reduction re
 \end{enumerate}
 Then $\leftarrow ({SN\_ind}^{\to_B}) \subseteq {SN\_ind}^{\to_1 \cup \to_2}$, i.e. if $a \to b$ and $b\in {SN\_ind}^{\to_B}$ then $a \in {SN\_ind}^{\to_1\cup \to_2}$.
 \end{theorem}%
+\begin{proof}
+ The proof is as follows 
+\end{proof}
 *)
-
 
 (** * The Formalisation
 
