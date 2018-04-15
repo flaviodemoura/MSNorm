@@ -41,15 +41,15 @@ Now we are ready to state the Modular Strong Normalisation Theorem:
 %\begin{theorem}
 Let $\to$ be a relation from $A$ to $B$, $\to_1$ and $\to_2$ be two reduction relations over $A$ and $\to_B$ be a reduction relation over $B$. Suppose that:
 \begin{enumerate}
-\item $\to_b$ strongly simulates $\to_1$ through $\to$;
-\item $\to_b$ weakly simulates $\to_2$ through $\to$;
-\item $A \subseteq {SN\_ind}^{\to_1}$
+\item\label{hip:one} $\to_B$ strongly simulates $\to_1$ through $\to$;
+\item\label{hip:two} $\to_B$ weakly simulates $\to_2$ through $\to$;
+\item\label{hip:three} $A \subseteq {SN\_ind}^{\to_1}$
 \end{enumerate}
-Then $\leftarrow ({SN\_ind}^{\to_B}) \subseteq {SN\_ind}^{\to_1 \cup \to_2}$, i.e. if $a \to b$ and $b\in {SN\_ind}^{\to_B}$ then $a \in {SN\_ind}^{\to_1\cup \to_2}$.
+Then $\leftarrow ({SN\_ind}^{\to_B}) \subseteq {SN\_ind}^{\to_1 \cup \to_2}$, i.e. $\forall a:A, (a\in \leftarrow({SN\_ind}^{\to_B}) \mbox{ implies } a \in {SN\_ind}^{\to_1\cup \to_2}$.
 \end{theorem}%
-\begin{proof}
- The proof is as follows 
-\end{proof}
+%\begin{proof}
+ This proof follows the lines of \cite{LengrandPhD}, but using the standard definition $SN\_ind$. First of all, hypothesis \ref{hip:one} and \ref{hip:two} allow us to conclude that the composition $(\to_1^* \cdot \to_2)$ is strongly simulated by $\to_B$: in fact, from hypothesis \ref{hip:two} we have that $\to_1^*$ is weakly simulated by $\to_B$. In addition, the composition of two reduction relations that are, respectively, strongly and weakly simulated by the same reduction relation is strongly simulated by this reduction relation. Therefore, $(\to_1^* \cdot \to_2)$ is strongly simulated by $\to_B$ through $\to$, that together with the fact that $a\in \leftarrow({SN\_ind}^{\to_B})$ allow us to conclude that $a \in {SN\_ind}^{\to_1^* \cdot \to_2}$. Now, from hypothesis \ref{hip:three}, we have $a \in {SN\_ind}^{\to_1}$, and we conclude from the fact that ${SN\_ind}^{\to_1^* \cdot \to_2} \cap {SN\_ind}^{\to_1} = {SN\_ind}^{\to_1\cup \to_2}$. \hfill$\Box$
+\end{proof}%
 *)
 
 (** * The Formalisation
@@ -916,7 +916,7 @@ Lemma inclUnion {A} {redA red'A: Red A}: forall a, (SN_ind redA a) -> (forall b,
 (* begin hide *)
 Proof.
   intros a HSN.
-  induction HSN.
+  induction HSN. clear H.
   intros Hyp.
   apply sn_acc.
   intros b0 Hunion.
@@ -928,8 +928,8 @@ Proof.
       inversion Hrefl; subst.
       apply compose with b.
       * apply refltailtransit with b0.
-        ** apply transSub in H1.
-           apply atleast1 in H1.
+        ** apply transSub in H.
+           apply atleast1 in H.
            assumption.
         ** assumption.
       * assumption.
