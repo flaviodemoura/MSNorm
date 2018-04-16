@@ -1,12 +1,12 @@
 (** * Introduction
 
-This work is about a mechanical and constructive proof of the Modular Strong Normalisation Theorem in the Coq Proof Assistant %~\cite{CoqTeam}%. The proof is entirely constructive in the sense that it does use classical reasoning, i.e. derivations based on the law of excluded middle or proof by contradiction, for instance. This is interesting from the computational point of view because the algorithmic content of proofs can be automatically extracted as certified code %~\cite{Let2008}%. There is no extraction code in this work, but it is part of a bigger project that aims to generate certified code. The choice of Coq as the formalisation tool is natural because the underlying logic behind the calculus of inductive constructions is constructive %\cite{Paulin93,wernerPhD}%. 
+This work is about a mechanical and constructive proof of the Modular Strong Normalisation Theorem in the Coq Proof Assistant %~\cite{CoqTeam}%. The proof is entirely constructive in the sense that it does use classical reasoning, i.e. derivations based on the law of excluded middle or proof by contradiction, for instance. This is interesting from the computational point of view because the algorithmic content of proofs can be automatically extracted as certified code %~\cite{Let2008}%. There is no extraction code in this work, but it is part of a bigger project that aims to generate certified code. The choice of Coq as the formalisation tool is natural because the underlying logic behind the calculus of inductive constructions, the theory over which Coq is developed, is constructive %\cite{Paulin93,wernerPhD}%. 
 
 The Modular Strong Normalisation Theorem states the conditions for the union of two reduction relations to be terminating (or strongly normalising) (cf. %~\cite{kes09}%). A property $P$ that holds for a combined system, assuming that each subsystem have the same property $P$, is called modular, i.e. if $P$ is a modular property that holds for both systems $A$ and $B$, then it also holds for the combined system built from $A$ and $B$. In the context of rewriting theory, termination is known to be a non-modular property. Nevertheless, under certain restrictions, modularity can be recovered (cf. %~\cite{Gramlich12}%).
 
-The main result of this paper is the formalisation of a constructive formal proof of the Modular Strong Normalisation Theorem for reduction relations. A constructive proof of this theorem is presented in %\cite{LengrandPhD}%, where a theory of constructive normalisation is developed. In this theory, the notion of strong normalisation is not standard; in fact, it is based on a new notion of stability. We followed Lengrand's proof but using only the standard inductive definition of strong normalisation. In this way, we believe that we achieved a simple and easy to follow formalisation of a non-trivial theorem. In addition, we proved the equivalence between Lengrand's definition of strong normalisation and the standard inductive definition used in this work. This paper is built up from a Coq script where some code was hidden for the sake of clarity of this document. All the files concerning this work are freely available in the Github repository  %{\tt https://github.com/flaviodemoura/MSNorm}%. The contributions of this work can be summarised as follows:
+The main result of this paper is the formalisation of a constructive formal proof of the Modular Strong Normalisation Theorem for reduction relations. A constructive proof of this theorem is presented in %\cite{LengrandPhD}%. This constructive proof is done using a notion of strong normalisation that is based on a notion of stability called patriarchal. In fact, a complete theory of constructive (strong and weak) normalisation is built in his PhD thesis. We follow Lengrand's proof but using only the standard inductive definition of strong normalisation. In this way, we believe that we achieved a simple and easy to follow formalisation of a non-trivial theorem. In addition, we proved the equivalence between Lengrand's definition of strong normalisation and the standard inductive definition used in this work. In this sense, Lengrand's proof is equivalent to our proof. This paper is built up from a Coq script where some code was hidden for the sake of clarity of this document. All the files concerning this work are freely available in the repository  %{\tt https://github.com/flaviodemoura/MSNorm}%. The contributions of this work can be summarised as follows:
 
-- A constructive proof of the modular strong normalisation theorem in the Coq Proof Assistant.
+- A constructive proof of the Modular Strong Normalisation Theorem that is based only on the standard inductive definition of strong normalisation in the Coq Proof Assistant.
 - An equivalence proof between different notions of Strong Normalisation
 - ??
  *)
@@ -16,52 +16,60 @@ The main result of this paper is the formalisation of a constructive formal proo
 (** * The Modular Strong Normalisation Theorem *)
 
 (**
-In this section, we present the Modular Strong Normalisation Theorem whose formalisation will be detailed in the next section. This is an abstract theorem about termination of reduction relations through the well known simulation technique %\cite{BN98}%. We follow the proof of %\cite{LengrandPhD,lengSNInd05}% that developed a constructive normalisation theory for proving termination of reduction relations, i.e. binary relations from a set to itself, in a constructive way. In order to fix notation, let [A] be a set, and $\to$ be a reduction relation over [A], i.e. $\to \subseteq A\times A$. We write $a \to b$ instead of $(a,b) \in \to$, for all $a,b\in A$. In Lengrand's work, the set of $\to$-strongly normalising elements is defined as the intersection of all subsets of [A] that are patriarchal, where a subset [B] of [A] is %{\it patriarchal}% if $\forall a \in A, \to(a) \subseteq B$ then $a \in B$. 
-
+In this section, we present the Modular Strong Normalisation Theorem whose formalisation will be detailed in the next section. This is an abstract theorem about termination of reduction relations through the well known simulation technique %\cite{BN98}%. In order to fix notation, let [A] be a set, and $\to$ be a reduction relation over [A], i.e. $\to \subseteq A\times A$. We write $a \to b$ instead of $(a,b) \in \to$, for all $a,b\in A$. A %{\it reduction sequence}% is a finite or infinite sequence of the form $a \to a_1 \to a_2 \to \ldots$ We write $\to^+$ (resp. $\to^*$) for the transitive (resp. reflexive transitive) closure of $\to$. In addition, if $\to$ is a relation from [A] to [B] then $\leftarrow$ is the inverse relation from [B] to [A].  *)
+(* In Lengrand's work, the set of $\to$-strongly normalising elements is defined as the intersection of all subsets of [A] that are patriarchal, where a subset [B] of [A] is %{\it patriarchal}% if $\forall a \in A, \to(a) \subseteq B$ then $a \in B$.
+We follow the proof of %\cite{LengrandPhD,lengSNInd05}% that developed a constructive normalisation theory for proving termination of reduction relations, i.e. binary relations from a set to itself, in a constructive way.
 Instead of using the above definition of $SN^{\to}$, we decided to work directly with its standard inductive definition which is given by
-
+A reduction relation over $A$ is said to be %{\it strongly normalising}%, if the following property holds any $a\in A$: there is no infinite reduction starting from $a$. *)
+(**
+An element $a\in A$ is %{\it strongly normalising}% w.r.t $\to$ if every reduction sequence starting from $a$ is finite, and in this case we write $a \in SN^{\to}$. This idea can be expressed inductively as follows: 
 %\begin{equation}\label{def:sn}
-a \in {SN\_ind}^{\to} \mbox{ iff } \forall b, (a \to b \mbox{ implies } b \in {SN\_ind}^{\to})
-\end{equation}%
-
+a \in {SN}^{\to} \mbox{ iff } \forall b, (a \to b \mbox{ implies } b \in {SN}^{\to})
+\end{equation}% *)
+(*
 %\noindent% whose Coq code is given by
 [[
 Inductive SN_ind {A:Type} (red: Red A) (a:A): Prop :=
   | sn_acc: (forall b, red a b -> SN_ind red b) -> SN_ind red a.
 ]]
-A few comments about Coq are at a place. In the above definition, [Inductive] is the reserved word for inductive definitions. It is followed by the name of the definition, which in our case is [SN_ind], and it has three arguments: [{A:Type}], [(red:Red A)] and [(a:A)]. The first argument appears between curly brackets, which means that it is  %{\it implicit}%. Implicit arguments are types of polymorphic functions that can be inferred from the context. The second argument corresponds to a reduction relation [red] over [A], and the third argument is an element of [A]. This definition has one constructor named [sn_acc] whose content corresponds exactly to the definition given in (%\ref{def:sn}%). In this way, in order to prove that a certain element [a:A] is strongly normalising w.r.t. a reduction relation $\to_r$, one has to build a proof of the formula $\forall b, a \to_r b \to SN\_ind \to_r b$.
-
-We use standard notation for the transitive (resp. reflexive transitive) closure of a given reduction relation $\to$, writen $\to^+$ (resp. $\to^*$). In addition, if $\to$ is a relation from [A] to [B] then $\leftarrow$ is the inverse relation from [B] to [A]. In order to present the Modular Strong Normalisation Theorem, we need to define the notions of strong and weak simulation:
+A few comments about Coq are at a place. In the above definition, [Inductive] is the reserved word for inductive definitions. It is followed by the name of the definition, which in our case is [SN_ind], and it has three arguments: [{A:Type}], [(red:Red A)] and [(a:A)]. The first argument appears between curly brackets, which means that it is  %{\it implicit}%. Implicit arguments are types of polymorphic functions that can be inferred from the context. The second argument corresponds to a reduction relation [red] over [A], and the third argument is an element of [A]. This definition has one constructor named [sn_acc] whose content corresponds exactly to the definition given in (%\ref{def:sn}%). In this way, in order to prove that a certain element [a:A] is strongly normalising w.r.t. a reduction relation $\to_r$, one has to build a proof of the formula $\forall b, a \to_r b \to SN\_ind \to_r b$.*)
+(**
+In order to present the Modular Strong Normalisation Theorem, we need to define the notions of strong and weak simulation. In the following definitions $A$ and $B$ are arbitrary sets:
 
 %\begin{definition}
-Let $\to$ be a relation from $A$ to $B$, $\to_A$ be a reduction relation over $A$  and $\to_B$ be a reduction relation over $B$. The reduction relation $\to_B$ {\it strongly} (resp. {\it weakly}) simulates $\to_A$ through $\to$ if $(\leftarrow \cdot \to_A) \subseteq (\to_B^+ \cdot \leftarrow)$ (resp. $(\leftarrow \cdot \to_A) \subseteq (\to_B^* \cdot \leftarrow)$).
+Let $\to$ be a relation from $A$ to $B$, $\to_A$ be a reduction relation over $A$  and $\to_B$ be a reduction relation over $B$. The reduction relation $\to_B$ {\it strongly} (resp. {\it weakly}) simulates $\to_A$ through $\to$ if $(\leftarrow \cdot \to_A) \subseteq (\to_B^+ \cdot \leftarrow)$ (resp. $(\leftarrow \cdot \to_A) \subseteq (\to_B^* \cdot \leftarrow)$). \flavio{Aqui pode ser interessante inserir uma figura para ilustrar estas definições.}
 \end{definition}%
 
 Now we are ready to state the Modular Strong Normalisation Theorem:
 %\begin{theorem}
-Let $\to$ be a relation from $A$ to $B$, $\to_1$ and $\to_2$ be two reduction relations over $A$ and $\to_B$ be a reduction relation over $B$. Suppose that:
+Let $\to$ be a relation from $A$ to $B$, $\to_1$ and $\to_2$ be two reduction relations over $A$, and $\to_B$ be a reduction relation over $B$. Suppose that:
 \begin{enumerate}
 \item\label{hip:one} $\to_B$ strongly simulates $\to_1$ through $\to$;
 \item\label{hip:two} $\to_B$ weakly simulates $\to_2$ through $\to$;
-\item\label{hip:three} $A \subseteq {SN\_ind}^{\to_1}$
+\item\label{hip:three} $A \subseteq {SN\_ind}^{\to_1}$.
 \end{enumerate}
-Then $\leftarrow ({SN\_ind}^{\to_B}) \subseteq {SN\_ind}^{\to_1 \cup \to_2}$, i.e. $\forall a:A, (a\in \leftarrow({SN\_ind}^{\to_B}) \mbox{ implies } a \in {SN\_ind}^{\to_1\cup \to_2}$.
+Then $\leftarrow ({SN\_ind}^{\to_B}) \subseteq {SN\_ind}^{\to_1 \cup \to_2}$. In other words, $$\forall a:A, (a\in \leftarrow({SN\_ind}^{\to_B}) \mbox{ implies } a \in {SN\_ind}^{\to_1\cup \to_2}.$$
 \end{theorem}%
 %\begin{proof}
- This proof follows the lines of \cite{LengrandPhD}, but using the standard definition $SN\_ind$. First of all, hypothesis \ref{hip:one} and \ref{hip:two} allow us to conclude that the composition $(\to_1^* \cdot \to_2)$ is strongly simulated by $\to_B$: in fact, from hypothesis \ref{hip:two} we have that $\to_1^*$ is weakly simulated by $\to_B$. In addition, the composition of two reduction relations that are, respectively, strongly and weakly simulated by the same reduction relation is strongly simulated by this reduction relation. Therefore, $(\to_1^* \cdot \to_2)$ is strongly simulated by $\to_B$ through $\to$, that together with the fact that $a\in \leftarrow({SN\_ind}^{\to_B})$ allow us to conclude that $a \in {SN\_ind}^{\to_1^* \cdot \to_2}$. Now, from hypothesis \ref{hip:three}, we have $a \in {SN\_ind}^{\to_1}$, and we conclude from the fact that ${SN\_ind}^{\to_1^* \cdot \to_2} \cap {SN\_ind}^{\to_1} = {SN\_ind}^{\to_1\cup \to_2}$. \hfill$\Box$
+ This proof follows the lines of \cite{LengrandPhD}, but using the standard definition $SN\_ind$. First of all, hypothesis \ref{hip:one} and \ref{hip:two} allow us to conclude that the composition $(\to_1^* \cdot \to_2)$ is strongly simulated by $\to_B$: in fact, from hypothesis \ref{hip:two} we have that $\to_1^*$ is weakly simulated by $\to_B$. In addition, the composition of two reduction relations that are, respectively, strongly and weakly simulated by the same reduction relation is strongly simulated by this reduction relation. Therefore, $(\to_1^* \cdot \to_2)$ is strongly simulated by $\to_B$ through $\to$, that together with the fact that $a\in \leftarrow({SN\_ind}^{\to_B})$ allow us to conclude that $a \in {SN\_ind}^{\to_1^* \cdot \to_2}$. Now, from hypothesis \ref{hip:three}, we have $a \in {SN\_ind}^{\to_1}$, and we conclude from the fact that ${SN\_ind}^{\to_1^* \cdot \to_2} \cap {SN\_ind}^{\to_1} = {SN\_ind}^{\to_1\cup \to_2}$. \flavio{expandir!} \hfill$\Box$ 
 \end{proof}%
 *)
 
-(** * The Formalisation
+(** * The Formalisation 
 
-Given two sets $A$ and $B$, a binary relation from $A$ to $B$ is a subset of the Cartesian product $A\times B$. In this way, if $R\subseteq A\times B$ then we usually write $R a b$ or $a R b$ to mean that $a$ is related to $b$ through $R$, i.e. $(a,b) \in R$. Alternatively, the membership relation can be represented by a type assignment so that an element $a$ belongs to the set $A$ ($a \in A$) corresponds to the fact the $a$ has type $A$ ($a:A$). So for instance, we can say that $n$ is a natural number by either writing $a\in \mathbb{N}$, i.e. that $a$ belongs to the set of natural numbers, if we are in the context of set theory, or $a:\mathbb{N}$, i.e that $a$ has the type of natural numbers, if we are in the context of type theory. In the rest of this section, we present a number of basic definitions in order to make clear the notation used in the other sections of this work. The definitions given in this section can be found in %\url{http://www.lix.polytechnique.fr/~lengrand/Work/HDR/Coq/First-order/NormalisationTheory.v}%. 
+In this section we present the details of the formalisation of the Modular Strong Normalisation Theorem in the Coq Proof Assistant. The first important point is that our proof is constructive, i.e. it does not use classical reasoning, and hence the objects appearing in theorems are really constructed  in order to prove their properties. The theory behind Coq, known as the calculus of inductive constructions, is a constructive higher-order logic which makes natural the choice of Coq as the formalisation tool for this work.
 
-A relation from $A$ to $B$ is defined as a binary predicate [Rel] as follows:
+In terms of notation, sets are coded as arbitrary types in such a way that the membership relation $a \in A$ ($a$ is an element of the set $A$) is represented as $a:A$ ($a$ has type $A$). This equivalence is extensively used in Computer Science when one writes $a:\mathbb{N}$ ($a$ has type $\mathbb{N}$) to express the fact that $a$ is a natural number, i.e. that $a\in \mathbb{N}$.
+*)
+
+(* 
+Given two sets $A$ and $B$, a binary relation from $A$ to $B$ is a subset of the Cartesian product $A\times B$. In this way, if $R\subseteq A\times B$ then we usually write $R a b$ or $a R b$ to mean that $a$ is related to $b$ through $R$, i.e. $(a,b) \in R$. Alternatively, the membership relation can be represented by a type assignment so that an element $a$ belongs to the set $A$ ($a \in A$) corresponds to the fact the $a$ has type $A$ ($a:A$). So for instance, we can say that $n$ is a natural number by either writing $a\in \mathbb{N}$, i.e. that $a$ belongs to the set of natural numbers, if we are in the context of set theory, or $a:\mathbb{N}$, i.e that $a$ has the type of natural numbers, if we are in the context of type theory. In the rest of this section, we present a number of basic definitions in order to make clear the notation used in the other sections of this work. The definitions given in this section can be found in %\url{http://www.lix.polytechnique.fr/~lengrand/Work/HDR/Coq/First-order/NormalisationTheory.v}%. *)
+
+(** We start by listing some basic definitions that could be skipped due to its simplicity, but we decided to keep them make notations clear, and in order to be able to give some explanations about Coq. Note this paper is written from a Coq script file, therefore, the Coq code presented is the real code of the formalisation. A relation from $A$ to $B$ is defined as a binary predicate as follows:
  *)
 
 Definition Rel (A B : Type) := A -> B -> Prop.
-(** A binary relation from $A$ to itself, i.e. a binary predicate with $A=B$ is called a %{\it reduction relation}% over $A$: 
-*)
+(** %\noindent% This definition gives the signature of an relation from a given set $A$ to a set $B$. As seen before, a %{\it reduction relation}% over $A$ is binary relation from $A$ to itself: *)
 
 Definition Red (A : Type) := Rel A A.
 (** A relation [R1] is a subrelation of the relation [R2] if every pair of elements related by [R1] is also related by [R2]: *)
