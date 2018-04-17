@@ -69,13 +69,13 @@ Given two sets $A$ and $B$, a binary relation from $A$ to $B$ is a subset of the
  *)
 
 Definition Rel (A B : Type) := A -> B -> Prop.
-(** %\noindent% This definition gives the signature of an relation from a given set $A$ to a set $B$. As seen before, a %{\it reduction relation}% over $A$ is binary relation from $A$ to itself: *)
+(** %\noindent% This definition gives the signature of an relation from a given set $A$ to a set $B$. As seen before, if $A=B$ then we have a %{\it reduction relation}%: *)
 
 Definition Red (A : Type) := Rel A A.
 (** A relation [R1] is a subrelation of the relation [R2] if every pair of elements related by [R1] is also related by [R2]: *)
 
 Definition Sub {A B} (R1 R2: Rel A B) : Prop := forall a b, R1 a b -> R2 a b.
-(** In the above definition, [A] and [B] first appear between curly brackets, which means that these arguments  are  %{\it implicit}%. Implicit arguments are types of polymorphic functions that can be inferred from the context. A infix notation for the subrelation can be defined with an index level that defines the precedence of each operator. *)
+(** In the above definition, [A] and [B] first appear between curly brackets, which means that these arguments  are  %{\it implicit}%. Implicit arguments are types of polymorphic functions that can be inferred from the context. A infix notation for the subrelation can be defined with an index level that defines its precedence w.r.t other operators. *)
 
 Notation "R1 <# R2" := (Sub R1 R2) (at level 50).
 (** The [Notation] command allows us to define a more convenient and/or intuitive notation. In this case, we can use the symbol [<#] as an infix notation instead of the prefix [Sub] predicate. *)
@@ -103,13 +103,13 @@ Notation "R1 <# R2" := (Sub R1 R2) (at level 50).
 (* Definition Equiv {A B} (R1 R2: Rel A B) := R1 <# R2 /\ R2 <# R1. *)
 (* Notation "R1 -- R2" := (Equiv R1 R2) (at level 50). *)
 
-(**  Given two relations [red1] from [A] to [B], and [red2] from [B] to [C], one can build a new relation from [A] to [C] by composing its steps. The composition of two relations are inductively defined as follows: *)
+(**  Given two relations, say [red1] from [A] to [B] and [red2] from [B] to [C], one can build a new relation from [A] to [C] by composing its steps: *)
 
 Inductive comp {A B C} (red1: Rel A B)(red2: Rel B C) : Rel A C :=
   compose: forall b a c,  red1 a b -> red2 b c -> comp red1 red2 a c.
 Notation "R1 # R2" := (comp R1 R2) (at level 40).
 Arguments compose {A B C red1 red2} _ _ _ _ _ .
-(* The inductive definition [comp] has just one constructor named [compose] that explicitly builds the composition of [red1] and [red2] from given reductions in [red1] and [red2]  that have a common element in [B]. *)
+(** %\noindent% The inductive definition [comp] has just one constructor named [compose] that explicitly builds the composition of [red1] and [red2]. Therefore, in order to prove that $a$ and $c$ are related by the (composite) relation [(comp red1 red2)] one has to explicitly give an element [b] such that [(red1 a b)] and [(red2 b c)]. *)
 
 (** The inverse of a relation from a [A] to [B] is inductively defined as the corresponding relation from [B] to [A]: *)
 
@@ -157,7 +157,7 @@ Inductive inverse {A B} (R: Rel A B) : Rel B A :=
 (*     assumption. *)
 (* Qed. *)
 
-(** The transitive closure of a reduction relation [red] over [A] is constructed by adding to [red], for all [a:A], the pairs of elements of the form [(a,b)] that can be built by any finite number of compositions: *)
+(** The transitive closure of a reduction relation [red] over [A] is constructed by adding to [red] all the pairs of elements of the form [(a,b)] that can be built by any finite number of compositions, for all [a, b:A]: *)
 
 Inductive trans {A} (red: Red A) : Red A :=
 | singl: forall a b,  red a b -> trans red a b
@@ -176,7 +176,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Given a reduction relation [red] over [A], and an element [a:A], the transitive closure of [red] contains all the elements of the form [(a,b)], where [b] is related with [a] by a finite (possibly empty) number of composition applications. In this sense, [(a,b)] can be seen as a path from a to b through [red]. New path from [a] to [c] can be built from a path from [a] to [b] and a path from b to c: *)
+(** Given a reduction relation [red] over [A], and an element [a:A], the transitive closure of [red] contains all the elements of the form [(a,b)], where [b] is related with [a] by a finite (possibly empty) number of composition applications. In this sense, [(a,b)] can be seen as a path from [a] to [b] through [red]. New path from [a] to [c] can be built from a path from [a] to [b] and a path from [b] to [c]: *)
 
 Lemma tailtransit {A red}: forall (b a c:A),  trans red a b -> trans red b c -> trans red a c.
 (* begin hide *)
@@ -535,7 +535,6 @@ Proof.
     + apply tailtransit with b2; assumption.
     + assumption.
 Qed.  
-(* end hide *)
 
 Lemma refltailtransit {A red}: forall (b a c:A),
     refltrans red a b -> refltrans red b c -> refltrans red a c.
@@ -548,9 +547,11 @@ Proof.
     + constructor.
       apply (tailtransit b); assumption.
 Qed. 
+(* end hide *)
 
 Lemma SimulWeakTrans {A B} (redA: Red A) (redB: Red B) (R: Rel A B)
 : WeakSimul redA redB R -> WeakSimul (trans redA) redB R.
+(* begin hide *)
 Proof.
   unfold WeakSimul.
   unfold Sub in *.
@@ -573,9 +574,11 @@ Proof.
     + apply (refltailtransit b0); assumption.
     + assumption.
 Qed.
+(* end hide *)
 
 Lemma SimulWeakReflTrans {A B} (redA: Red A) (redB: Red B) (R: Rel A B)
 : WeakSimul redA redB R -> WeakSimul (refltrans redA) redB R.
+(* begin hide *)
 Proof.
   unfold WeakSimul.
   unfold Sub in *.
