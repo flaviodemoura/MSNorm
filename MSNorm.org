@@ -16,7 +16,7 @@ bibliography:~/Dropbox/bibliography/references.bib
 ** cite:DK08
 ** cite:terese03
 ** cite:LengrandPhD
-** cite:lengSNInd05 (postscript file only)
+** cite:lengSNInd05
 ** cite:raamsdonk99:_perpet_reduc_calcul 
 ** cite:GirardPT 
 ** cite:kes09
@@ -25,3 +25,4 @@ bibliography:~/Dropbox/bibliography/references.bib
 ** cite:Gramlich12
 ** cite:Ohlebusch94
 ** cite:Paulin93
+** cite:Geu09
