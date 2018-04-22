@@ -691,7 +691,7 @@ Lemma SN_indEquivSN {A:Type} {R : Red A} : forall t, SN_ind R t <-> SN R t.
 Proof.
   intro t; split.
   - intro HSN_ind. (** Suppose that [SN_ind R t] and call this hypothesis [HSN_ind]. *)
-    inversion HSN_ind.
+    inversion HSN_ind. (** This means that [forall b : A, R t b -> SN_ind R b]. Call this hypothesis H. *)
     eapply SNindP.
     + intros t' HredSN HSN.
       apply SNpatriarchal.
