@@ -19,7 +19,7 @@ clean:: Makefile.coq
 	rm -f Makefile.coq .depend 
 	cd latex; rm -f *.log *.aux *.dvi *.v.tex *.toc *.bbl *.blg *.idx *.ilg *.pdf *.ind *.out *.fls *.gz *.fdb_latexmk
 
-doc: latex/MSNorm.pdf 
+doc: latex/MSNorm.pdf
 
 COQDOC = coqdoc -R . MSNorm
 
@@ -39,6 +39,14 @@ html: Makefile $(VS) src/toc.html
 		-d ../html
 	cp src/toc.html html/
 
+# Assume-se o Linux como sistema operacional padrão
+pdf:
+	xdg-open latex/MSNorm.pdf
+
+# Caso o Sistema Operacional seja Mac OS, modifica-se a variável pdf
+ifeq ($(UNAME_S), Darwin)
 pdf:
 	open -a Skim latex/MSNorm.pdf&
+endif
+
 
