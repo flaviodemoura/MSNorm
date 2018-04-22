@@ -16,15 +16,15 @@ The main result of this paper is the formalisation of a constructive formal proo
 (** * The Modular Strong Normalisation Theorem *)
 
 (**
-In this section, we present the Modular Strong Normalisation Theorem whose formalisation will be detailed in the next section. This is an abstract theorem about termination of reduction relations through the well known simulation technique %\cite{BN98}%. In order to fix notation, let [A] be a set, and $\to$ be a reduction relation over [A], i.e. $\to \subseteq A\times A$. We write $a \to b$ instead of $(a,b) \in \to$, for all $a,b\in A$. A %{\it reduction sequence}% is a finite or infinite sequence of the form $a \to a_1 \to a_2 \to \ldots$ We write $\to^+$ (resp. $\to^*$) for the transitive (resp. reflexive transitive) closure of $\to$. In addition, if $\to$ is a relation from [A] to [B] then $\leftarrow$ is the inverse relation from [B] to [A].  *)
+In this section, we present the Modular Strong Normalisation Theorem whose formalisation will be detailed in the next section. This is an abstract theorem about termination of reduction relations through the well known simulation technique %\cite{BN98}%. In order to fix notation, let [A] and [B] be sets. A relation from [A] to [B] is a subset of $A\times B$. If $R$ is a relation from [A] to [B] then we write $aRb$ instead of $(a,b) \in R$, and in this case, we say that $a$ %{\it reduces}% to $b$. If one uses arrow notation to represent relations, and $\to$ is a relation from [A] to [B] then $\leftarrow$ is the inverse relation from [B] to [A]. If $\to_1$ is a relation from $A$ to $B$, and $\to_2$ is a relation from $B$ to $C$ then the composition of $\to_1$ with $\to_2$, written $\to_1\cdot \to_2$, is a relation from $A$ to $C$. A relation from a set to itself is a %{\it reduction relation}%, i.e. a reduction relation is a subset of $A\times A$. If $\to_A$ is a reduction relation over $A$, then a %{\it reduction sequence}% is a finite or infinite sequence of the form $a \to_A a_1 \to_A a_2 \to_A \ldots$ A finite reduction $a \to_A a_1 \to_A a_2 \to_A \ldots$ \to_A a_n\ (n\geq 0)$ is a $n$-step reduction from $a$. We write $\to_A^+$ (resp. $\to_A^*$) for the transitive (resp. reflexive transitive) closure of $\to_A$. *) 
 (* In Lengrand's work, the set of $\to$-strongly normalising elements is defined as the intersection of all subsets of [A] that are patriarchal, where a subset [B] of [A] is %{\it patriarchal}% if $\forall a \in A, \to(a) \subseteq B$ then $a \in B$.
 We follow the proof of %\cite{LengrandPhD,lengSNInd05}% that developed a constructive normalisation theory for proving termination of reduction relations, i.e. binary relations from a set to itself, in a constructive way.
 Instead of using the above definition of $SN^{\to}$, we decided to work directly with its standard inductive definition which is given by
 A reduction relation over $A$ is said to be %{\it strongly normalising}%, if the following property holds any $a\in A$: there is no infinite reduction starting from $a$. *)
 (**
-An element $a\in A$ is %{\it strongly normalising}% w.r.t $\to$ if every reduction sequence starting from $a$ is finite, and in this case we write $a \in SN^{\to}$. This idea can be expressed inductively as follows: 
+An element $a\in A$ is %{\it strongly normalising}% w.r.t $\to_A$ if every reduction sequence starting from $a$ is finite, and in this case we write $a \in SN^{\to_A}$. This idea can be expressed inductively as follows: 
 %\begin{equation}\label{def:sn}
-a \in {SN}^{\to} \mbox{ iff } \forall b, (a \to b \mbox{ implies } b \in {SN}^{\to})
+a \in {SN}^{\to_A} \mbox{ iff } \forall b, (a \to_A b \mbox{ implies } b \in {SN}^{\to_A})
 \end{equation}% *)
 (*
 %\noindent% whose Coq code is given by
@@ -57,28 +57,25 @@ Then $\leftarrow ({SN\_ind}^{\to_B}) \subseteq {SN\_ind}^{\to_1 \cup \to_2}$. In
 
 (** * The Formalisation 
 
-In this section we present the details of the formalisation of the Modular Strong Normalisation Theorem in the Coq Proof Assistant. The first important point is that our proof is constructive, i.e. it does not use classical reasoning, and hence the objects appearing in theorems are really constructed  in order to prove their properties. The theory behind Coq, known as the calculus of inductive constructions, is a constructive higher-order logic which makes natural the choice of Coq as the formalisation tool for this work.
+In this section we present the details of the formalisation of the Modular Strong Normalisation Theorem in the Coq Proof Assistant. The first important point is that our proof is constructive, i.e. it does not use classical reasoning. In addition, no additional library other then the ones that are automatically loaded after starting Coq is used. The theory behind Coq, known as the calculus of inductive constructions, is a constructive higher-order logic which makes natural the choice of Coq as the formalisation tool for this work.
 
-In terms of notation, sets are coded as arbitrary types in such a way that the membership relation $a \in A$ ($a$ is an element of the set $A$) is represented as $a:A$ ($a$ has type $A$). This correspondence is extensively used in Computer Science when one writes $a:\mathbb{N}$ ($a$ has type $\mathbb{N}$) to express the fact that $a$ is a natural number, i.e. that $a\in \mathbb{N}$ (cf. %\cite{Geu09}%).
-*)
-
-(* 
+In terms of notation, sets are coded as arbitrary types in such a way that the membership relation $a \in A$ ($a$ is an element of the set $A$) is represented as $a:A$ ($a$ has type $A$). *)
+(*This correspondence is extensively used in Computer Science when one writes $a:\mathbb{N}$ ($a$ has type $\mathbb{N}$) to express the fact that $a$ is a natural number, i.e. that $a\in \mathbb{N}$ (cf. %\cite{Geu09}%).
 Given two sets $A$ and $B$, a binary relation from $A$ to $B$ is a subset of the Cartesian product $A\times B$. In this way, if $R\subseteq A\times B$ then we usually write $R a b$ or $a R b$ to mean that $a$ is related to $b$ through $R$, i.e. $(a,b) \in R$. Alternatively, the membership relation can be represented by a type assignment so that an element $a$ belongs to the set $A$ ($a \in A$) corresponds to the fact the $a$ has type $A$ ($a:A$). So for instance, we can say that $n$ is a natural number by either writing $a\in \mathbb{N}$, i.e. that $a$ belongs to the set of natural numbers, if we are in the context of set theory, or $a:\mathbb{N}$, i.e that $a$ has the type of natural numbers, if we are in the context of type theory. In the rest of this section, we present a number of basic definitions in order to make clear the notation used in the other sections of this work. The definitions given in this section can be found in %\url{http://www.lix.polytechnique.fr/~lengrand/Work/HDR/Coq/First-order/NormalisationTheory.v}%. *)
-
-(** We start by giving some basic definitions in order to make notations clear, and that will allow us to give some explanations about Coq. Note that this paper is written directly from a Coq script file, therefore, the Coq code presented is the real code of the formalisation. A relation from $A$ to $B$ is defined as a binary predicate as follows:
+(** We start with some basic definitions in order to make Coq notation clear, and that will allow us to give some comments about Coq. Note that this paper is written directly from a Coq script file, therefore, the Coq code presented is the real code of the formalisation. A relation from $A$ to $B$ is defined as a binary predicate as follows:
  *)
 
 Definition Rel (A B : Type) := A -> B -> Prop.
-(** %\noindent% This definition gives the signature of an relation from $A$ to $B$. As seen before, if $A=B$ then we have a %{\it reduction relation}%: *)
+(** %\noindent% In this definition, [Rel] receives two types as argument, and return the signature of a relation from $A$ to $B$, i.e. the type [A -> B -> Prop] of a relation from [A] to [B]. As seen before, if $A=B$ then we have a %{\it reduction relation}%: *)
 
 Definition Red (A : Type) := Rel A A.
 (** Given two relations [R1] and [R2] from [A] to [B], if every pair of elements in [R1] is also in [R2] then we say that [R1] is a subrelation of [R2]: *)
 
 Definition Sub {A B} (R1 R2: Rel A B) : Prop := forall a b, R1 a b -> R2 a b.
-(** In the above definition, [A] and [B] first appear between curly brackets, which means that these arguments  are  %{\it implicit}%. Implicit arguments are types of polymorphic functions that can be inferred from the context. An infix notation for the subrelation can be defined with an index level that defines its precedence w.r.t other operators. *)
+(** In the above definition, [A] and [B] first appear between curly brackets, which means that these arguments  are  %{\it implicit}%. Implicit arguments are types of polymorphic functions that can be inferred from the context. Therefore, [Sub] requires two relations as arguments, and Coq automatically infers its type. A more convenient notation can be easily defined for the objects we are constructing. In the case of the predicate [Sub], we define an infix notation as follows: *)
 
 Notation "R1 <# R2" := (Sub R1 R2) (at level 50).
-(** The [Notation] command allows us to define a more convenient and/or intuitive notation. In this case, we can use the symbol [<#] as an infix notation instead of the prefix [Sub] predicate. *)
+(** This means that now one can write [R1 <# R2] instead of [Sub R1 R2]. In addition, in order to avoid parsing ambiguity, a precedence level ranging from 0 to 100 can be provided. *)
 
 (* (* begin hide *) *)
 (* (* Inclusion is reflexive *) *)
@@ -108,7 +105,9 @@ Notation "R1 <# R2" := (Sub R1 R2) (at level 50).
 Inductive comp {A B C} (red1: Rel A B)(red2: Rel B C) : Rel A C :=
   compose: forall b a c,  red1 a b -> red2 b c -> comp red1 red2 a c.
 Notation "R1 # R2" := (comp R1 R2) (at level 40).
+(* begin hide *)
 Arguments compose {A B C red1 red2} _ _ _ _ _ .
+(* end hide *)
 (** %\noindent% The inductive definition [comp] has just one constructor named [compose] that explicitly builds the composition of [red1] and [red2]. Therefore, in order to prove that $a$ and $c$ are related by the (composite) relation [(comp red1 red2)] one has to explicitly give an element [b] such that [(red1 a b)] and [(red2 b c)]. *)
 
 (** The inverse of a relation from a [A] to [B] is inductively defined as the corresponding relation from [B] to [A]: *)
@@ -157,21 +156,15 @@ Inductive inverse {A B} (R: Rel A B) : Rel B A :=
 (*     assumption. *)
 (* Qed. *)
 
-(** The transitive closure of a reduction relation [red] over [A] is constructed by adding to [red] all the pairs of elements of the form [(a,b)] that can be built by any finite number of compositions, for all [a, b:A]: *)
+(** The transitive closure of a reduction relation [red] over [A] is constructed, as usual, by adding to [red] all possible reductions with at least one step starting from each $a\in A$: *)
 
 Inductive trans {A} (red: Red A) : Red A :=
 | singl: forall a b,  red a b -> trans red a b
 | transit: forall b a c,  red a b -> trans red b c -> trans red a c.
-
+(* begin hide *)
 Arguments transit {A} {red} _ _ _ _ _ .
-
-(** The reflexive transitive closure of a reduction relation is obtained from its transitive closure by adding reflexivity, i.e. by adding the fact that each element of the relation is now related to itself: *)
-
-Inductive refltrans {A} (red: Red A) : Red A :=
-| reflex: forall a,  refltrans red a a
-| atleast1: forall a b,  trans red a b -> refltrans red a b.
-
-(** Therefore, it is straightforward that a reduction relation is included in its transitive closure: *)
+(* end hide *)
+(** Therefore, it is straightforward from the definition to prove that a reduction relation is included in its transitive closure: *)
 
 Lemma transSub {A:Type} (red: Red A) : red <# (trans red).
 (* begin hide *)
@@ -181,8 +174,13 @@ Proof.
   apply singl; assumption.
 Qed.
 (* end hide *)
+(** The reflexive transitive closure of a reduction relation is obtained from its transitive closure by adding reflexivity, i.e. by adding the fact that each element of the relation reduces to itself in 0 steps: *)
 
-(** Given a reduction relation [red] over [A], and an element [a:A], the transitive closure of [red] contains all the elements of the form [(a,b)], where [b] is related with [a] by a finite (possibly empty) number of composition applications. In this sense, [(a,b)] can be seen as a path from [a] to [b] through [red]. Paths can be composed in such a way that a new path from [a] to [c] can be built from a path from [a] to [b] and a path from [b] to [c]: *)
+Inductive refltrans {A} (red: Red A) : Red A :=
+| reflex: forall a,  refltrans red a a
+| atleast1: forall a b,  trans red a b -> refltrans red a b.
+
+(* Given a reduction relation [red] over [A], and an element [a:A], the transitive closure of [red] contains all the elements of the form [(a,b)], where [b] is related with [a] by a finite (possibly empty) number of composition applications. In this sense, [(a,b)] can be seen as a path from [a] to [b] through [red]. Paths can be composed in such a way that a new path from [a] to [c] can be built from a path from [a] to [b] and a path from [b] to [c]: 
 
 Lemma tailtransit {A red}: forall (b a c:A),  trans red a b -> trans red b c -> trans red a c.
 (* begin hide *)
@@ -196,7 +194,7 @@ Proof.
     * exact H.
     * apply IHtrans in H2; exact H2.
 Qed.
-(* end hide *)
+(* end hide *) *)
 (* (* Transitive closure is monotonous *) *)
 (* Lemma SubTrans1 {A} (red1 red2: Red A) : red1 <# red2 -> (trans red1) <# (trans red2). *)
 (* Proof. *)
@@ -216,9 +214,9 @@ Qed.
 
 Inductive Image {A B} (R:Rel A B)(P: A -> Prop): B -> Prop
   := image: forall a b, P a -> R a b -> Image R P b.
-
+(* begin hide *)
 Arguments image {A B R P} _ _ _ _.
-
+(* end hide *)
 (** The notions of weak and strong simulation of reduction relations, as given in Definition %\ref{def:sws}%, are a straightforward translation to the Coq language:*)
 
 Definition WeakSimul {A B} (redA: Red A) (redB: Red B) (R: Rel A B) := 
@@ -502,15 +500,13 @@ Definition StrongSimul {A B} (redA: Red A) (redB: Red B) (R: Rel A B) :=
 
 (** ** Strong Normalisation 
 
-In %\cite{LengrandPhD}%, S. Lengrand develops a constructive theory of normalisation in the sense that it does not rely on classical logic. In this theory, the notion of strong normalisation for reduction relations is based on a sort of stability predicate called %{\it patriarchal}%: *)
+In %\cite{LengrandPhD}%, S. Lengrand develops a constructive theory of normalisation in the sense that it does not rely on classical logic. In this theory, the notion of strong normalisation for reduction relations is defined by a second-order formula which is based on a stability predicate called %{\it patriarchal}%: *)
 
 Definition patriarchal {A} (red:Red A) (P:A -> Prop): Prop
   := forall x, (forall y, red x y -> P y) -> P x.
 
 Definition SN {A:Type} (red:Red A) (a:A): Prop
   := forall P, patriarchal red P -> P a.
-
-(** Being SN is a patriarchal predicate TBD *)
 
 Lemma SNpatriarchal {A} {red: Red A}: patriarchal red (SN red).
 (* begin hide *)
@@ -530,8 +526,27 @@ Qed.
 (* end hide *)
 
 Lemma SN_stable {A} {red: Red A}: forall M, SN red M -> forall N, red M N -> SN red N.
+(* begin hide *)
 Proof.
-  Admitted.
+    assert (H: patriarchal red (fun a => forall b, red a b -> SN red b)).
+  { unfold patriarchal.
+    unfold SN.
+    intros.
+    unfold patriarchal in *.
+    apply H1.
+    intros.
+    apply H with (y := b).
+    - assumption.
+    - assumption.
+    - apply H1.
+  }
+  assert (H1: patriarchal red (SN red)).
+  { apply SNpatriarchal. }
+  intros.
+  apply (H0 _ H).
+  assumption.
+Qed.
+(* end hide *)
   
 (* Induction principle: *)
 (* Let P be a predicate such that, for all SN elements a, if the 1-step *)
@@ -562,10 +577,27 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma toSN {A}{red:Red A} {x}: (forall y, red x y -> SN red y) -> SN red x.
+(* begin hide *)
+Proof.
+  unfold SN.
+  intros H P H1.
+  unfold patriarchal in *.
+  apply H1.
+  intros y H2.
+  apply H.
+  - assumption.
+  - assumption.
+Qed.
+(* end hide *)
+
+(** ** Equivalence between different notions of SN *)
+
+(** The standard inductive definition of strong normalisation for reduction relations is given by: *)
+
 Inductive SN_ind {A:Type} (red: Red A) (a:A): Prop :=
   | sn_acc: (forall b, red a b -> SN_ind red b) -> SN_ind red a.
-
-(* If M is SN, so are its 1-step reducts TBD *)
+(** In this section, we prove that the definitions [SN_ind] and [SN] are equivalent, and in what follows we work only with the standard definition [SN_ind]. *)
 
 Lemma SNstable {A} {red: Red A}: forall a, SN_ind red a -> forall b, red a b -> SN_ind red b.
 (* begin hide *)
@@ -598,83 +630,87 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Equivalence between different notions of SN *)
-
-Definition NF {A:Type} (R : Red A) (t : A) := forall t', ~ R t t'.
+(* Definition NF {A:Type} (R : Red A) (t : A) := forall t', ~ R t t'. *)
                
-Inductive SNalt {A:Type} (R : Red A) (t : A) : Prop :=
-| SN_nf : NF R t -> SNalt R t 
-| SN_acc : (forall t', R t t' -> SNalt R t') -> SNalt R t.
+(* Inductive SNalt {A:Type} (R : Red A) (t : A) : Prop := *)
+(* | SN_nf : NF R t -> SNalt R t  *)
+(* | SN_acc : (forall t', R t t' -> SNalt R t') -> SNalt R t. *)
 
 Theorem SNindP {A:Type} {R: Red A} {P: A -> Prop}
-: (forall t, (forall t', R t t' -> P t') -> SNalt R t -> P t)
-  -> (forall t, SNalt R t -> P t).
-(* begin hide *)
-Proof.
-  intros IH t Ht. induction Ht.
-  - apply IH. 
-   + intros. apply H in H0. inversion H0.
-   + constructor; assumption.
-  - apply IH.  
-   + assumption.
-   + apply SN_acc. assumption.
-Qed.
-(* end hide *)
+: (forall t, (forall t', R t t' -> P t') -> SN_ind R t -> P t)
+  -> (forall t, SN_ind R t -> P t).
+Proof. Admitted.
+(*   intros IH t Ht. induction Ht. *)
+(*   - apply IH.  *)
+(*    + intros. apply H in H0. inversion H0. *)
+(*    + constructor; assumption. *)
+(*   - apply IH.   *)
+(*    + assumption. *)
+(*    + apply SN_acc. assumption. *)
+(* Qed. *)
+(* (* end hide *) *)
 
-Lemma SNaltPat {A:Type} {R: Red A} : patriarchal R (SNalt R).
-(* begin hide *)
-Proof.
-  unfold patriarchal. intros x H. apply SN_acc. assumption.
-Qed.
-(* end hide *)
-(** If all 1-step reducts of a are SN, so is a *)
-
-Lemma toSN {A}{red:Red A} {x}: (forall y, red x y -> SN red y) -> SN red x.
-(* begin hide *)
-Proof.
-  unfold SN.
-  intros H P H1.
-  unfold patriarchal in *.
-  apply H1.
-  intros y H2.
-  apply H.
-  - assumption.
-  - assumption.
-Qed.
-(* end hide *)
+(* Lemma SNaltPat {A:Type} {R: Red A} : patriarchal R (SNalt R). *)
+(* (* begin hide *) *)
+(* Proof. *)
+(*   unfold patriarchal. intros x H. apply SN_acc. assumption. *)
+(* Qed. *)
+(* (* end hide *) *)
 
 (** The equivalence between these two definitions is proved by the following theorem: *)
+(* Theorem SNaltEquivSN {A:Type} {R: Red A}: forall t, SNalt R t <-> SN R t. *)
+(* (* begin hide *) *)
+(* Proof. *)
+(*  split; intro H. *)
+(*  - inversion H. *)
+(*    + apply toSN. intros t' HRtt'. *)
+(*      apply H0 in HRtt'. inversion HRtt'. *)
+(*    + eapply SNindP. *)
+(*      * intros. apply SNpatriarchal. apply H1. *)
+(*      * assumption. *)
+(*  - eapply SNind. *)
+(*    + intros. apply SNaltPat. apply H0. *)
+(*    + assumption. *)
+(* Qed. *)
+(* (* end hide *)  *)
+(* (** In fact, the constructor [SN_nf] which states that every normal form is [SNalt] is not essential and can be removed leading to the definition called [SN_ind]: *) *)
+(* (** The equivalence between [SN_ind] and [SNalt] is given by the following theorem: *) *)
+(* Lemma SN_indEquivSNalt {A:Type} {R : Red A} : forall t, SN_ind R t <-> SNalt R t. *)
+(* (* begin hide *) *)
+(* Proof. *)
+(*  split; intro H; induction H.  *)
+(*  - apply SN_acc; assumption. *)
+(*  - constructor. intros t' H1. *)
+(*    unfold NF in H. apply H in H1. *)
+(*    inversion H1. *)
+(*  - constructor. assumption. *)
+(* Qed.     *)
+(* (* end hide *) *)
 
-Theorem SNaltEquivSN {A:Type} {R: Red A}: forall t, SNalt R t <-> SN R t.
-(* begin hide *)
+Lemma SN_indEquivSN {A:Type} {R : Red A} : forall t, SN_ind R t <-> SN R t.
 Proof.
- split; intro H. 
- - inversion H.
-   + apply toSN. intros t' HRtt'.
-     apply H0 in HRtt'. inversion HRtt'.
-   + eapply SNindP.
-     * intros. apply SNpatriarchal. apply H1.
-     * assumption.
- - eapply SNind.
-   + intros. apply SNaltPat. apply H0.
-   + assumption.
+  intro t; split.
+  - intro HSN_ind. (** Suppose that [SN_ind R t] and call this hypothesis [HSN_ind]. *)
+    inversion HSN_ind.
+    eapply SNindP.
+    + intros t' HredSN HSN.
+      apply SNpatriarchal.
+      apply HredSN.
+    + assumption.
+  - intro HSN. (** Suppose [(SN r t)], and call this hypothesis [HSN]. *)
+    
+    unfold SN in HSN. (** By definition [(SN r t)] means that [forall P : A -> Prop, patriarchal R P -> P t]. *)
+    
+    unfold patriarchal in HSN. (** where [patriarchal] means that [(forall x : A, (forall y : A, R x y -> P y) -> P x)]. *)
+    
+    apply HSN. (** Now we can instantiate the predicate [P] in[HSN] with [SN_ind R] and then we need to prove that [forall x : A, (forall y : A, R x y -> SN_ind R y) -> SN_ind R x]. *)
+
+    intros x HSN_ind. (** To do so, let [x:A] and call [HSN_ind] the hypothesis [forall y : A, R x y -> SN_ind R y], and prove that [SN_ind R x]. *)
+
+    apply sn_acc. (** Applying the definition of [SN_ind], i.e. the constructor [sn_acc], we need to prove that [forall y : A, R x y -> SN_ind R y] *)
+
+    assumption. (** which is exactly the hypothesis [HSN_ind], and we conclude. *)
 Qed.
-(* end hide *) 
-(** In fact, the constructor [SN_nf] which states that every normal form is [SNalt] is not essential and can be removed leading to the definition called [SN_ind]: *)
-
-(** The equivalence between [SN_ind] and [SNalt] is given by the following theorem: *)
-
-Lemma SN_indEquivSNalt {A:Type} {R : Red A} : forall t, SN_ind R t <-> SNalt R t.
-(* begin hide *)
-Proof.
- split; intro H; induction H. 
- - apply SN_acc; assumption.
- - constructor. intros t' H1.
-   unfold NF in H. apply H in H1.
-   inversion H1.
- - constructor. assumption.
-Qed.    
-(* end hide *)
 
 (** ** The Main Theorem *)
 
