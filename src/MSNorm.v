@@ -38,6 +38,24 @@ In order to present the Modular Strong Normalisation Theorem, we need to define 
 
 %\begin{definition}\label{def:sws}
 Let $\to$ be a relation from $A$ to $B$, $\to_A$ be a reduction relation over $A$  and $\to_B$ be a reduction relation over $B$. The reduction relation $\to_B$ {\it strongly} (resp. {\it weakly}) simulates $\to_A$ through $\to$ if $(\leftarrow \cdot \to_A) \subseteq (\to_B^+ \cdot \leftarrow)$ (resp. $(\leftarrow \cdot \to_A) \subseteq (\to_B^* \cdot \leftarrow)$). \flavio{Aqui pode ser interessante inserir uma figura para ilustrar estas definições.}
+\begin{tikzpicture}[scale=.75]
+\draw[ultra thick,myblue] (0,0) circle [x radius=1.5cm, y radius=4cm]
+                    (6,0) circle [x radius=1.5cm, y radius=4cm];
+                    
+\node[font=\color{myblue}\Large\bfseries] at (0,5) {A};
+\node[font=\color{myblue}\Large\bfseries] at (6,5) {B};  
+
+\node (a1)  at (0,2)  {a};
+\node (a2) at (0,0)   {a'};
+
+\node[circle] (b1) at (6,2)  {b}; 
+\node[circle] (b2) at (6,-2)  {b'};
+
+\draw[->,red] (a1.east) .. controls +(up:0cm) and +(left:1cm) .. node[above,sloped] {R} (b1.west);
+\draw[->,red] (a2.east) .. controls +(up:0cm) and +(left:1cm) .. node[above,sloped] {R} (b2.west);
+\draw[->,red] (a1.south) .. controls +(up:0cm) and +(left:0cm) .. node[above,sloped] {A} (a2.north);
+\draw[->,red] (b1.south) .. controls +(up:0cm) and +(left:0cm) .. node[above,sloped] {$B^+$} (b2.north);
+\end{tikzpicture}
 \end{definition}%
 
 Now we are ready to state the Modular Strong Normalisation Theorem:
@@ -639,16 +657,16 @@ Qed.
 Theorem SNindP {A:Type} {R: Red A} {P: A -> Prop}
 : (forall t, (forall t', R t t' -> P t') -> SN_ind R t -> P t)
   -> (forall t, SN_ind R t -> P t).
-Proof. Admitted.
+Proof. Admitted. 
 (*   intros IH t Ht. induction Ht. *)
-(*   - apply IH.  *)
+(*   - apply IH. *)
 (*    + intros. apply H in H0. inversion H0. *)
 (*    + constructor; assumption. *)
-(*   - apply IH.   *)
+(*   - apply IH. *)
 (*    + assumption. *)
 (*    + apply SN_acc. assumption. *)
 (* Qed. *)
-(* (* end hide *) *)
+(* end hide *)
 
 (* Lemma SNaltPat {A:Type} {R: Red A} : patriarchal R (SNalt R). *)
 (* (* begin hide *) *)
