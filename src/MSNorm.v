@@ -180,7 +180,7 @@ Inductive refltrans {A} (red: Red A) : Red A :=
 | reflex: forall a,  refltrans red a a
 | atleast1: forall a b,  trans red a b -> refltrans red a b.
 
-(* Given a reduction relation [red] over [A], and an element [a:A], the transitive closure of [red] contains all the elements of the form [(a,b)], where [b] is related with [a] by a finite (possibly empty) number of composition applications. In this sense, [(a,b)] can be seen as a path from [a] to [b] through [red]. Paths can be composed in such a way that a new path from [a] to [c] can be built from a path from [a] to [b] and a path from [b] to [c]: 
+(* Given a reduction relation [red] over [A], and an element [a:A], the transitive closure of [red] contains all the elements of the form [(a,b)], where [b] is related with [a] by a finite (possibly empty) number of composition applications. In this sense, [(a,b)] can be seen as a path from [a] to [b] through [red]. Paths can be composed in such a way that a new path from [a] to [c] can be built from a path from [a] to [b] and a path from [b] to [c]: *)
 
 Lemma tailtransit {A red}: forall (b a c:A),  trans red a b -> trans red b c -> trans red a c.
 (* begin hide *)
@@ -194,7 +194,7 @@ Proof.
     * exact H.
     * apply IHtrans in H2; exact H2.
 Qed.
-(* end hide *) *)
+(* end hide *)
 (* (* Transitive closure is monotonous *) *)
 (* Lemma SubTrans1 {A} (red1 red2: Red A) : red1 <# red2 -> (trans red1) <# (trans red2). *)
 (* Proof. *)
