@@ -1,6 +1,6 @@
 (** * Introduction
 
-This work is about a mechanical and constructive proof of the Modular Strong Normalisation Theorem in the Coq Proof Assistant %~\cite{CoqTeam}%. The proof is entirely constructive in the sense that it does not use classical reasoning, i.e. derivations based on the law of excluded middle or proof by contradiction, for instance. This is interesting from the computational point of view because the algorithmic content of proofs can be automatically extracted as certified code %~\cite{Let2008}%. There is no extraction of code in this work, which is part of a bigger project that aims to generate certified code. The choice of Coq as the formalisation tool is natural because the underlying logic behind the calculus of inductive constructions, the theory over which Coq is developed, is also constructive %\cite{Paulin93,wernerPhD}%. 
+This work is about a mechanical and constructive proof of the Modular Strong Normalisation Theorem in the Coq Proof Assistant %~\cite{CoqTeam}%. The proof is entirely constructive in the sense that it does not use classical reasoning, i.e. derivations based on the law of excluded middle or proof by contradiction, for instance. This is interesting from the computational point of view because the algorithmic content of proofs can be automatically extracted as certified code %~\cite{Let2008}%. There is no extraction of code in this work, which is part of a bigger project that aims to generate certified code. The choice of Coq as the formalisation tool is natural because the underlying logic behind the calculus of inductive constructions, the logical foudation of Coq, is also constructive %\cite{Paulin93,wernerPhD}%. 
 
 The Modular Strong Normalisation Theorem states the conditions for the union of two reduction relations over a set $A$ to be terminating (or strongly normalising) knowing that they can be simulated by another terminating reduction relation (cf. %~\cite{kes09}%). It is well known that the union of terminating relations are not necessarily terminating, i.e. termination is not a modular property %\cite{toyama87}%. More precisely, a property $P$ that holds for a combined system, assuming that each subsystem have the same property $P$, is called modular, i.e. if $P$ is a modular property that holds for both systems $A$ and $B$, then it also holds for the combined system built from $A$ and $B$. In the context of rewriting theory, termination is known to be a non-modular property. Nevertheless, under certain restrictions, modularity can be recovered (cf. %~\cite{Gramlich12}%).
 
@@ -516,15 +516,19 @@ Definition StrongSimul {A B} (redA: Red A) (redB: Red B) (R: Rel A B) :=
 (* Proof. *)
 (*   Admitted. *)
 
-(** ** Strong Normalisation 
+(** ** Equivalence between strongly normalising approaches  
 
-In %\cite{LengrandPhD}%, S. Lengrand develops a constructive theory of normalisation in the sense that it does not rely on classical logic. In this theory, the notion of strong normalisation for reduction relations is defined by a second-order formula which is based on a stability predicate called %{\it patriarchal}%: *)
+In this section, we prove the equivalence between two different definitions of strong normalisation. The first definition was developed by S. Lengrand in his PhD thesis (cf. %\cite{LengrandPhD,lengSNInd05}%). In fact, he develops a constructive theory of normalisation in the sense that it does not rely on classical logic. In this theory, the notion of strong normalisation for reduction relations is defined by a second-order formula which is based on a stability predicate called [patriarchal]: *)
 
 Definition patriarchal {A} (red:Red A) (P:A -> Prop): Prop
   := forall x, (forall y, red x y -> P y) -> P x.
 
+(** In this way, one says that a reduction relation over [A] is patriarchal w.r.t. a predicate [P] over [A] when, for every [a:A], if every [red]-reduct [b:A] of [a] such that [P b] holds, then [P a] also holds. Now, an element [a:A] is strongly normalising w.r.t. to the reduction relation [red] when [red] is patriarchal for every predicate [P]: *)
+
 Definition SN {A:Type} (red:Red A) (a:A): Prop
   := forall P, patriarchal red P -> P a.
+
+(** Now, one has that [red] is patriarchal w.r.t the predicate [SN red]: *)
 
 Lemma SNpatriarchal {A} {red: Red A}: patriarchal red (SN red).
 (* begin hide *)
@@ -538,109 +542,110 @@ Proof.
   intros y H0.
   apply H.
   + assumption.
-  + unfold patriarchal.
-    assumption.
+  + assumption.
 Qed.
 (* end hide *)
 
-Lemma SN_stable {A} {red: Red A}: forall M, SN red M -> forall N, red M N -> SN red N.
-(* begin hide *)
-Proof.
-    assert (H: patriarchal red (fun a => forall b, red a b -> SN red b)).
-  { unfold patriarchal.
-    unfold SN.
-    intros.
-    unfold patriarchal in *.
-    apply H1.
-    intros.
-    apply H with (y := b).
-    - assumption.
-    - assumption.
-    - apply H1.
-  }
-  assert (H1: patriarchal red (SN red)).
-  { apply SNpatriarchal. }
-  intros.
-  apply (H0 _ H).
-  assumption.
-Qed.
-(* end hide *)
+(** Most of the Coq code presented so far can be found at %{\small \url{http://www.lix.polytechnique.fr/~lengrand/Work/HDR/Coq/First-order/NormalisationTheory.v}}%. The definitions are simple and straightforward, and follow the standard way of defining relations in Coq %\footnote{\url{https://coq.inria.fr/library/Coq.Relations.Relation_Definitions.html}}%. The lemma [SNpatriarchal] above is the sole non trivial lemma from [NormalisationTheory.v] that is used in this work; two other lemmas are [tailtransit] and [transSub]. Nevertheless, the proof code is not exactly the same because the library [ssreflect] is used by Lengrand, and since this work is part of a bigger formalisation that aims to prove the strong normalisation property for a calculus with explicit substitutions and whose framework does not use [ssreflect], the proofs in this file does not use any library other than the ones automatically loaded by Coq at startup. *)
+
+(* Given any reduction relation [red], one has that [SN red] is stable, i.e. if [a] is strongly normalising w.r.t [red] and [a] [red]-reduces to [b] then [b] is also strongly normalising w.r.t. [red]: *)
+
+(* Lemma SN_stable {A} {red: Red A}: forall a, SN red a -> forall b, red a b -> SN red b. *)
+(* (* begin hide *) *)
+(* Proof. *)
+(*   assert (H: patriarchal red (fun a => forall b, red a b -> SN red b)). *)
+(*   { unfold patriarchal. *)
+(*     unfold SN. *)
+(*     intros. *)
+(*     unfold patriarchal in *. *)
+(*     apply H1. *)
+(*     intros. *)
+(*     apply H with (y := b). *)
+(*     - assumption. *)
+(*     - assumption. *)
+(*     - apply H1. *)
+(*   } *)
+(*   assert (H1: patriarchal red (SN red)). *)
+(*   { apply SNpatriarchal. } *)
+(*   intros. *)
+(*   apply (H0 _ H). *)
+(*   assumption. *)
+(* Qed. *)
+(* (* end hide *) *)
   
 (* Induction principle: *)
 (* Let P be a predicate such that, for all SN elements a, if the 1-step *)
 (* reducts of a satisfy P then a satisfies P. *)
 (* Then all SN elements satisfy P TBD *)
 
-Theorem SNind {A} {red: Red A} {P: A -> Prop}
-: (forall a, (forall b, red a b -> P b) -> SN red a -> P a)
-  -> (forall a, SN red a -> P a).
-(* begin hide *)
-Proof.
-  intros.
-  assert (H': patriarchal red (fun a => SN red a -> P a)).
-  { unfold patriarchal.
-    intros.
-    apply H.
-    - intros.
-      apply H1.
-      + assumption.
-      + apply (SN_stable x).
-        * assumption.
-        * assumption.
-    - assumption.
-  }
-  apply (H0 (fun a : A => SN red a -> P a)).
-  - assumption.
-  - assumption.
-Qed.
-(* end hide *)
+(* Theorem SNind {A} {red: Red A} {P: A -> Prop} *)
+(* : (forall a, (forall b, red a b -> P b) -> SN red a -> P a) *)
+(*   -> (forall a, SN red a -> P a). *)
+(* (* begin hide *) *)
+(* Proof. *)
+(*   intros. *)
+(*   assert (H': patriarchal red (fun a => SN red a -> P a)). *)
+(*   { unfold patriarchal. *)
+(*     intros. *)
+(*     apply H. *)
+(*     - intros. *)
+(*       apply H1. *)
+(*       + assumption. *)
+(*       + apply (SN_stable x). *)
+(*         * assumption. *)
+(*         * assumption. *)
+(*     - assumption. *)
+(*   } *)
+(*   apply (H0 (fun a : A => SN red a -> P a)). *)
+(*   - assumption. *)
+(*   - assumption. *)
+(* Qed. *)
+(* (* end hide *) *)
 
-Lemma toSN {A}{red:Red A} {x}: (forall y, red x y -> SN red y) -> SN red x.
-(* begin hide *)
-Proof.
-  unfold SN.
-  intros H P H1.
-  unfold patriarchal in *.
-  apply H1.
-  intros y H2.
-  apply H.
-  - assumption.
-  - assumption.
-Qed.
-(* end hide *)
+(* Lemma toSN {A}{red:Red A} {x}: (forall y, red x y -> SN red y) -> SN red x. *)
+(* (* begin hide *) *)
+(* Proof. *)
+(*   unfold SN. *)
+(*   intros H P H1. *)
+(*   unfold patriarchal in *. *)
+(*   apply H1. *)
+(*   intros y H2. *)
+(*   apply H. *)
+(*   - assumption. *)
+(*   - assumption. *)
+(* Qed. *)
+(* (* end hide *) *)
 
-(** ** Equivalence between different notions of SN *)
-
-(** The standard inductive definition of strong normalisation for reduction relations is given by: *)
+(** Although the above definition is not standard (cf. %\cite{terese03,BN98}%), it is equivalent to the standard inductive definition of strong normalisation for reduction relations given in (\ref{def:sn}). The corresponding Coq definition is given by: *)
 
 Inductive SN_ind {A:Type} (red: Red A) (a:A): Prop :=
   | sn_acc: (forall b, red a b -> SN_ind red b) -> SN_ind red a.
-(** In this section, we prove that the definitions [SN_ind] and [SN] are equivalent, and in what follows we work only with the standard definition [SN_ind]. *)
+(** So, given an element [a:A] and a reduction relation [red] over [A], [a] is strongly normalising w.r.t [red] if every [red]-reduct [b] of [a] is strongly normalising w.r.t [red]. This means that in order to conclude that [SN_ind red a], one has to prove first [(forall b, red a b -> SN_ind red b)]. Note that formally, this inductive definition gives only one direction of the biconditional (\ref{def:sn}), but the other direction can be obtained for free: *)
 
 Lemma SNstable {A} {red: Red A}: forall a, SN_ind red a -> forall b, red a b -> SN_ind red b.
-(* begin hide *)
 Proof.
   intros a HSN b Hred.
   inversion HSN; clear HSN.
   apply H; assumption. 
 Qed.
-(* end hide *)
+(** This proof does the analysis of the definition [SN_ind] in order to match the hypothesis [SN_ind red a], named [HSN], through the tactic [inversion]. *)
 
-Lemma SNTransStable {A} {red: Red A}: forall a, SN_ind red a -> forall b, (trans red) a b -> SN_ind red b.
-(* begin hide *)
-Proof.
-  intros a HSN b Htrans.
-  induction Htrans.
-  - apply SNstable with a; assumption.
-  - apply IHHtrans. apply SNstable with a; assumption.
-Qed.    
-(* end hide *)
+(* Lemma SNTransStable {A} {red: Red A}: forall a, SN_ind red a -> forall b, (trans red) a b -> SN_ind red b. *)
+(* (* begin hide *) *)
+(* Proof. *)
+(*   intros a HSN b Htrans. *)
+(*   induction Htrans. *)
+(*   - apply SNstable with a; assumption. *)
+(*   - apply IHHtrans. apply SNstable with a; assumption. *)
+(* Qed.     *)
+(* (* end hide *) *)
+(** For a given reduction relation [red] over [A], if [a:A] is strongly normalising w.r.t. [red], i.e. if one has a proof of [SN_ind red a] then this proof can be transformed into a proof of [SN_ind (trans red) a], i.e. [a] is also strongly normalising w.r.t. the transitive closure of [red]. %\flavio{(expandir)}% *)
 
 Lemma SNTrans {A} {red: Red A}: forall a, SN_ind red a -> SN_ind (trans red) a.
 (* begin hide *)
 Proof.
-  induction 1 as [? IHr IHTr]; apply sn_acc; intros ? HTans;
-    induction HTans as [ ? ? ? | ? ? ? Hr Htr IHtr].
+  induction 1 as [? IHr IHTr]; apply sn_acc; intros ? HTrans;
+    induction HTrans as [ ? ? ? | ? ? ? Hr Htr IHtr].
   - auto.
   - apply IHtr; intros; auto.
     + apply IHr in Hr; destruct Hr; auto.
@@ -700,10 +705,14 @@ Qed.
 (*  - constructor. assumption. *)
 (* Qed.     *)
 (* (* end hide *) *)
+(** The equivalence between the definitions [SN] and [SN_ind] is proved by the next theorem. Since this is an important contribution of this work, we comment the proof steps in order to explain the proof. %\flavio{(rewrite)}% *)
 
-Lemma SN_indEquivSN {A:Type} {R : Red A} : forall t, SN_ind R t <-> SN R t.
+Theorem SN_indEquivSN {A:Type} {R : Red A} : forall t, SN_ind R t <-> SN R t.
 Proof.
+
+  (** Let [t] be an element of the set [A]. Since the proof is a biconditional, it is split into two parts. *)
   intro t; split.
+  
   - intro HSN_ind.
     induction HSN_ind.
     apply SNpatriarchal.
