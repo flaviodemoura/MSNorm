@@ -654,19 +654,15 @@ Qed.
 (* | SN_nf : NF R t -> SNalt R t  *)
 (* | SN_acc : (forall t', R t t' -> SNalt R t') -> SNalt R t. *)
 
-Theorem SNindP {A:Type} {R: Red A} {P: A -> Prop}
-: (forall t, (forall t', R t t' -> P t') -> SN_ind R t -> P t)
-  -> (forall t, SN_ind R t -> P t).
-Proof. Admitted. 
+(* Theorem SNindP {A:Type} {R: Red A} {P: A -> Prop} *)
+(* : (forall t, (forall t', R t t' -> P t') -> SN_ind R t -> P t) *)
+(*   -> (forall t, SN_ind R t -> P t). *)
+(* Proof. *)
 (*   intros IH t Ht. induction Ht. *)
-(*   - apply IH. *)
-(*    + intros. apply H in H0. inversion H0. *)
-(*    + constructor; assumption. *)
-(*   - apply IH. *)
-(*    + assumption. *)
-(*    + apply SN_acc. assumption. *)
+(*   apply IH. *)
+(*   - intros. apply H0 in H1. assumption. *)
+(*   - apply sn_acc. assumption. *)
 (* Qed. *)
-(* end hide *)
 
 (* Lemma SNaltPat {A:Type} {R: Red A} : patriarchal R (SNalt R). *)
 (* (* begin hide *) *)
@@ -708,13 +704,10 @@ Proof. Admitted.
 Lemma SN_indEquivSN {A:Type} {R : Red A} : forall t, SN_ind R t <-> SN R t.
 Proof.
   intro t; split.
-  - intro HSN_ind. (** Suppose that [SN_ind R t] and call this hypothesis [HSN_ind]. *)
-    inversion HSN_ind. (** This means that [forall b : A, R t b -> SN_ind R b]. Call this hypothesis H. *)
-    eapply SNindP.
-    + intros t' HredSN HSN.
-      apply SNpatriarchal.
-      apply HredSN.
-    + assumption.
+  - intro HSN_ind.
+    induction HSN_ind.
+    apply SNpatriarchal.
+    assumption.
   - intro HSN. (** Suppose [(SN r t)], and call this hypothesis [HSN]. *)
     
     unfold SN in HSN. (** By definition [(SN r t)] means that [forall P : A -> Prop, patriarchal R P -> P t]. *)
@@ -1106,6 +1099,8 @@ Qed.
 (** * Conclusion
 
      - This is part of a bigger project.
+     - Compatible versions of Coq
+     - General explanation of how to compile and generate documentation.
 
 *)
 
