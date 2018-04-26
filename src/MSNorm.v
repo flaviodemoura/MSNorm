@@ -16,7 +16,7 @@ The main result of this paper is the formalisation of a constructive formal proo
 (** * The Modular Strong Normalisation Theorem *)
 
 (**
-In this section, we present the Modular Strong Normalisation Theorem whose formalisation will be detailed in the next section. This is an abstract theorem about termination of reduction relations through the well known simulation technique %\cite{BN98}%. In order to fix notation, let [A] and [B] be sets. A relation from [A] to [B] is a subset of $A\times B$. If $R$ is a relation from [A] to [B] then we write $aRb$ instead of $(a,b) \in R$, and in this case, we say that $a$ %{\it reduces}% to $b$. If one uses arrow notation to represent relations, and $\to$ is a relation from [A] to [B] then $\leftarrow$ is the inverse relation from [B] to [A]. If $\to_1$ is a relation from $A$ to $B$, and $\to_2$ is a relation from $B$ to $C$ then the composition of $\to_1$ with $\to_2$, written $\to_1\cdot \to_2$, is a relation from $A$ to $C$. A relation from a set to itself is a %{\it reduction relation}%, i.e. a reduction relation is a subset of $A\times A$. If $\to_A$ is a reduction relation over $A$, then a %{\it reduction sequence}% is a finite or infinite sequence of the form $a \to_A a_1 \to_A a_2 \to_A \ldots$ A finite reduction $a \to_A a_1 \to_A a_2 \to_A \ldots$ \to_A a_n\ (n\geq 0)$ is a $n$-step reduction from $a$. We write $\to_A^+$ (resp. $\to_A^*$) for the transitive (resp. reflexive transitive) closure of $\to_A$. *) 
+In this section, we present the Modular Strong Normalisation Theorem whose formalisation will be detailed in the next section. This is an abstract theorem about termination of reduction relations through the well known simulation technique %\cite{BN98}%. In order to fix notation, let [A] and [B] be sets. A relation from [A] to [B] is a subset of $A\times B$. If $R$ is a relation from [A] to [B] then we write $aRb$ instead of $(a,b) \in R$, and in this case, we say that $a$ %{\it reduces}% to $b$. If one uses arrow notation to represent relations, and $\to$ is a relation from [A] to [B] then $\leftarrow$ is the inverse relation from [B] to [A]. If $\to_1$ is a relation from $A$ to $B$, and $\to_2$ is a relation from $B$ to $C$ then the composition of $\to_1$ with $\to_2$, written $\to_1\cdot \to_2$, is a relation from $A$ to $C$. A relation from a set to itself is a %{\it reduction relation}%, i.e. a reduction relation is a subset of $A\times A$. If $\to_A$ is a reduction relation over $A$, then a %{\it reduction sequence}% is a finite or infinite sequence of the form $a \to_A a_1 \to_A a_2 \to_A \ldots$ A finite reduction $a \to_A a_1 \to_A a_2 \to_A \ldots \to_A a_n\ (n\geq 0)$ is a $n$-step reduction from $a$. We write $\to_A^+$ (resp. $\to_A^*$) for the transitive (resp. reflexive transitive) closure of $\to_A$. *) 
 (* In Lengrand's work, the set of $\to$-strongly normalising elements is defined as the intersection of all subsets of [A] that are patriarchal, where a subset [B] of [A] is %{\it patriarchal}% if $\forall a \in A, \to(a) \subseteq B$ then $a \in B$.
 We follow the proof of %\cite{LengrandPhD,lengSNInd05}% that developed a constructive normalisation theory for proving termination of reduction relations, i.e. binary relations from a set to itself, in a constructive way.
 Instead of using the above definition of $SN^{\to}$, we decided to work directly with its standard inductive definition which is given by
@@ -616,11 +616,11 @@ Qed.
 (* Qed. *)
 (* (* end hide *) *)
 
-(** Although the above definition is not standard (cf. %\cite{terese03,BN98}%), it is equivalent to the standard inductive definition of strong normalisation for reduction relations given in (\ref{def:sn}). The corresponding Coq definition is given by: *)
+(** Although the above definition is not standard (cf. %\cite{terese03,BN98}%), it is equivalent to the standard inductive definition of strong normalisation for reduction relations given in (%\ref{def:sn}%). The corresponding Coq definition is given by: *)
 
 Inductive SN_ind {A:Type} (red: Red A) (a:A): Prop :=
   | sn_acc: (forall b, red a b -> SN_ind red b) -> SN_ind red a.
-(** So, given an element [a:A] and a reduction relation [red] over [A], [a] is strongly normalising w.r.t [red] if every [red]-reduct [b] of [a] is strongly normalising w.r.t [red]. This means that in order to conclude that [SN_ind red a], one has to prove first [(forall b, red a b -> SN_ind red b)]. Note that formally, this inductive definition gives only one direction of the biconditional (\ref{def:sn}), but the other direction can be obtained for free: *)
+(** So, given an element [a:A] and a reduction relation [red] over [A], [a] is strongly normalising w.r.t [red] if every [red]-reduct [b] of [a] is strongly normalising w.r.t [red]. This means that in order to conclude that [SN_ind red a], one has to prove first [(forall b, red a b -> SN_ind red b)]. Note that formally, this inductive definition gives only one direction of the biconditional (%\ref{def:sn}%), but the other direction can be obtained for free: *)
 
 Lemma SNstable {A} {red: Red A}: forall a, SN_ind red a -> forall b, red a b -> SN_ind red b.
 Proof.
@@ -628,7 +628,17 @@ Proof.
   inversion HSN; clear HSN.
   apply H; assumption. 
 Qed.
-(** This proof does the analysis of the definition [SN_ind] in order to match the hypothesis [SN_ind red a], named [HSN], through the tactic [inversion]. *)
+(** This proof does the analysis of the definition [SN_ind] in order to match the hypothesis [SN_ind red a], named [HSN], through the tactic [inversion]. In addition, it is important to know that Coq automatically generates an inductive principle for every inductive definition. For instance, the natural numbers [nat] are inductively defined as:  
+%\begin{alltt}
+Inductive nat : Set :=  O : nat | S : nat \(\to\) nat
+\end{alltt}%
+
+%\noindent% The corresponding induction principle, named %{\tt nat\_ind}\footnote{The name of the automatic induction principle generated follows the pattern {\tt inductive\_definition\_ind}, i.e. the name of the inductive definition followed by the string {\tt \_ind}.}%, is given by
+%\begin{alltt}
+forall P : nat \(\to\) Prop,
+P 0 \(\to\) (forall n : nat, P n \(\to\) P (S n)) \(\to\) forall n : nat, P n
+\end{alltt}%
+*)
 
 (* Lemma SNTransStable {A} {red: Red A}: forall a, SN_ind red a -> forall b, (trans red) a b -> SN_ind red b. *)
 (* (* begin hide *) *)
@@ -705,16 +715,20 @@ Qed.
 (*  - constructor. assumption. *)
 (* Qed.     *)
 (* (* end hide *) *)
-(** The equivalence between the definitions [SN] and [SN_ind] is proved by the next theorem. Since this is an important contribution of this work, we comment the proof steps in order to explain the proof. %\flavio{(rewrite)}% *)
+(** The equivalence between the definitions [SN] and [SN_ind] is proved by the next theorem. Since this is an important contribution of this work, we comment the proof steps in order to explain the proof in more detail. *)
 
 Theorem SN_indEquivSN {A:Type} {R : Red A} : forall t, SN_ind R t <-> SN R t.
 Proof.
 
-  (** Let [t] be an element of the set [A]. Since the proof is a biconditional, it is split into two parts. *)
+  (** The theorem has the the type [A] and a reduction relation [R] over [A] as implicit arguments, i.e. they are inferred from the context. Let [t] be an element of the set [A]. We split the proof in two steps. *)
   intro t; split.
   
   - intro HSN_ind.
+    (** The first step consists in proving that [SN_ind R t] implies [SN R t], and hence we suppose [SN_ind R t] that we call [HSN_ind]. *)
+    
     induction HSN_ind.
+    (** We proceed by induction on the hypothesis [HSN_ind]. *)
+    
     apply SNpatriarchal.
     assumption.
   - intro HSN. (** Suppose [(SN r t)], and call this hypothesis [HSN]. *)
