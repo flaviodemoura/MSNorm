@@ -24,6 +24,10 @@
 \newcommand{\cflavio}[2]{{\color{red} {#2}}}
 \newcommand{\raphael}[1]{{\color{blue} #1}}
 \newcommand{\craphael}[2]{{\underline{#1}}{\color{blue} {(#2)}}}
+\newcommand{\dan}[1]{{\color{brown} #1}}
+\newcommand{\cdan}[2]{{\color{brown} {#2}}}
+\usepackage{ulem}
+\newcommand{\odan}[1]{\text{\sout{\ensuremath{\dan{#1}}}}}
 
 
 \title{A constructive formalisation of the Modular Strong Normalisation Theorem}
@@ -57,6 +61,7 @@ Instituto de Informática, Universidade Federal de Goiás, Brazil \\
 % \addcontentsline{toc}{chapter}{Index}
 % \printindex
 
+\renewcommand{\em}{\it}
 \printbibliography
 
 \end{document}
