@@ -48,25 +48,52 @@ A few comments about Coq are at a place. In the above definition, [Inductive] is
 In order to present the Modular Strong Normalisation Theorem, we need to define the notions of strong and weak simulation. In the following definitions $A$ and $B$ are arbitrary sets:
 
 %\begin{definition}\label{def:sws}
-Let $\to$ be a relation from $A$ to $B$, $\to_A$ be a reduction relation over $A$  and $\to_B$ be a reduction relation over $B$. The reduction relation $\to_B$ {\it strongly} (resp. {\it weakly}) simulates $\to_A$ through $\to$ if $(\leftarrow \cdot \to_A) \subseteq (\to_B^+ \cdot \leftarrow)$ (resp. $(\leftarrow \cdot \to_A) \subseteq (\to_B^* \cdot \leftarrow)$). \flavio{Aqui pode ser interessante inserir uma figura para ilustrar estas definições.}
-\begin{tikzpicture}[scale=.75]
+Let $\to$ be a relation from $A$ to $B$, $\to_A$ be a reduction relation over $A$  and $\to_B$ be a reduction relation over $B$. The reduction relation $\to_B$ {\it strongly} (resp. {\it weakly}) simulates $\to_A$ through $\to$ if $(\leftarrow \cdot \to_A) \subseteq (\to_B^+ \cdot \leftarrow)$ (resp. $(\leftarrow \cdot \to_A) \subseteq (\to_B^* \cdot \leftarrow)$).
+\begin{center}
+\begin{tikzpicture}[scale=0.45]
 \draw[ultra thick,myblue] (0,0) circle [x radius=1.5cm, y radius=4cm]
-                    (6,0) circle [x radius=1.5cm, y radius=4cm];
-                    
+                     (6,0) circle [x radius=1.5cm, y radius=4cm];
+                     
 \node[font=\color{myblue}\Large\bfseries] at (0,5) {A};
 \node[font=\color{myblue}\Large\bfseries] at (6,5) {B};  
-
+ 
 \node (a1)  at (0,2)  {a};
 \node (a2) at (0,0)   {a'};
-
+ 
 \node[circle] (b1) at (6,2)  {b}; 
 \node[circle] (b2) at (6,-2)  {b'};
+\node[above= 0.0001cm of b2] (aux) {};
+\node[right= 0.00002cm of aux] (aux2) {};
+\node[left= 0.000002cm of aux2, red] (aux3) {+};
+ 
+\draw[->,red] (a1.east) .. controls +(up:0cm) and +(left:1cm) .. node[above,sloped] {R} (b1.west);
+\draw[->,red] (a2.east) .. controls +(up:0cm) and +(left:1cm) .. node[above,sloped] {R} (b2.west);
+\draw[->,red] (a1.south) .. controls +(up:0cm) and +(left:0cm) .. node[right] {A} (a2.north);
+\draw[->,red] (b1.south) .. controls +(up:0cm) and +(left:0cm) .. node[right] {B} (b2.north);
+
+
+\draw[ultra thick,myblue] (12,0) circle [x radius=1.5cm, y radius=4cm]
+                     (18,0) circle [x radius=1.5cm, y radius=4cm];
+                     
+\node[font=\color{myblue}\Large\bfseries] at (12,5) {A};
+\node[font=\color{myblue}\Large\bfseries] at (18,5) {B};  
+ 
+\node (a1)  at (12,2)  {a};
+\node (a2) at (12,0)   {a'};
+ 
+\node[circle] (b1) at (18,2)  {b}; 
+\node[circle] (b2) at (18,-2)  {b'};
+\node[above= 0.0001cm of b2] (aux) {};
+\node[right= 0.000002cm of aux] (aux2) {};
+\node[left= 0.000002cm of aux2, red] (aux3) {*};
+
 
 \draw[->,red] (a1.east) .. controls +(up:0cm) and +(left:1cm) .. node[above,sloped] {R} (b1.west);
 \draw[->,red] (a2.east) .. controls +(up:0cm) and +(left:1cm) .. node[above,sloped] {R} (b2.west);
-\draw[->,red] (a1.south) .. controls +(up:0cm) and +(left:0cm) .. node[above,sloped] {A} (a2.north);
-\draw[->,red] (b1.south) .. controls +(up:0cm) and +(left:0cm) .. node[above,sloped] {$B^+$} (b2.north);
+\draw[->,red] (a1.south) .. controls +(up:0cm) and +(left:0cm) .. node[right] {A} (a2.north);
+\draw[->,red] (b1.south) .. controls +(up:0cm) and +(left:0cm) .. node[right] {B} (b2.north);
 \end{tikzpicture}
+\end{center}
 \end{definition}%
 
 Now we are ready to state the Modular Strong Normalisation Theorem:
