@@ -649,6 +649,8 @@ Inductive nat : Set :=  O : nat | S : nat \(\to\) nat
 forall P : nat \(\to\) Prop,
 P 0 \(\to\) (forall n : nat, P n \(\to\) P (S n)) \(\to\) forall n : nat, P n
 \end{alltt}%
+
+So, in order to prove that a certain property %{\tt P}% holds for all %{\tt n: nat}%, one needs to prove that %{\tt P 0}% holds, and that if %{\tt P n}% holds then %{\tt P (S n)}% also holds.
 *)
 
 (* Lemma SNTransStable {A} {red: Red A}: forall a, SN_ind red a -> forall b, (trans red) a b -> SN_ind red b. *)
