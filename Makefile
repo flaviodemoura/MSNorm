@@ -39,15 +39,18 @@ html: Makefile $(VS) src/toc.html
 		-d ../html
 	cp src/toc.html html/
 
-# Assume-se o Linux como sistema operacional padrão
-pdf:    
-	xdg-open latex/MSNorm.pdf&
+PDF_OPEN = xdg-open latex/MSNorm.pdf&		
 
-# Caso o Sistema Operacional seja Mac OS, modifica-se a variável pdf
+ifeq ($(OS),Windows_NT) # Se o Sistema Operacional for Windows...
+else # Caso o Sistema Operacional seja Mac OS, modifica-se a variável pdf
+UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S), Darwin)
-pdf:
-	open -a Skim latex/MSNorm.pdf&
+PDF_OPEN = open -a Skim latex/MSNorm.pdf&
+endif
 endif
 
+# Assume-se o Linux como sistema operacional padrão
+pdf:    doc
+	$(PDF_OPEN)
 
 
