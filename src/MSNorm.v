@@ -63,13 +63,13 @@ Let $\to$ be a relation from $A$ to $B$, $\to_A$ be a reduction relation over $A
 \node[circle] (b1) at (6,2)  {b}; 
 \node[circle] (b2) at (6,-2)  {b'};
 \node[above= 0.0001cm of b2] (aux) {};
-\node[right= 0.00002cm of aux] (aux2) {};
-\node[left= 0.000002cm of aux2, red] (aux3) {+};
+\node[left= 0.00002cm of aux] (aux2) {};
+\node[right= 0.000002cm of aux2, red] (aux3) {+};
  
 \draw[->,red] (a1.east) .. controls +(up:0cm) and +(left:1cm) .. node[above,sloped] {R} (b1.west);
 \draw[->,red] (a2.east) .. controls +(up:0cm) and +(left:1cm) .. node[above,sloped] {R} (b2.west);
-\draw[->,red] (a1.south) .. controls +(up:0cm) and +(left:0cm) .. node[right] {A} (a2.north);
-\draw[->,red] (b1.south) .. controls +(up:0cm) and +(left:0cm) .. node[right] {B} (b2.north);
+\draw[->,red] (a1.south) .. controls +(up:0cm) and +(left:0cm) .. node[left] {A} (a2.north);
+\draw[->,red] (b1.south) .. controls +(up:0cm) and +(left:0cm) .. node[left] {B} (b2.north);
 
 
 \draw[ultra thick,myblue] (12,0) circle [x radius=1.5cm, y radius=4cm]
@@ -84,14 +84,14 @@ Let $\to$ be a relation from $A$ to $B$, $\to_A$ be a reduction relation over $A
 \node[circle] (b1) at (18,2)  {b}; 
 \node[circle] (b2) at (18,-2)  {b'};
 \node[above= 0.0001cm of b2] (aux) {};
-\node[right= 0.000002cm of aux] (aux2) {};
-\node[left= 0.000002cm of aux2, red] (aux3) {*};
+\node[left= 0.000002cm of aux] (aux2) {};
+\node[right= 0.000002cm of aux2, red] (aux3) {*};
 
 
 \draw[->,red] (a1.east) .. controls +(up:0cm) and +(left:1cm) .. node[above,sloped] {R} (b1.west);
 \draw[->,red] (a2.east) .. controls +(up:0cm) and +(left:1cm) .. node[above,sloped] {R} (b2.west);
-\draw[->,red] (a1.south) .. controls +(up:0cm) and +(left:0cm) .. node[right] {A} (a2.north);
-\draw[->,red] (b1.south) .. controls +(up:0cm) and +(left:0cm) .. node[right] {B} (b2.north);
+\draw[->,red] (a1.south) .. controls +(up:0cm) and +(left:0cm) .. node[left] {A} (a2.north);
+\draw[->,red] (b1.south) .. controls +(up:0cm) and +(left:0cm) .. node[left] {B} (b2.north);
 \end{tikzpicture}
 \end{center}
 \end{definition}%
@@ -566,23 +566,23 @@ Definition patriarchal {A} (red:Red A) (P:A -> Prop): Prop
 Definition SN {A:Type} (red:Red A) (a:A): Prop
   := forall P, patriarchal red P -> P a.
 
-(** Now, one has that [red] is patriarchal w.r.t the predicate [SN red]: *)
+(* (** Now, one has that [red] is patriarchal w.r.t the predicate [SN red]: *) *)
 
-Lemma SNpatriarchal {A} {red: Red A}: patriarchal red (SN red).
-(* begin hide *)
-Proof.
-  unfold patriarchal.
-  intros M H.
-  unfold SN in *.
-  intros P H1.
-  unfold patriarchal in H1.
-  apply H1.
-  intros y H0.
-  apply H.
-  + assumption.
-  + assumption.
-Qed.
-(* end hide *)
+(* Lemma SNpatriarchal {A} {red: Red A}: patriarchal red (SN red). *)
+(* (* begin hide *) *)
+(* Proof. *)
+(*   unfold patriarchal. *)
+(*   intros t H. *)
+(*   unfold SN in *. *)
+(*   intros P Hpat. *)
+(*   unfold patriarchal in Hpat. *)
+(*   apply Hpat. *)
+(*   intros t' Hred. *)
+(*   apply H. *)
+(*   + assumption. *)
+(*   + assumption. *)
+(* Qed. *)
+(* (* end hide *) *)
 
 (** Most of the Coq code presented so far can be found at %{\small \url{http://www.lix.polytechnique.fr/~lengrand/Work/HDR/Coq/First-order/NormalisationTheory.v}}%. The definitions are simple and straightforward, and follow the standard way of defining relations in Coq %\footnote{\url{https://coq.inria.fr/library/Coq.Relations.Relation_Definitions.html}}%. The lemma [SNpatriarchal] above is the sole non trivial lemma from [NormalisationTheory.v] that is used in this work; two other lemmas are [tailtransit] and [transSub]. Nevertheless, the proof code is not exactly the same because the library [ssreflect] is used by Lengrand, and since this work is part of a bigger formalisation that aims to prove the strong normalisation property for a calculus with explicit substitutions and whose framework does not use [ssreflect], the proofs in this file does not use any library other than the ones automatically loaded by Coq at startup. *)
 
@@ -678,6 +678,15 @@ P 0 \(\to\) (forall n : nat, P n \(\to\) P (S n)) \(\to\) forall n : nat, P n
 \end{alltt}%
 
 So, in order to prove that a certain property %{\tt P}% holds for all %{\tt n: nat}%, one needs to prove that %{\tt P 0}% holds, and that if %{\tt P n}% holds then %{\tt P (S n)}% also holds.
+
+The induction principle generated for [SN_ind] is given by 
+%\begin{alltt}
+ forall (A : Type) (red : Red A) (P : A -> Prop),
+ (forall a : A,
+ (forall b : A, red a b -> SN_ind red b) ->
+ (forall b : A, red a b -> P b) -> P a) -> forall a : A, SN_ind red a -> P a\end{alltt}%
+
+So, in order to prove that a certain property holds for all [a:A] in 
 *)
 
 (* Lemma SNTransStable {A} {red: Red A}: forall a, SN_ind red a -> forall b, (trans red) a b -> SN_ind red b. *)
@@ -755,23 +764,27 @@ Qed.
 (*  - constructor. assumption. *)
 (* Qed.     *)
 (* (* end hide *) *)
-(** The equivalence between the definitions [SN] and [SN_ind] is proved by the next theorem. Since this is an important contribution of this work, we comment the proof steps in order to explain the proof in more detail. *)
+(** The equivalence between the definitions [SN] and [SN_ind] is proved by the next theorem. Since this is an important contribution of this work, we comment the proof steps in order to explain the proof in more detail. Note that the type [A] and a reduction relation [R] over [A] as implicit arguments, i.e. they are inferred from the context. *)
 
 Theorem SN_indEquivSN {A:Type} {R : Red A} : forall t, SN_ind R t <-> SN R t.
 Proof.
-
-  (** The theorem has the the type [A] and a reduction relation [R] over [A] as implicit arguments, i.e. they are inferred from the context. Let [t] be an element of the set [A]. We split the proof in two steps. *)
-  intro t; split.
+  intro t; split. (** %{\color{blue}  Let}% [t] %{\color{blue}be an element of the set}% [A]%{\color{blue}. We split the proof into two steps.}% *)
   
-  - intro HSN_ind.
-    (** The first step consists in proving that [SN_ind R t] implies [SN R t], and hence we suppose [SN_ind R t] that we call [HSN_ind]. *)
+  - intro HSN_ind.  (** %{\color{blue} First, we need to prove that}% [SN_ind R t] %{\color{blue}implies}% [SN R t]. %{\color{blue}So, we are assuming that}% [SN_ind R t]%{\color{blue}, and we label this assumption as}% [HSN_ind]. *)
     
-    induction HSN_ind.
-    (** We proceed by induction on the hypothesis [HSN_ind]. *)
+    induction HSN_ind. (** %{\color{blue}We proceed by induction on the hypothesis}% [HSN_ind]. %{\color{blue} This corresponds to the application of the generated induction principle}% [SN_ind_ind]%{\color{blue}, in which, the property}% [P] %{\color{blue} is instantiated with}% [SN R]. %{\color{blue}Therefore, we need to prove}% [SN R a], %{\color{blue} for a given}% [a:A]%{\color{blue}, assuming that it holds for all one}% [R]%{\color{blue}-step descendents of}% [a]. *)
+
+    unfold SN. unfold patriarchal. (** %{\color{blue}Unfolding the definition of}% [SN]%{\color{blue}, one has to prove that}% [forall P : A -> Prop, patriarchal R P -> P a] %{\color{blue}which, in turn, means that our goal is}% [forall P : A -> Prop, (forall x : A, (forall y : A, R x y -> P y) -> P x) -> P a]. *)
     
-    apply SNpatriarchal.
-    assumption.
-  - intro HSN. (** Suppose [(SN r t)], and call this hypothesis [HSN]. *)
+    intros P Hpat. (** %{\color{blue}Let}% [P] %{\color{blue}be a predicate over}% [A]%{\color{blue}, and label}% [Hpat] %{\color{blue}the hypothesis}% [forall x : A, (forall y : A, R x y -> P y) -> P x]. %{\color{blue}Therefore, we need to prove}% [P a]. *)
+    
+    apply Hpat. (** %{\color{blue}Now, using {\it modus ponens} with the instance}% [(forall y : A, R a y -> P y) -> P a] %{\color{blue}of}% [Hpat]%{\color{blue}, the current goal reduces to}% [forall y : A, R a y -> P y]%{\color{blue}, i.e. we need to prove that all one-step}% [R]%{\color{blue}-reduct of}% [a] %{\color{blue}hold for the predicate}% [P]. *)
+    
+    intros b Hred. (** %{\color{blue}Let}% [b] %{\color{blue}be a one-step}% [R]%{\color{blue}-reduct of}% [a]. *)
+    
+    apply H0; assumption. (** %{\color{blue}The hypothesis}% [H0] allows us to conclude. *)
+    
+  - intro HSN. (** %{\color{blue} On the other direction, suppose that}% [(SN r t)]%{\color{blue}, and call this hypothesis}% [HSN]. *)
     
     unfold SN in HSN. (** By definition [(SN r t)] means that [forall P : A -> Prop, patriarchal R P -> P t]. *)
     
