@@ -784,30 +784,34 @@ Proof.
     
     apply H0; assumption. (** %{\color{blue}The hypothesis}% [H0] allows us to conclude. *)
     
-  - intro HSN. (** %{\color{blue} On the other direction, suppose that}% [(SN r t)]%{\color{blue}, and call this hypothesis}% [HSN]. *)
+  - intro HSN. (** %{\color{blue} On the other direction, suppose that}% [SN r t]%{\color{blue}, and call this hypothesis}% [HSN]. *)
     
-    unfold SN in HSN. (** By definition [(SN r t)] means that [forall P : A -> Prop, patriarchal R P -> P t]. *)
+    unfold SN in HSN. (** %{\color{blue}By definition}% [SN r t] %{\color{blue}means that}% [forall P : A -> Prop, patriarchal R P -> P t]. *)
     
-    unfold patriarchal in HSN. (** where [patriarchal] means that [(forall x : A, (forall y : A, R x y -> P y) -> P x)]. *)
+    unfold patriarchal in HSN. (** %{\color{blue}where}% [patriarchal] %{\color{blue}means that}% [(forall x : A, (forall y : A, R x y -> P y) -> P x)]. *)
     
-    apply HSN. (** Now we can instantiate the predicate [P] in[HSN] with [SN_ind R] and then we need to prove that [forall x : A, (forall y : A, R x y -> SN_ind R y) -> SN_ind R x]. *)
+    apply HSN. (** %{\color{blue}Now we can instantiate the predicate}% [P] %{\color{blue}in the hypothesis}% [HSN] %{\color{blue}with}% [SN_ind R] %{\color{blue}and then we need to prove that}% [forall x : A, (forall y : A, R x y -> SN_ind R y) -> SN_ind R x]. *)
 
-    intros x HSN_ind. (** To do so, let [x:A] and call [HSN_ind] the hypothesis [forall y : A, R x y -> SN_ind R y], and prove that [SN_ind R x]. *)
+    intros x HSN_ind. (** %{\color{blue}To do so, let}% [x:A] %{\color{blue}and call}% [HSN_ind] %{\color{blue}the hypothesis}% [forall y : A, R x y -> SN_ind R y]%{\color{blue}, and prove that}% [SN_ind R x]. *)
 
-    apply sn_acc. (** Applying the definition of [SN_ind], i.e. the constructor [sn_acc], we need to prove that [forall y : A, R x y -> SN_ind R y] *)
+    apply sn_acc. (** %{\color{blue}Applying the definition of}% [SN_ind]%{\color{blue}, i.e. the constructor}% [sn_acc,]%{\color{blue} we need to prove that}% [forall y : A, R x y -> SN_ind R y] *)
 
-    assumption. (** which is exactly the hypothesis [HSN_ind], and we conclude. *)
+    assumption. (** %{\color{blue}which is exactly the hypothesis}% [HSN_ind]%{\color{blue}, and we conclude.}% *)
 Qed.
 
-(** ** The Main Theorem *)
+(** ** The Main Theorem 
 
-(** Now suppose that we have two reduction relations over [A], say [red1] and [red2], a relation [R] from [A] to [B] and a reduction relation [red] over [B]. If [red1] is weakly simulated by [red] through [R], and [red2] is strongly simulated by [red] through [R] then the composition [red1 # red2] is strongly simulated by [red] through [R]: *)
+In this section, we present the main steps of the formal proof of the Modular Strong Normalisation Theorem.
+*)
 
+
+
+(* Now suppose that we have two reduction relations over [A], say [red1] and [red2], a relation [R] from [A] to [B] and a reduction relation [red] over [B]. If [red1] is weakly simulated by [red] through [R], and [red2] is strongly simulated by [red] through [R] then the composition [red1 # red2] is strongly simulated by [red] through [R]: *)
+(* begin hide *)
 Lemma WeakStrongSimul {A B} (redA1 redA2: Red A) (redB: Red B) (R: Rel A B):
   WeakSimul redA1 redB R
   -> StrongSimul redA2 redB R
   -> StrongSimul (redA1 # redA2) redB R.
-(* begin hide *)
 Proof.
   intros H1 H2.
   unfold StrongSimul in *.
@@ -842,11 +846,9 @@ Proof.
     + constructor.
       apply (tailtransit b); assumption.
 Qed. 
-(* end hide *)
 
 Lemma SimulWeakTrans {A B} (redA: Red A) (redB: Red B) (R: Rel A B)
 : WeakSimul redA redB R -> WeakSimul (trans redA) redB R.
-(* begin hide *)
 Proof.
   unfold WeakSimul.
   unfold Sub in *.
@@ -869,11 +871,9 @@ Proof.
     + apply (refltailtransit b0); assumption.
     + assumption.
 Qed.
-(* end hide *)
 
 Lemma SimulWeakReflTrans {A B} (redA: Red A) (redB: Red B) (R: Rel A B)
 : WeakSimul redA redB R -> WeakSimul (refltrans redA) redB R.
-(* begin hide *)
 Proof.
   unfold WeakSimul.
   unfold Sub in *.
@@ -894,7 +894,6 @@ Proof.
     apply HWTrans.
     apply compose with a; assumption.
 Qed.  
-(* end hide *)
 
 (* LENGRAND: Strong normalisation by simulation:
 Assume redA is strongly simulated by redB through R.
@@ -903,7 +902,6 @@ then a is SN for redA. TBD *)
 
 Theorem SNbySimul {A B} {redA: Red A} {redB: Red B} {R: Rel A B}:
 StrongSimul redA redB R -> forall a, Image (inverse R) (SN_ind redB) a -> SN_ind redA a.
-(* begin hide *)
 Proof.
   intros Hstrong a Hinv.
   inversion Hinv; subst. clear Hinv.
@@ -933,14 +931,10 @@ Proof.
   - inversion H2; subst. clear H2.
     assumption.
 Qed.
-(* end hide *)
-
-(** [RCSimul] TBD *)
 
 Lemma RCSimul {A B} {redA red'A: Red A} {redB: Red B} {R: Rel A B}:
   (StrongSimul red'A redB R) -> (WeakSimul redA redB R) ->
   (StrongSimul ((refltrans redA) # red'A) redB R).
-(* begin hide *)
 Proof.
   intros Hst Hwk.
   assert (Hrfl:  WeakSimul (refltrans redA) redB R).
@@ -950,13 +944,11 @@ Proof.
   clear Hwk.
   apply WeakStrongSimul; assumption.
 Qed.
-(* end hide *)
 
 Inductive Id {A} : Red A :=
   identity: forall a:A, Id a a.
 
 Lemma HId {A} (red: Red A): forall a, SN_ind red a <-> Image (inverse Id) (SN_ind red) a.
-(* begin hide *)
 Proof.
   split.
   - intros H.
@@ -969,9 +961,6 @@ Proof.
     inversion H; subst. clear H.
     assumption.
 Qed.
-(* end hide *)
-
-(** Union of reduction relations *)
 
 Inductive union {A} (red1: Red A)(red2: Red A) : Red A :=
  | union_left: forall a b,  red1 a b -> union red1 red2 a b
@@ -981,7 +970,6 @@ Notation "R1 \un R2" := (union R1 R2) (at level 40).
 
 Lemma UnionStrongSimul {A} {redA red'A: Red A}:
   StrongSimul redA (redA \un red'A) Id.
-(* begin hide *)
 Proof.
   unfold StrongSimul.
   unfold Sub.
@@ -994,11 +982,9 @@ Proof.
     apply union_left; assumption.
   - apply inverseof. apply identity.
 Qed.
-(* end hide *)
 
 Lemma UnionReflStrongSimul {A} {redA red'A: Red A}:
   StrongSimul ((refltrans redA) # red'A) (redA \un red'A) Id.
-(* begin hide *)
 Proof.
   unfold StrongSimul.
   unfold Sub.
@@ -1041,10 +1027,8 @@ Proof.
            assumption.
       * apply inverseof. apply identity.
 Qed.
-(* end hide *)
 
 Lemma inclUnion {A} {redA red'A: Red A}: forall a, (SN_ind redA a) -> (forall b, (((refltrans redA) # red'A) a b) -> SN_ind (redA \un red'A) b) -> (SN_ind (redA \un red'A) a).
-(* begin hide *)
 Proof.
   intros a HSN.
   induction HSN. clear H.
@@ -1069,11 +1053,9 @@ Proof.
     + apply reflex.
     + assumption.
 Qed.
-(* end hide *)
 
 Lemma stabComp {A} {redA: Red A}: forall a,
     SN_ind redA a -> forall b, refltrans redA a b -> SN_ind redA b.
-(* begin hide *)
 Proof.
   intros a HSN b Hrefl.
   generalize dependent HSN.
@@ -1086,7 +1068,6 @@ Proof.
       apply IHtrans.
       apply SNstable with a; assumption. 
 Qed.
-(* end hide *)
 
 Lemma SNinclUnion {A} {redA red'A: Red A}: (forall b, SN_ind redA b -> forall c, red'A b c -> SN_ind redA c) -> (forall a, (SN_ind ((refltrans redA) # red'A) a) -> (SN_ind redA a) -> (SN_ind (redA \un red'A) a)).
 (* begin hide *)
@@ -1106,13 +1087,11 @@ Proof.
       }
       apply Hstable with b0; assumption.
 Qed.
-(* end hide *)
 
 Lemma SNunion {A} {redA red'A: Red A}:
   (forall b, SN_ind redA b -> forall c, red'A b c -> SN_ind redA c) ->
   forall a, (SN_ind (redA \un red'A) a) <->
        (SN_ind ((refltrans redA) # red'A) a) /\ ((SN_ind redA) a).
-(* begin hide *)
 Proof. 
   intros Hstable a; split.
   - intro HSN. split.
@@ -1141,15 +1120,16 @@ Proof.
 Qed.
 (* end hide *)
 
-(** The main theorem of this formalisation is named [ModStrNorm], after modular strong normalisation theorem TBD *)
+(** Now we are ready to present the Modular Strong Normalisation Theorem. The general idea of the proof was presented in Section ?? Here, we comment the code to give an idea of how it is done in Coq.  *)
 
 Theorem ModStrNorm {A B} {redA red'A: Red A} {redB: Red B} {R: Rel A B}:
   (StrongSimul red'A redB R) -> (WeakSimul redA redB R) ->
   (forall b: A, SN_ind redA b) -> forall a, Image (inverse R) (SN_ind redB) a ->
                                  SN_ind (redA \un red'A) a.
-(* begin hide *)
 Proof.
-  intros Hstrong Hweak HSN a HImage.
+  intros Hstrong Hweak HSN a HImage. (** %{\color{blue} Let}% [A] %{\color{blue}and}% [B] %{\color{blue}be types}%, [redA] %{\color{blue}and}% [red'A] %{\color{blue}be two reduction relations over}% [A]%{\color{blue},}% [redB] %{\color{blue}a reduction relation over}% [B]%{\color{blue}, and}% [R] %{\color{blue}a relation from}% [A] %{\color{blue}to}% [B]%{\color{blue}. Assume that}% [red'A] %{\color{blue}is strongly simulated by}% [redB] %{\color{blue}through}% [R]%{\color{blue}, that}% [redA] %{\color{blue}is weakly simulated by}% [redB] %{\color{blue}through}% [R]%{\color{blue}, that every}% [b:A] %{\color{blue}is such that}% [SN_ind redA b]%{\color{blue}, and that every}% [a:A] %{\color{blue}is the image of }%  *)
+
+  
   assert(Hsplit: SN_ind (redA \un red'A) a <->
                     SN_ind (refltrans redA # red'A) a /\ SN_ind redA a).
   {
