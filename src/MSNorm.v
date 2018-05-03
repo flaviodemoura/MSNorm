@@ -1133,11 +1133,48 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Conclusion
+(** * Conclusion *)
 
-     - This is part of a bigger project.
-     - Compatible versions of Coq
-     - General explanation of how to compile and generate documentation.
+(** In this work we presented a constructive formalisation of the
+    Modular Strong Normalisation Theorem in the Coq Proof
+    Assistant. The proof is constructive in the sense that it does not
+    use the principle of proof by contradiction or any other classical
+    rule. In addition, only the standard Coq libraries, that are
+    loaded at startup, are used. The constructive approach is not
+    the standard way to prove termination of a reduction relation. In
+    fact, the most common way to prove strong normalisation is by
+    defining termination as the absence of infinite reductions, and
+    using proof by contradiction as the reasoning tool. For instance,
+    a classical proof of the Modular Strong Normalisation Theorem is
+    available at %\cite{kes09}%. Constructive proofs are usually more
+    difficult and elaborate than classical ones, but the former are
+    preferred in the context of Computer Science.
+
+    The Modular Strong Normalisation Theorem is an abstract result
+    that states the conditions for the union of two reduction
+    relations to be terminating. It is a non-trivial result in
+    abstract reduction systems that uses the well known technique of
+    termination by simulation, i.e. the termination of a reduction
+    system is obtained by simulating its steps via another reduction
+    relation that is known to be terminating.
+
+    The proofs developed in this formalisation follow the ideas
+    presented in %\cite{LengrandPhD}%, where a theory of constructive
+    normalisation is developed. This theory is based on a definition
+    of strong normalisation that ... Instead of using Lengrand's
+    definition, we decided to use the standard inductive definition of
+    strong normalisation. A formal proof of the equivalence between
+    these definitions is also provided. In this way, we believe that
+    our presentation is easy to follow and ...
+
+    An interesting application of the Modular Strong Normalisation
+    Theorem is given in %\cite{kes09}% to establish the termination of
+    a calculus with explicit substitutions. Termination of calculus
+    with explicit substitutions is a challenging problem that...
+
+     - This is part of a bigger project.  Compatible versions of Coq
+     - General explanation of how to compile and generate
+     - documentation.
 
 *)
 
