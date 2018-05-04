@@ -1,5 +1,0 @@
-(** * Introduction
-
-In this work ...
-
-*)

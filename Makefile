@@ -1,9 +1,7 @@
-MODULES_PROSE := Intro
-MODULES_CODE  := NormalisationTheory MSNorm
-MODULES       := $(MODULES_PROSE) $(MODULES_CODE) Conclusion
+MODULES  := MSNorm
 VS            := $(MODULES:%=src/%.v)
 TEX           := $(MODULES:%=latex/%.v.tex)
-VS_DOC        := $(MODULES_DOC:%=%.v)
+VS_DOC        := $(MODULES:%=%.v)
 
 .PHONY: coq clean doc html pdf
 
@@ -19,9 +17,9 @@ Makefile.coq: Makefile $(VS)
 clean:: Makefile.coq
 	$(MAKE) -f Makefile.coq clean
 	rm -f Makefile.coq .depend 
-	cd latex; rm -f *.sty *.log *.aux *.dvi *.v.tex *.toc *.bbl *.blg *.idx *.ilg *.pdf *.ind *.out *.fls *.gz *.fdb_latexmk
+	cd latex; rm -f *.log *.aux *.dvi *.v.tex *.toc *.bbl *.blg *.idx *.ilg *.pdf *.ind *.out *.fls *.gz *.fdb_latexmk
 
-doc: latex/MSNorm.pdf html
+doc: latex/MSNorm.pdf
 
 COQDOC = coqdoc -R . MSNorm
 
@@ -41,6 +39,18 @@ html: Makefile $(VS) src/toc.html
 		-d ../html
 	cp src/toc.html html/
 
-pdf:
-	open -a Skim latex/MSNorm.pdf&
+PDF_OPEN = xdg-open latex/MSNorm.pdf&		
+
+ifeq ($(OS),Windows_NT) # Se o Sistema Operacional for Windows...
+else # Caso o Sistema Operacional seja Mac OS, modifica-se a variável pdf
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S), Darwin)
+PDF_OPEN = open -a Skim latex/MSNorm.pdf&
+endif
+endif
+
+# Assume-se o Linux como sistema operacional padrão
+pdf:    doc
+	$(PDF_OPEN)
+
 

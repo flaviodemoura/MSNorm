@@ -1,15 +1,46 @@
-\documentclass[12pt]{llncs}
-\usepackage[]{inputenc}
+\documentclass[a4paper,envcountsame]{llncs}
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage[british]{babel}
 \usepackage{lmodern}
 %\usepackage{fullpage}
 \usepackage{coqdoc}
 \usepackage{amsmath,amssymb}
+\usepackage{amsfonts, color}
 \usepackage{url}
+\usepackage{alltt}
 \usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage[backend=bibtex,style=numeric-comp,sorting=none,firstinits=true]{biblatex}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,fit,arrows}
 
-\title{Formalising a constructive proof of the Modular Strong Normalisation Theorem}
-\author{TBD}
+\definecolor{myblue}{RGB}{56,94,141}
+
+\bibliography{MSNorm.bib}
+
+
+\newcommand{\flavio}[1]{{\color{red} #1}}
+\newcommand{\cflavio}[2]{{\color{red} {#2}}}
+\newcommand{\raphael}[1]{{\color{blue} #1}}
+\newcommand{\craphael}[2]{{\underline{#1}}{\color{blue} {(#2)}}}
+\newcommand{\dan}[1]{{\color{brown} #1}}
+\newcommand{\cdan}[2]{{\color{brown} {#2}}}
+\newcommand{\fab}[1]{{\color{magenta} #1}}
+\newcommand{\cfab}[2]{{\color{magenta} {#2}}}
+\usepackage{ulem}
+\newcommand{\odan}[1]{\text{\sout{\ensuremath{\dan{#1}}}}}
+
+
+\title{A constructive formalisation of the Modular Strong Normalisation Theorem}
+\author{Flávio L. C. de Moura\inst{1} \and Daniel L. Ventura\inst{2} \and
+Raphael S. Ramos\inst{1} \and Fabrício S. Paranhos\inst{2}}
+
+\institute{Departamento de Ciência da Computação, Universidade de Brasília, Brazil\\
+\email{flaviomoura@unb.br,raphael.soares.1996@gmail.com}
+\and
+Instituto de Informática, Universidade Federal de Goiás, Brazil \\
+\email{daniel@inf.ufg.br,paranhos.s.f@gmail.com}}
 
 \makeindex
 
@@ -18,27 +49,28 @@
 \maketitle
 
 \begin{abstract}
-  Modularity is a desirable property of rewriting systems because it allows a combined system to inherit the properties of its components. Termination is not modular, nevertheless under certain restrictions modularity can be recovered. In this work we present a formalisation of a proof of a modular strong normalisation theorem in the Coq proof assistant. The formalised proof is constructive unlikely the standard technique used in most strong normalising proofs.
+  Modularity is a desirable property of rewrite systems because it
+  allows a combined system to inherit the properties of its
+  components. Termination is not modular, nevertheless under certain
+  restrictions modularity can be recovered. In this work we present a
+  formalisation of the Modular Strong Normalisation Theorem in the Coq
+  proof assistant. The formalised proof is constructive in the sense
+  that it does not rely on classical logic, which is interesting from
+  the computational point of view due to the corresponding algorithmic
+  content of proofs.
 \end{abstract}
-
-\thispagestyle{empty}
-\mbox{}\vfill
-
-%\phantomsection
-%\tableofcontents
-
-\include{Intro.v}
-\include{NormalisationTheory.v}
 \include{MSNorm.v}
-\include{Conclusion.v}
 
-\clearpage
+%\clearpage
 %\addcontentsline{toc}{chapter}{Bibliography}
-\bibliographystyle{plain}
-%\bibliography{/homedir/Dropbox/bibliography/references.bib}
+%\bibliographystyle{plain}
+%\bibliography{MSNorm.bib}
 
 % \clearpage
 % \addcontentsline{toc}{chapter}{Index}
 % \printindex
+
+\renewcommand{\em}{\it}
+\printbibliography
 
 \end{document}
