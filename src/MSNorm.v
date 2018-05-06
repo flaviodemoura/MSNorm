@@ -14,7 +14,10 @@
     explicit substitutions %\cite{Mellies95,Gu99}%. A calculus with
     explicit substitutions %\cite{Lins86,ACCL91,kes09}% presents some
     formalisation for the substitution operation, defined as a
-    meta-operation in the $\lambda$-calculus, and the PSN property
+    meta-operation in the $\lambda$-calculus. In other words, for the 
+    rule $(\lambda{x}. M) N \to_{\beta} M [x:=N]$, $M [x:=N]$ represents
+    a term in such a calculus where the substitution is defined through a 
+    small-step semantics. PSN property in this context
     guarantees that any strongly normalising term, i.e. terminating,
     in the $\lambda$-calculus is also strongly normalising in the
     calculus with explicit substitutions.
@@ -23,7 +26,8 @@
     the union of two reduction relations over a set $A$ to be PSN
     through its relation of simulation to a reduction relation over
     some set $B$ (cf. %~\cite{LengrandPhD,kes09}%). In particular,
-    when the reduction relation over $B$ is terminating, the theorem
+    when the reduction relation over $B$ is terminating 
+    %\dan{and the simulation relation is complete}%, the theorem
     guarantees that both reduction over $A$ are terminating and so its
     union, i.e. that termination is modular.
 
@@ -48,7 +52,7 @@
     normalisation, is already formalised in Coq %\footnote{
     \scriptsize
     \url{http://www.lix.polytechnique.fr/~lengrand/Work/HDR/Coq/First-order/NormalisationTheory.v}}%. In
-    a certain sense, this work can be seen a non-trivial expansion of
+    a certain sense, this work can be seen as a non-trivial expansion of
     the normalisation theory formalised by Lengrand. In fact, the
     strong normalisation property defined in %\cite{LengrandPhD}% uses
     a specialized inductive principle that should hold for all
