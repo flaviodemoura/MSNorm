@@ -444,7 +444,8 @@ Proof.
 Qed.
 (** This proof does the analysis of the definition [SN_ind] in order
     to match the hypothesis [SN_ind red a], named [HSN], through the
-    tactic [inversion].
+    %\odan{tactic}% [inversion] %\dan{tactic}%. %\dan{(para quem nao conhece 
+    o assistente a explicacao eh obscura mas nao sei se vale a pena explica-la com mais detalhes como nas posteriores.)}%
 
     The induction principle automatically generated for [SN_ind],
     called [SN_ind_ind], is as follows:
@@ -457,9 +458,9 @@ Qed.
 
     \end{alltt}%
 
-    So, in order to conclude that a certain property holds for all
+    %\cdan{So, in order to conclude that a certain property holds for all
     [a:A] such that [SN_ind red a], we need to prove that [forall b : A,
-    red a b -> SN_ind red b] and [(forall b : A, red a b -> P b) -> P a]. In
+    red a b -> SN_ind red b] and [(forall b : A, red a b -> P b) -> P a]}{So, in order to  prove some property [P] holds for any [a':A] strong normalising w.r.t. [red], we need to prove that [P] holds for any strong normalising [a:A] given it holds for every [red]-reduct [b:A] of [a].}% %\dan{(na verdade o que temos no principio de inducao eh, supondo que 'a' seja SN e 'P' seja patriarchal, temos que P vale para a. Como isso se compara com a definicao de SN do Lengrand ?)}%. In
     the proof of theorem [SN_indEquivSN], we use this induction
     principle. *)
 (* begin hide *)
@@ -477,29 +478,29 @@ Qed.
 (** The definitions [SN] and [SN_ind] are equivalent as stated by the
     next theorem. Since this proof is an important contribution of
     this work, we comment the proof steps in order to explain it in
-    more detail. Note that the type [A] and a reduction relation [R]
+    more detail. Note that %\odan{the}% type [A] and a reduction relation [R]
     over [A] are given as implicit arguments, i.e. they are inferred
     from the context. *)
 
 Theorem SN_indEquivSN {A:Type} {R : Red A} : forall t, SN_ind R t <-> SN R t.
 Proof.
   intro t; split. (** %{\color{blue} We start by considering}% [t]
-  %{\color{blue}to be an element of the set}% [A]%{\color{blue}, or
+  %{\color{blue}to be an element of set}% [A]%{\color{blue}, or
   more precisely, let}% [t] %{\color{blue} be an element of type}%
   [A]. %{\color{blue}We split the proof into two steps.}% *)
   
   - intro HSN_ind.  (** %{\color{blue} First, we need to prove that}%
     [SN_ind R t] %{\color{blue}implies}% [SN R t]. %{\color{blue}So,
-    we are assuming that}% [SN_ind R t]%{\color{blue}, and we label
-    this assumption as}% [HSN_ind]. *)
+    we \cdan{are assuming that}{assume}}% [SN_ind R t]%{\color{blue} and we label
+    \cdan{this assumption}{it} as}% [HSN_ind]. *)
     
     induction HSN_ind. (** %{\color{blue}We proceed by induction on
     the hypothesis}% [HSN_ind]. %{\color{blue} This corresponds to the
     application of the induction principle}%
-    [SN_ind_ind]%{\color{blue} as explained in the previous page, in
-    which, the property}% [P] %{\color{blue} is instantiated with}%
+    [SN_ind_ind]%{\color{blue} as explained \cdan{in the previous page}{above}, in
+    which \odan{the} property}% [P] %{\color{blue} is instantiated with}%
     [SN R]. %{\color{blue}Therefore, we need to prove}% [SN R a],
-    %{\color{blue} for a given}% [a:A]%{\color{blue}, assuming that it
+    %{\color{blue} for a given}% [a:A]%{\color{blue}, assuming \odan{that} it
     holds for all one-step}% [R]%{\color{blue}-descendents of}%
     [a]%{\color{blue}, i.e. assuming that}% [forall b : A, R a b -> SN R
     b]. %{\color{blue} Call this assumption}% [H0]. %{\color{blue}
@@ -512,7 +513,7 @@ Proof.
     [SN]%{\color{blue}, one has to prove that}% [forall P : A -> Prop,
     patriarchal R P -> P a]. *)
 
-    intros P Hpat. (** %{\color{blue} So, given a predicate a}%
+    intros P Hpat. (** %{\color{blue} So, given a}%
     [R]%{\color{blue}-patriarchal predicate}% [P]%{\color{blue}, we
     need to prove that}% [a] %{\color{blue}holds for}% [P]. *)
     
