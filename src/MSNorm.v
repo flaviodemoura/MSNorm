@@ -237,29 +237,32 @@ A few comments about Coq are at a place. In the above definition, [Inductive] is
 
 (** * The Formalisation *)
 
-(** In this section we present the details of the formalisation of the
+(** In this section we present %\cdan{the details of the formalisation}{the formalisation details}% of the
     Modular Strong Normalisation Theorem in the Coq Proof
     Assistant. The first important point is that our proof is
     constructive, i.e. it does not use classical reasoning such as the
     law of excluded middle, double negation elimination or proof by
     contradiction. In addition, no additional library other then the
-    ones that are automatically loaded during Coq start up are used.
+    ones that are automatically loaded during Coq start up are used 
+    %\dan{(in the standard distribution ?) de qualquer forma a justificativa 
+    me parece estranha.}%.
 
     In terms of notation, sets are coded as arbitrary types in such a
     way that the membership relation $a \in A$ ($a$ is an element of
     the set $A$) is represented as $a:A$ ($a$ has type
-    $A$). (cf. %\cite{Geu09}%).
+    $A$). %\dan{Also, n-ary predicates and functions are defined in a 
+    curryfied version}% (cf. %\cite{Geu09}%).
 
     We start with some basic definitions in order to make Coq notation
-    clear. Note that this paper is written directly from a Coq script
+    clear%\cdan{. Note that t}{\footnote{\dan{This paper is written directly from a Coq script
     file, therefore, the Coq code presented is the real code of the
-    formalisation. A relation from $A$ to $B$ is defined as a binary
+    formalisation.}}}%. A relation from $A$ to $B$ is defined as a binary
     predicate: *)
 
 Definition Rel (A B : Type) := A -> B -> Prop.
 (** %\noindent% In this definition, [Rel] receives two types as
-    argument, and return the signature of a relation from $A$ to $B$,
-    i.e. the type [A -> B -> Prop]. As seen before, if $A=B$ then we have a
+    arguments, and return the signature of a relation from $A$ to $B$,
+    i.e. the type [A -> B -> Prop]. As %\cdan{seen}{mentioned}% before, if $A=B$ then we have a
     %{\it reduction relation}%: *)
 
 Definition Red (A : Type) := Rel A A.
@@ -273,12 +276,11 @@ Definition Sub {A B} (R1 R2: Rel A B) : Prop := forall a b, R1 a b -> R2 a b.
     implicit}%. Implicit arguments are types of polymorphic functions
     that can be inferred from the context. Therefore, [Sub] requires
     two relations as arguments, and Coq automatically infers its
-    type. A more convenient notation can be easily defined for the
-    objects we are constructing. In the case of the predicate [Sub],
-    we define an infix notation as follows: *)
+    type. A more convenient notation can be easily defined for %\odan{the}%
+    objects we are constructing. In %\cdan{the case of the predicate}{the}% [Sub] %\dan{ predicate case}% we define an infix notation as follows: *)
 
 Notation "R1 <# R2" := (Sub R1 R2) (at level 50).
-(** This means that now one can write [R1 <# R2] instead of [Sub R1
+(** %\cdan{This means that n}{N}%ow one can write [R1 <# R2] instead of [Sub R1
     R2]. In addition, in order to avoid parsing ambiguity, a
     precedence level ranging from 0 to 100 can be provided.
 
@@ -310,19 +312,19 @@ Arguments compose {A B C red1 red2} _ _ _ _ _ .
     Prop, P 0 \(\to\) (forall n : nat, P n \(\to\) P (S n)) \(\to\)
     forall n : nat, P n \end{alltt}%
 
-    So, in order to prove that a certain property %{\tt P}% holds for
+    %\cdan{So}{Therefore}%, in order to prove that a certain property %{\tt P}% holds for
     all %{\tt n: nat}%, one needs to prove that %{\tt P 0}% holds, and
     that if %{\tt P n}% holds then %{\tt P (S n)}% also holds. In
     general, if %{\it def}% is an inductive definition with
-    constructors %{\tt c1}%, %{\tt c2}%, \ldots, %{\tt ck}% then in
-    order to prove that a certain property %{\tt P}% holds for every
-    element defined by %{\it def}% then we need to show, in a certain
-    sense that, %{\tt P}% is compatible with each of its
+    constructors %{\tt c1}%, %{\tt c2}%, %\ldots%, %{\tt ck}% then, in
+    order to prove that %\odan{a certain}% property %{\tt P}% holds for every
+    element defined by %{\it def}%, we need to show, in a certain
+    sense, that %{\tt P}% is compatible with each of its
     constructors. A more precise and detailed explanation about Coq
     induction principles can be found, for instance, in
     %\cite{CoqTeam,BC04,cpdt,Pierce:SF}%.
 
-    The inverse of a relation from a [A] to [B] is inductively defined
+    The inverse of a relation from [A] to [B] is inductively defined
     as the corresponding relation from [B] to [A]: *)
 
 Inductive inverse {A B} (R: Rel A B) : Rel B A :=
@@ -377,9 +379,9 @@ Inductive Image {A B} (R:Rel A B)(P: A -> Prop): B -> Prop
 (* begin hide *)
 Arguments image {A B R P} _ _ _ _.
 (* end hide *)
-(** The notions of weak and strong simulation of reduction relations,
-    as given in Definition %\ref{def:sws}%, are a straightforward
-    translation to the Coq language: *)
+(** The notions of weak and strong simulation of reduction relations %\odan{,
+    as given in Definition %\ref{def:sws}%,}% are a straightforward
+    translation to the Coq language %\dan{(cf. Def. %\ref{def:sws}%)}%: *)
 
 Definition WeakSimul {A B} (redA: Red A) (redB: Red B) (R: Rel A B) := 
   ((inverse R) # redA) <# ((refltrans redB) # (inverse R)).
@@ -389,10 +391,11 @@ Definition StrongSimul {A B} (redA: Red A) (redB: Red B) (R: Rel A B) :=
 
 (** ** Equivalence between strongly normalising definitions *)
 
-(** In this section, we prove the equivalence between Lengrand's
+(** In this section, we prove the equivalence between S. Lengrand's
     definition of strong normalisation, denoted by [SN], and the
-    inductive definition (%\ref{def:sn}%) here denoted by [SN_ind]. In
-    his PhD thesis, S. Lengrand develops a constructive theory of
+    inductive definition %\dan{presented in}% (%\ref{def:sn}%), 
+    here denoted by [SN_ind]. In
+    his PhD thesis, Lengrand develops a constructive theory of
     normalisation in the sense that it does not rely on classical
     logic. In this theory, the notion of strong normalisation for
     reduction relations is defined by a second-order formula which is
@@ -403,20 +406,22 @@ Definition patriarchal {A} (red:Red A) (P:A -> Prop): Prop
   := forall x, (forall y, red x y -> P y) -> P x.
 
 (** In this way, one says that a predicate over [A] is patriarchal
-    w.r.t. a reduction relation over [A] if, every [red]-reduct [b:A]
+    w.r.t. a reduction relation over [A] if %\cdan{, every [red]-reduct [b:A]
     of [a] such that [P b] holds, then [P a] also holds for every
-    [a:A]. Now, an element [a:A] is strongly normalising w.r.t. to the
-    reduction relation [red], when [red] is patriarchal for every
-    predicate [P]: *)
+    [a:A]}{[Pa] holds whenever, for every [red]-reduct [b:A]
+    of [a], [P b] holds }%. Now, an element [a:A] is strongly normalising w.r.t. to the
+    reduction relation [red], when %\cdan{[red] is patriarchal for every
+    predicate [P]}{[Pa] holds for every patriarchal predicate [P] w.r.t. reduction relation [red]}%: *)
 
 Definition SN {A:Type} (red:Red A) (a:A): Prop
   := forall P, patriarchal red P -> P a.
 (** Most of the Coq code presented so far can be found at %{\small
-         \url{http://www.lix.polytechnique.fr/~lengrand/Work/HDR/Coq/First-order/NormalisationTheory.v}}%. Nevertheless,
-         the proof code is not the same because this develpment does
-         not use the library [ssreflect].
+         \url{http://www.lix.polytechnique.fr/~lengrand/Work/HDR/Coq/First-order/NormalisationTheory.v}}% %\dan{(nao seria melhor incluir nas referencias ?)}%. Nevertheless,
+         the proof code is %\cdan{not the same because this development does
+         not use the library [ssreflect].}{different since library [ssreflect] is not 
+         used in the present development.}% 
 
-    The above definition corresponds to the standard inductive
+    The %\odan{above}% definition %\dan{bellow}% corresponds to the standard inductive
     definition of strong normalisation for reduction relations given
     in (%\ref{def:sn}%): *)
 
