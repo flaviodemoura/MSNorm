@@ -28,7 +28,7 @@
     some set $B$ (cf. %~\cite{LengrandPhD,kes09}%). In particular,
     when the reduction relation over $B$ is terminating and the
     simulation relation is complete, the theorem guarantees that both
-    reduction over $A$ are terminating and so its union, i.e. that
+    reductions over $A$ are terminating and so its union, i.e. that
     termination is modular.
 
     We present in this work a constructive proof of the Modular Strong
@@ -593,10 +593,11 @@ Qed.
 
 (** ** The Main Theorem *)
 
-(** In this section, we present the main steps of the formal proof of
-    the Modular Strong Normalisation Theorem. It depends on some
-    results that we explain in what follows. The first result concerns
-    about the composition of weakly and strongly simulated
+(** In this section, we present the %\cdan{main steps of the formal proof}{formal proof main steps}% of
+    the Modular Strong Normalisation Theorem. %\cdan{It}{The proof}% 
+    depends on some results %\cdan{that we explain}{explained}% in what 
+    follows. The first result concerns
+    %\cdan{about}% the composition of weakly and strongly simulated
     reductions. More precisely, if a reduction relation [redB] weakly
     simulates a reduction relation [redA1] through [R], and strongly
     simulates the reduction relation [redA2] through [R] then [redB]
@@ -1010,12 +1011,14 @@ Qed.
 (** In this work we presented a constructive formalisation of the
     Modular Strong Normalisation Theorem in the Coq Proof
     Assistant. The proof is constructive in the sense that it does not
-    use the principle of proof by contradiction or any other classical
-    rule. In addition, only the standard Coq libraries, that are
+    use the principle of %\cdan{proof by contradiction}{excluded middle}% 
+    or any other classical rule%\dan{, such as proof by contradiction}%. 
+    In addition, only the standard Coq libraries, that are
     loaded at startup, are used. The constructive approach is not
     the standard way to prove termination of a reduction relation. In
     fact, the most common way to prove strong normalisation is by
-    defining termination as the absence of infinite reductions, and
+    defining termination as the absence of infinite reductions 
+    %\dan{(n\~ao tenho certeza quanto a isso. tem alguma refer\^encia ?)}%, and
     using proof by contradiction as the reasoning tool. For instance,
     a classical proof of the Modular Strong Normalisation Theorem is
     available at %\cite{kes09}%. Constructive proofs are usually more
@@ -1024,11 +1027,14 @@ Qed.
 
     The Modular Strong Normalisation Theorem is an abstract result
     that states the conditions for the union of two reduction
-    relations to be terminating. It is a non-trivial result in
-    abstract reduction systems that uses the well known technique of
+    relations to %\cdan{be terminating}{preserve strong normalisation (PSN)}%. 
+    It is a non-trivial result in
+    abstract reduction systems that uses the well-known technique of
     termination by simulation, i.e. the termination of a reduction
     system is obtained by simulating its steps via another reduction
-    relation that is known to be terminating.
+    relation that is known to be terminating. %\dan{The theorem is, for 
+    instance, applied in %\cite{kes09}% to establish the PSN property of
+    a calculus with explicit substitutions.}%
 
     The proofs developed in this formalisation follow the ideas
     presented in %\cite{LengrandPhD}%, where a theory of constructive
@@ -1039,10 +1045,10 @@ Qed.
     these definitions is also provided. In this way, we believe that
     our presentation is easy to follow and ...
 
-    An interesting application of the Modular Strong Normalisation
+    %\cdan{An interesting application of the Modular Strong Normalisation
     Theorem is given in %\cite{kes09}% to establish the termination of
     a calculus with explicit substitutions. Termination of calculus
-    with explicit substitutions is a challenging problem that...
+    with explicit substitutions is a challenging problem that...}{}%
 
      - This is part of a bigger project.  Compatible versions of Coq
      - General explanation of how to compile and generate
