@@ -217,22 +217,23 @@ A few comments about Coq are at a place. In the above definition, [Inductive] is
       ({SN}^{\to_B}) \mbox{ implies } a \in {SN}^{\to_1\cup \to_2}.$$
       \end{theorem}%
 
-      This proof follows the lines of \cite{LengrandPhD}, but using
-      the standard definition $SN$ in (\ref{def:sn}). First of all,
-      hypothesis \ref{hip:one} and \ref{hip:two} allow us to conclude
-      that the composition $(\to_1^* \cdot \to_2)$ is strongly
-      simulated by $\to_B$: in fact, from hypothesis \ref{hip:two} we
-      have that $\to_1^*$ is weakly simulated by $\to_B$. In addition,
+      This proof follows the lines of %\cite{LengrandPhD}%, but using
+      the standard definition $SN$ in (%\ref{def:sn}%). First of all,
+      hypothesis %\ref{hip:one}% and %\ref{hip:two}% allow us to conclude
+      that the composition $\cdan{(\to_1^* \cdot \to_2)}{(\to_2^* \cdot \to_1)}$ 
+      is strongly simulated by $\to_B$: in fact, from hypothesis %\ref{hip:two}% we
+      have that $\cdan{\to_1^*}{\to_2^*}$ is weakly simulated by $\to_B$. In addition,
       the composition of two reduction relations that are,
       respectively, strongly and weakly simulated by the same
       reduction relation is strongly simulated by this reduction
-      relation. Therefore, $(\to_1^* \cdot \to_2)$ is strongly
+      relation. Therefore, $\cdan{(\to_1^* \cdot \to_2)}{(\to_2^* \cdot \to_1)}$ 
+      is strongly
       simulated by $\to_B$ through $\to$, that together with the fact
-      that $a\in \leftarrow({SN\_ind}^{\to_B})$ allow us to conclude
-      that $a \in {SN\_ind}^{\to_1^* \cdot \to_2}$. Now, from
-      hypothesis \ref{hip:three}, we have $a \in {SN\_ind}^{\to_1}$,
-      and we conclude from the fact that ${SN\_ind}^{\to_1^* \cdot
-      \to_2} \cap {SN\_ind}^{\to_1} = {SN\_ind}^{\to_1\cup \to_2}$. *)
+      that $a\in \leftarrow({SN}^{\to_B})$ allow us to conclude
+      that $a \in {SN\_ind}^{\cdan{\to_1^* \cdot \to_2}{\to_2^* \cdot \to_1}}$. 
+      Now, from hypothesis %\ref{hip:three}%, we have $a \in {SN}^{\to_2}$,
+      and we conclude from the fact that ${SN}^{\cdan{\to_1^* \cdot
+      \to_2}{\to_2^* \cdot \to_1}} \cap {SN}^{\to_2} = {SN}^{\to_1\cup \to_2}$. *)
 
 (** * The Formalisation *)
 
@@ -964,7 +965,7 @@ Proof.
   let}% [a:A] %{\color{blue}be an arbitrary element in the inverse
   image of}% [SN_ind redB]%{\color{blue}. We need to prove that}%
   [SN_ind (redA \un red'A) a]%{\color{blue}. By lemma}%
-  [SNunion]%{\color{blue}, this is equivalent to prove that}% [SN_ind
+  [SNunion]%{\color{blue} \dan{(precisa de uma hip\'otese adicional para termos a equival\^encia, n\~ao ?)}, this is equivalent to prove that}% [SN_ind
   (refltrans redA # red'A) a /\ SN_ind redA a]. *)
 
   assert(Hsplit: SN_ind (redA \un red'A) a <->
