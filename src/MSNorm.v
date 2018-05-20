@@ -411,7 +411,7 @@ Definition patriarchal {A} (red:Red A) (P:A -> Prop): Prop
 Definition SN {A:Type} (red:Red A) (a:A): Prop
   := forall P, patriarchal red P -> P a.
 (** Most of the Coq code presented so far can be found at
-%\cite{LengNT}%. Nevertheless, our proof code is different since
+%\cite{lengrand-nt}%. Nevertheless, our proof code is different since
 library [ssreflect] is not used in the present development.
 
     The definition bellow corresponds to the standard inductive
@@ -594,10 +594,9 @@ Qed.
 
 (** ** The Main Theorem *)
 
-(** In this section, we present the %\cdan{main steps of the formal proof}{formal proof main steps}% of
-    the Modular Strong Normalisation Theorem. %\cdan{It}{The proof}% 
-    depends on some results %\cdan{that we explain}{explained}% in what 
-    follows. The first result concerns
+(** In this section, we present the formal proof main steps of the
+    Modular Strong Normalisation Theorem. The proof depends on some
+    results explained in what follows. The first result concerns
     %\cdan{about}% the composition of weakly and strongly simulated
     reductions. More precisely, if a reduction relation [redB] weakly
     simulates a reduction relation [redA1] through [R], and strongly
@@ -614,32 +613,143 @@ Lemma WeakStrongSimul {A B} (redA1 redA2: Red A) (redB: Red B) (R: Rel A B):
 Proof.
   intros Hweak Hstrong. (** %{\color{blue}Let}% [Hweak]
                             (%{\color{blue}resp.}% [Hstrong])
-                            %{\color{blue}be the statement that}%
+                            %{\color{blue}be the statement}%
                             [redB] %{\color{blue}weakly
                             (resp. strongly) simulates the reduction
                             relation}% [redA1] (%{\color{blue} resp.}%
                             [redA2]) %{\color{blue}through}% [R]. *)
   
-  unfold StrongSimul in *.
-  unfold WeakSimul in *.
-  unfold Sub in *.
-  intros a b H3.
-  inversion H3; subst. clear H3.
-  inversion H0; subst. clear H0.
+  unfold StrongSimul in *. (** %{\color{blue}By definition of strong
+                               simulation, the composition}% [(inverse R)
+                               # redA2] %{\color{blue}is a subrelation
+                               of the transitive closure of}% [redB]
+                               %{\color{blue}composed with}%
+                               [(inverse R)].  %{\color{blue}In addition,
+                               we have to prove that the composition}%
+                               [(inverse R) # (redA1 # redA2)]
+                               %{\color{blue}is a subrelation of the
+                               transitive closure of}% [redB]
+                               %{\color{blue}composed with}%
+                               [(inverse R)]. *)
+  
+  unfold WeakSimul in *. (** %{\color{blue}By definition of weak
+                             simulation the composition}% [(inverse R) #
+                             redA1] %{\color{blue}is a subrelation of
+                             the transitive reflexive closure of}%
+                             [redB] %{\color{blue}composed with}%
+                             (inverse R). *)
+  
+  unfold Sub in *. (** %{\color{blue}Therefore, every pair of
+                       elements}% [a] %{\color{blue}and}% [b]
+                       %{\color{blue}that are related by}% [(inverse R) #
+                       (redA1 # redA2)] %{\color{blue}is also related
+                       by}% [trans redB # (inverse R)]. *)
+  
+  intros a b Hcomp. (** %{\color{blue}Let}% [Hcomp] %{\color{blue}be
+                        the hypothesis}% [(inverse R # (redA1 #
+                        redA2)) a b]%{\color{blue}, i.e.}% [a]
+                        %{\color{blue}and}% [b] %{\color{blue}are
+                        related by the relation}% [(inverse R) # (redA1 #
+                        redA2)]. *)
+  
+  inversion Hcomp; subst. clear Hcomp. (** %{\color{blue}From the
+                                           hypothesis}%
+                                           [Hcomp]%{\color{blue}, we
+                                           have there exists an
+                                           element}% [b0]
+                                           %{\color{blue}such that}%
+                                           [(inverse R) a b0]
+                                           %{\color{blue}, call this
+                                           fact}% [H]%{\color{blue},
+                                           and}% [(redA1 # redA2) b0
+                                           b]%{\color{blue}, which we
+                                           call}% [H0]. *)
+  
+  inversion H0; subst. clear H0. (** %{\color{blue}Similarly, the
+                                     hypothesis}% [H0]%{\color{blue},
+                                     means there exists an element}%
+                                     [b1] %{\color{blue}such that}%
+                                     [RedA1 b0 b1] %{\color{blue}and}%
+                                     [redA2 b1 b]. *)
+  
   assert (H': (inverse R # redA1) a b1).
-  { apply compose with b0; assumption. }
-  apply H1 in H'.
-  inversion H'; subst. clear H'.
-  induction H0.
-  - apply H2.
-    apply compose with b1; assumption.
-  - assert (Hstrong: (trans redB # inverse R) b2 b).
-    { apply H2. apply compose with b1; assumption. }
-    inversion Hstrong; subst. clear Hstrong.
-    apply compose with b3. 
-    + apply tailtransit with b2; assumption.
-    + assumption.
-Qed.  
+  { apply compose with b0; assumption. } (** %{\color{blue}Therefore,
+                                             from}% [H]
+                                             %{\color{blue}and}% [H1]
+                                             %{\color{blue}we get}%
+                                             [((inverse R) # redA1) a
+                                             b1]%{\color{blue}, call
+                                             this fact}% [H']. *)
+  
+  apply Hweak in H'. (** %{\color{blue}Since the reduction relation}%
+                         [redA1] %{\color{blue}is weakly simulated
+                         by}% [redB] %{\color{blue}through}%
+                         [R]%{\color{blue}, we get}% [((inverse R) #
+                         redA1) a b1] *)
+  
+  inversion H'; subst. clear H'. (** %{\color{blue}Which, in turn
+                                     means that there exists an
+                                     element}% [b2] %{\color{blue}such
+                                     that}% [refltrans redB a b2]
+                                     %{\color{blue}and}% [(inverse R) b2
+                                     b1] *)
+  
+  induction H0. (** %{\color{blue}We proceed by induction on the
+                    reflexive transitive closure of}%
+                    [redB]%{\color{blue}, i.e. on the hypothesis}%
+                    [refltrans redB a b2]. %{\color{blue}The proof is
+                    split in two cases corresponding to the two
+                    constructors of the definition of the reflexive
+                    transitive closure of a reduction relation. The
+                    first case corresponds to the reflexive
+                    constructor.}% *)
+  
+  - apply Hstrong. (** %{\color{blue}The strong simulation hypothesis,
+                       allows us to prove}% [(trans redB # (inverse R))
+                       a b] %{\color{blue}by showing that}% [((inverse R)
+                       # redA2) a b]. *)
+      
+    apply compose with b1; assumption. (** %{\color{blue} This
+                                           composition can be
+                                           constructed with the
+                                           element}% [b1]
+                                           %{\color{blue}given
+                                           above}%. *)
+    
+  - assert (Hcomp: (trans redB # inverse R) b2 b).
+    { apply Hstrong. apply compose with b1; assumption. }
+    (** %{\color{blue}The second case of the induction, is proved by
+        first observing that}% [(trans redB # (inverse R)) b2 b]
+        %{\color{blue}, which can be proved from the strong simulation
+        hypothesis}% [Hstrong] %{\color{blue}and noting that}% [b2]
+        %{\color{blue}is related to}% [b] %{\color{blue}through the
+        relation}% [(inverse R) # redA2] %{\color{blue}via the element}%
+        [b1] %{\color{blue}above.}% *)
+    
+    inversion Hcomp; subst. clear Hcomp. (** %{\color{blue}Therefore,
+                                             there exits an element}%
+                                             [b3] %{\color{blue}such
+                                             that}% [trans redB b2 b3]
+                                             %{\color{blue}and}%
+                                             [(inverse R) b3 b]. *)
+    
+    apply compose with b3. (** %{\color{blue}Hence, the element}% [a]
+    %{\color{blue}is related to}% [b] %{\color{blue}through}% [b3]
+    %{\color{blue}because}% *)
+
+    + apply tailtransit with b2; assumption. (** [a] %{\color{blue}is
+                                                 related to}% [b3]
+                                                 %{\color{blue}through
+                                                 the relation}% [trans
+                                                 redB]
+                                                 %{\color{blue}via the
+                                                 element}% [b2]. *)
+    + assumption. (** %{\color{blue}And}% [b3] %{\color{blue}is
+                                                 related to}% [b]
+                                                 %{\color{blue}through}%
+                                                 [(inverse R)]. *)
+Qed.
+
 (* begin hide *)
 Lemma refltailtransit {A red}: forall (b a c:A),
     refltrans red a b -> refltrans red b c -> refltrans red a c.
@@ -701,9 +811,34 @@ Proof.
     apply compose with a; assumption.
 Qed.  
 (* end hide *)
+
+(** The next result is a consequence of the lemma
+    [WeakStrongSimul]. In fact, it is easy to prove that if [redA] is
+    weakly simulated by [redB] through [R] then so is its reflexive
+    transitive closure. Then, by lemma [WeakStrongSimul] the
+    composition of [(refltrans redA)] with [red'A] that is strongly
+    simulated by [redB] through [R] is also strongly simulated by
+    [redB] through [R]. *)
+
+Corollary RCSimul {A B} {redA red'A: Red A} {redB: Red B} {R: Rel A B}:
+  (StrongSimul red'A redB R) ->
+  (WeakSimul redA redB R) ->
+  (StrongSimul ((refltrans redA) # red'A) redB R).
+(* begin hide *)
+Proof.
+  intros Hst Hwk.
+  assert (Hrfl:  WeakSimul (refltrans redA) redB R).
+  {
+    apply SimulWeakReflTrans; assumption.
+  }
+  clear Hwk.
+  apply WeakStrongSimul; assumption.
+Qed.
+(* end hide *)
+
 (** The second result is known as strong normalisation by simulation
-    and was proved in %\cite{LengNT}%. The strong normalisation by
-    simulation theorem, here called [SNbySimul], states that if a
+    and was proved in %\cite{lengrand-nt}%. The strong normalisation
+    by simulation theorem, here called [SNbySimul], states that if a
     reduction relation over [A], say [redA], is strongly simulated by
     a reduction relation over [B], say [redB], through [R] then the
     pre-image of any element that satisfies the predicate [SN_ind
@@ -743,23 +878,6 @@ Proof.
   - inversion H2; subst. clear H2.
     assumption.
 Qed.
-(* end hide *)
-
-(** The third result ... *)
-
-Lemma RCSimul {A B} {redA red'A: Red A} {redB: Red B} {R: Rel A B}:
-  (StrongSimul red'A redB R) -> (WeakSimul redA redB R) ->
-  (StrongSimul ((refltrans redA) # red'A) redB R).
-(* begin hide *)
-Proof.
-  intros Hst Hwk.
-  assert (Hrfl:  WeakSimul (refltrans redA) redB R).
-  {
-    apply SimulWeakReflTrans; assumption.
-  }
-  clear Hwk.
-  apply WeakStrongSimul; assumption.
-Qed.
 
 Inductive Id {A} : Red A :=
   identity: forall a:A, Id a a.
@@ -778,14 +896,14 @@ Proof.
     assumption.
 Qed.
 
-Inductive union {A} (red1: Red A)(red2: Red A) : Red A :=
+Inductive union {A} (red1 red2: Red A) : Red A :=
  | union_left: forall a b,  red1 a b -> union red1 red2 a b
  | union_right: forall a b,  red2 a b -> union red1 red2 a b.
 
-Notation "R1 \un R2" := (union R1 R2) (at level 40).
+Notation "R1 !_! R2" := (union R1 R2) (at level 40).
 
 Lemma UnionStrongSimul {A} {redA red'A: Red A}:
-  StrongSimul redA (redA \un red'A) Id.
+  StrongSimul redA (redA !_! red'A) Id.
 Proof.
   unfold StrongSimul.
   unfold Sub.
@@ -800,7 +918,7 @@ Proof.
 Qed.
 
 Lemma UnionReflStrongSimul {A} {redA red'A: Red A}:
-  StrongSimul ((refltrans redA) # red'A) (redA \un red'A) Id.
+  StrongSimul ((refltrans redA) # red'A) (redA !_! red'A) Id.
 Proof.
   unfold StrongSimul.
   unfold Sub.
@@ -829,7 +947,7 @@ Proof.
         ** constructor; constructor; assumption.
       * apply inverseof. apply identity.
     + intros b0 Hred'A.
-      assert (Hone: (redA \un red'A) a b).
+      assert (Hone: (redA !_! red'A) a b).
       {
         constructor; assumption.
       }
@@ -844,7 +962,7 @@ Proof.
       * apply inverseof. apply identity.
 Qed.
 
-Lemma inclUnion {A} {redA red'A: Red A}: forall a, (SN_ind redA a) -> (forall b, (((refltrans redA) # red'A) a b) -> SN_ind (redA \un red'A) b) -> (SN_ind (redA \un red'A) a).
+Lemma inclUnion {A} {redA red'A: Red A}: forall a, (SN_ind redA a) -> (forall b, (((refltrans redA) # red'A) a b) -> SN_ind (redA !_! red'A) b) -> (SN_ind (redA !_! red'A) a).
 Proof.
   intros a HSN.
   induction HSN. clear H.
@@ -887,7 +1005,7 @@ Qed.
 
 Lemma SNinclUnion {A} {redA red'A: Red A}: (forall b, SN_ind redA b -> forall c, red'A b c -> SN_ind redA c) ->
                                            (forall a, (SN_ind ((refltrans redA) # red'A) a) ->
-                                                 (SN_ind redA a) -> (SN_ind (redA \un red'A) a)).
+                                                 (SN_ind redA a) -> (SN_ind (redA !_! red'A) a)).
 (* begin hide *)
 Proof.
   intros Hstable a HSNcomp.
@@ -907,24 +1025,42 @@ Proof.
 Qed.
 (* end hide *)
 
-(** The next lemma ... *)
+(** %\noindent% The next lemma gives a characterisation of the
+    predicate [SN_ind (redA !_! red'A)], where [redA !_! red'A]
+    denotes the union of the reduction relations [redA] and
+    [red'A]. The union of two reduction relations is defined as
+    follows:
+
+    %\begin{alltt} Inductive union {A} (red1 red2: Red A) : Red A := |
+    union_left: forall a b, red1 a b -> union red1 red2 a b |
+    union_right: forall a b, red2 a b -> union red1 red2 a b.
+
+    Notation "R1 !_! R2" := (union R1 R2) (at level 40).  \end{alltt}%
+
+    In addition, we say a predicate [P] is stable w.r.t. the reduction
+    relation [R] if [P b] holds, whenever [P a] holds, for all [a,b]
+    such that [R a b]. So, under the hypothesis of stability of
+    [SN_ind redA] w.r.t. the reduction relation [red'A], the predicate
+    [SN_ind (redA !_! red'A)] can be decomposed as the conjunction
+    [(SN_ind ((refltrans redA) # red'A)) /\ (SN_ind redA)]:
+ *)
 
 Lemma SNunion {A} {redA red'A: Red A}:
   (forall b, SN_ind redA b -> forall c, red'A b c -> SN_ind redA c) ->
-  forall a, (SN_ind (redA \un red'A) a) <->
+  forall a, (SN_ind (redA !_! red'A) a) <->
        (SN_ind ((refltrans redA) # red'A) a) /\ ((SN_ind redA) a).
 (* begin hide *)
 Proof. 
   intros Hstable a; split.
   - intro HSN. split.
-    + assert (HSsimul: StrongSimul (refltrans redA # red'A) (redA \un red'A) Id).
+    + assert (HSsimul: StrongSimul (refltrans redA # red'A) (redA !_! red'A) Id).
       {
         apply UnionReflStrongSimul.
       }
       apply HId in HSN.
       generalize dependent HSN.
       apply SNbySimul; assumption.
-    + assert (HSsimul: StrongSimul redA (redA \un red'A) Id).
+    + assert (HSsimul: StrongSimul redA (redA !_! red'A) Id).
       {
         apply UnionStrongSimul.
       }
@@ -934,7 +1070,7 @@ Proof.
   - intro Hand.
     destruct Hand as [Hcomp HredA].
     assert (HSNunion1: (SN_ind ((refltrans redA) # red'A) a) ->
-                       (SN_ind redA a) -> (SN_ind (redA \un red'A) a)).
+                       (SN_ind redA a) -> (SN_ind (redA !_! red'A) a)).
     {
       apply SNinclUnion; assumption.
     }
@@ -942,12 +1078,15 @@ Proof.
 Qed.
 (* end hide *)
 
+(** The Modular Strong Normalisation Theorem, here called
+    [ModStrNorm], is then written in the Coq language as follows: *)
+
 Theorem ModStrNorm {A B: Type} {redA red'A: Red A}
         {redB: Red B} {R: Rel A B}:
   (StrongSimul red'A redB R) ->
   (WeakSimul redA redB R) ->
   (forall b: A, SN_ind redA b) -> forall a, Image (inverse R) (SN_ind redB) a ->
-                                 SN_ind (redA \un red'A) a.
+                                 SN_ind (redA !_! red'A) a.
 Proof.
   (** %{\color{blue} Let}% [A] %{\color{blue}and}% [B]
   %{\color{blue}be types}%, [redA] %{\color{blue}and}% [red'A]
@@ -957,18 +1096,49 @@ Proof.
   [B]. *)
   
   intros Hstrong Hweak HSN a HImage. (** %{\color{blue}Assume that}%
-  [red'A] %{\color{blue}is strongly simulated by}% [redB]
-  %{\color{blue}through}% [R]%{\color{blue}, that}% [redA]
-  %{\color{blue}is weakly simulated by}% [redB]
-  %{\color{blue}through}% [R]%{\color{blue}, that every}% [b:A]
-  %{\color{blue}is such that}% [SN_ind redA b]%{\color{blue}, and
-  let}% [a:A] %{\color{blue}be an arbitrary element in the inverse
-  image of}% [SN_ind redB]%{\color{blue}. We need to prove that}%
-  [SN_ind (redA \un red'A) a]%{\color{blue}. By lemma}%
-  [SNunion]%{\color{blue} \dan{(precisa de uma hip\'otese adicional para termos a equival\^encia, n\~ao ?)}, this is equivalent to prove that}% [SN_ind
-  (refltrans redA # red'A) a /\ SN_ind redA a]. *)
+                                         [red'A] %{\color{blue}is
+                                         strongly simulated by}%
+                                         [redB]
+                                         %{\color{blue}through}%
+                                         [R]%{\color{blue}(hypothesis}%
+                                         [Hstrong]%{\color{blue}),
+                                         that}% [redA]
+                                         %{\color{blue}is weakly
+                                         simulated by}% [redB]
+                                         %{\color{blue}through}%
+                                         [R]%{\color{blue}(hypothesis}%
+                                         [Hweak]%{\color{blue}), that
+                                         every}% [b:A]
+                                         %{\color{blue}is such that}%
+                                         [SN_ind redA
+                                         b]%{\color{blue}(hypothesis}%
+                                         [HSN]%{\color{blue}), and
+                                         let}% [a:A] %{\color{blue}be
+                                         an arbitrary element in the
+                                         inverse image of}% [SN_ind
+                                         redB]%{\color{blue}(hypothesis}%
+                                         [HImage] %{\color{blue}). We
+                                         need to prove that}% [SN_ind
+                                         (redA !_! red'A)
+                                         a]%{\color{blue}. By lemma}%
+                                         [SNunion] %{\color{blue}this
+                                         is equivalent to prove that}%
+                                         [SN_ind (refltrans redA #
+                                         red'A) a /\ SN_ind redA
+                                         a]%{\color{blue}, under the
+                                         hypothesis of stability of}%
+                                         [SN_ind redA]
+                                         %{\color{blue}w.r.t. the
+                                         reduction relation}%
+                                         [red'A]%{\color{blue}, which
+                                         is trivially obtained from
+                                         hypothesis}% [HSN]
+                                         %{\color{blue}since every
+                                         element of}% [A]
+                                         %{\color{blue}satisfies the
+                                         predicate}% [SN_ind redA]. *)
 
-  assert(Hsplit: SN_ind (redA \un red'A) a <->
+  assert(Hsplit: SN_ind (redA !_! red'A) a <->
                     SN_ind (refltrans redA # red'A) a /\ SN_ind redA a).
   {
     apply SNunion.
@@ -1012,30 +1182,29 @@ Qed.
 (** In this work we presented a constructive formalisation of the
     Modular Strong Normalisation Theorem in the Coq Proof
     Assistant. The proof is constructive in the sense that it does not
-    use the principle of %\cdan{proof by contradiction}{excluded middle}% 
-    or any other classical rule%\dan{, such as proof by contradiction}%. 
-    In addition, only the standard Coq libraries, that are
-    loaded at startup, are used. The constructive approach is not
-    the standard way to prove termination of a reduction relation. In
-    fact, the most common way to prove strong normalisation is by
-    defining termination as the absence of infinite reductions 
-    %\dan{(n\~ao tenho certeza quanto a isso. tem alguma refer\^encia ?)}%, and
-    using proof by contradiction as the reasoning tool. For instance,
-    a classical proof of the Modular Strong Normalisation Theorem is
-    available at %\cite{kes09}%. Constructive proofs are usually more
-    difficult and elaborate than classical ones, but the former are
-    preferred in the context of Computer Science.
+    use the principle of excluded middle or any other classical rule,
+    such as proof by contradiction. In addition, no additioal Coq
+    libraries is used. The constructive approach is not the standard
+    way to prove termination of a reduction relation. In fact, the
+    most common way to prove termination of a reduction relation is by
+    showing that it does not have infinite reduction sequences, and
+    using proof by contradiction as the reasoning tool
+    (cf. %\cite{terese03,BN98}%). For instance, a classical proof of
+    the Modular Strong Normalisation Theorem is available at
+    %\cite{kes09}%. Constructive proofs are usually more difficult and
+    elaborate than classical ones, but the former are preferred in the
+    context of Computer Science.
 
     The Modular Strong Normalisation Theorem is an abstract result
     that states the conditions for the union of two reduction
-    relations to %\cdan{be terminating}{preserve strong normalisation (PSN)}%. 
-    It is a non-trivial result in
-    abstract reduction systems that uses the well-known technique of
-    termination by simulation, i.e. the termination of a reduction
-    system is obtained by simulating its steps via another reduction
-    relation that is known to be terminating. %\dan{The theorem is, for 
-    instance, applied in %\cite{kes09}% to establish the PSN property of
-    a calculus with explicit substitutions.}%
+    relations to preserve strong normalisation (PSN). It is a
+    non-trivial result in abstract reduction systems that uses the
+    well-known technique of termination by simulation, i.e. the
+    termination of a reduction system is obtained by simulating its
+    steps via another reduction relation that is known to be
+    terminating. The theorem is, for instance, applied in
+    %\cite{kes09}% to establish the PSN property of a calculus with
+    explicit substitutions.
 
     The proofs developed in this formalisation follow the ideas
     presented in %\cite{LengrandPhD}%, where a theory of constructive
@@ -1046,10 +1215,11 @@ Qed.
     these definitions is also provided. In this way, we believe that
     our presentation is easy to follow and ...
 
-    %\cdan{An interesting application of the Modular Strong Normalisation
-    Theorem is given in %\cite{kes09}% to establish the termination of
-    a calculus with explicit substitutions. Termination of calculus
-    with explicit substitutions is a challenging problem that...}{}%
+    %\cdan{An interesting application of the Modular Strong
+    Normalisation Theorem is given in %\cite{kes09}% to establish the
+    termination of a calculus with explicit substitutions. Termination
+    of calculus with explicit substitutions is a challenging problem
+    that...}{}%
 
      - This is part of a bigger project.  Compatible versions of Coq
      - General explanation of how to compile and generate
