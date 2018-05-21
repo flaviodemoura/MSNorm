@@ -222,18 +222,21 @@ A few comments about Coq are at a place. In the above definition, [Inductive] is
       hypothesis %\ref{hip:one}% and %\ref{hip:two}% allow us to conclude
       that the composition $\cdan{(\to_1^* \cdot \to_2)}{(\to_2^* \cdot \to_1)}$ 
       is strongly simulated by $\to_B$: in fact, from hypothesis %\ref{hip:two}% we
-      have that $\cdan{\to_1^*}{\to_2^*}$ is weakly simulated by $\to_B$. In addition,
+      have that $\cdan{\to_1^*}{\to_2^*}$ is weakly simulated by $\to_B$. 
+      %\fab{Devemos explicitar o lema correspondente no texto (SimulWeakReflTrans)?}%. 
+      In addition,
       the composition of two reduction relations that are,
       respectively, strongly and weakly simulated by the same
       reduction relation is strongly simulated by this reduction
-      relation. Therefore, $\cdan{(\to_1^* \cdot \to_2)}{(\to_2^* \cdot \to_1)}$ 
+      relation %\fab{(WeakStrongSimul)}%. Therefore, $\cdan{(\to_1^* \cdot \to_2)}{(\to_2^* \cdot \to_1)}$ 
       is strongly
-      simulated by $\to_B$ through $\to$, that together with the fact
+      simulated by $\to_B$ through $\to$ %\fab{(RCSimul)}%, that together with the fact
       that $a\in \leftarrow({SN}^{\to_B})$ allow us to conclude
-      that $a \in {SN\_ind}^{\cdan{\to_1^* \cdot \to_2}{\to_2^* \cdot \to_1}}$. 
+      that $a \in {SN}^{\cdan{\to_1^* \cdot \to_2}{\to_2^* \cdot \to_1}}$ %\fab{(SNbySimul)}%. 
       Now, from hypothesis %\ref{hip:three}%, we have $a \in {SN}^{\to_2}$,
       and we conclude from the fact that ${SN}^{\cdan{\to_1^* \cdot
-      \to_2}{\to_2^* \cdot \to_1}} \cap {SN}^{\to_2} = {SN}^{\to_1\cup \to_2}$. *)
+      \to_2}{\to_2^* \cdot \to_1}} \cap {SN}^{\to_2} = {SN}^{\to_1\cup \to_2}$
+      %\fab{(SNunion)}%. *)
 
 (** * The Formalisation *)
 
@@ -1161,6 +1164,7 @@ Proof.
   {
    apply SNbySimul.
   }
+  
   apply HSNSimul.
     + apply RCSimul; assumption. (** %{\color{blue}Now we need to
                                      prove that}% [(refltrans redA #
