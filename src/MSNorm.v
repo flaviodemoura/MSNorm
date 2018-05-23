@@ -49,14 +49,14 @@
     A constructive proof of the Modular Strong Normalisation Theorem
     is presented by S. Lengrand in %\cite{LengrandPhD}% and some of
     the basic notions used in this proof, such as strong
-    normalisation, is already formalised in Coq %\cite{lengNT}%. In a
-    certain sense, this work can be seen as a non-trivial expansion of
-    the normalisation theory formalised by Lengrand. In fact, the
-    strong normalisation property defined in %\cite{LengrandPhD}% uses
-    a specialized inductive principle that should hold for all
-    predicate, i.e. through a second order formula. On the other hand,
-    in this work we use only the standard inductive definition of the
-    strong normalisation property
+    normalisation, is already formalised in Coq
+    %\cite{lengrand-nt}%. In a certain sense, this work can be seen as
+    a non-trivial expansion of the normalisation theory formalised by
+    Lengrand. In fact, the strong normalisation property defined in
+    %\cite{LengrandPhD}% uses a specialized inductive principle that
+    should hold for all predicate, i.e. through a second order
+    formula. On the other hand, in this work we use only the standard
+    inductive definition of the strong normalisation property
     (cf. %\cite{kes09,LengrandPhD,Raams-phd}%), and we also prove the
     equivalence between these definitions. In this way, we understand
     that we achieved a simpler and easier to follow formalisation. The
@@ -64,11 +64,7 @@
     ideas in Lengrand's PhD thesis, but to the best of our knowledge,
     this is the first formalisation of this theorem.
 
-    This paper is built up from a Coq script where some code is hidden
-    for the sake of clarity of this document. All the files concerning
-    this work are freely available in the repository %{\tt
-    https://github.com/flaviodemoura/MSNorm}%. The contributions of
-    this work can be summarised as follows:
+    The contributions of this work can be summarised as follows:
 
     %\begin{itemize}
 
@@ -76,14 +72,23 @@
       normalisation theory based on the simulation technique developed
       in \cite{LengrandPhD}.
 
+      \begin{itemize}
+
       \item In particular, we built a constructive proof of the
             Modular Strong Normalisation Theorem, and
 
       \item We proved the equivalence between Lengrand's definition of
             strong normalisation and the standard inductive definition
             of strong normalisation.
+            
+      \end{itemize} \end{itemize}%
 
-     \end{itemize}% *)
+     This paper is built up from a Coq script where some code is
+     hidden for the sake of clarity of this document. The
+     formalisation is compatible with Coq 8.8.0. All the files
+     concerning this work are freely available in the repository %{\tt
+     https://github.com/flaviodemoura/MSNorm}%. *)
+
 
 (** * The Modular Strong Normalisation Theorem *)
 
@@ -126,16 +131,16 @@ Inductive SN_ind {A:Type} (red: Red A) (a:A): Prop :=
 A few comments about Coq are at a place. In the above definition, [Inductive] is the reserved word for inductive definitions. It is followed by the name of the definition, which in our case is [SN_ind], and it has three arguments: [{A:Type}], [(red:Red A)] and [(a:A)]. The first argument appears between curly brackets, which means that it is  %{\it implicit}%. Implicit arguments are types of polymorphic functions that can be inferred from the context. The second argument corresponds to a reduction relation [red] over [A], and the third argument is an element of [A]. This definition has one constructor named [sn_acc] whose content corresponds exactly to the definition given in (%\ref{def:sn}%). In this way, in order to prove that a certain element [a:A] is strongly normalising w.r.t. a reduction relation $\to_r$, one has to build a proof of the formula $\forall b, a \to_r b \to SN\_ind \to_r b$.*)
 
 (** In order to present the theorem, we need to define the notions of
-    strong and weak simulation. In the following definitions $A$ and
-    $B$ are arbitrary sets:
+strong and weak simulation. In the following definitions $A$ and $B$
+are arbitrary sets:
 
     %\begin{definition}\label{def:sws} Let $\to$ be a relation from
-    $A$ to $B$, $\to_A$ be a reduction relation over $A$ and $\to_B$
-    be a reduction relation over $B$. The reduction relation $\to_B$
-    {\it strongly} (resp. {\it weakly}) simulates $\to_A$ through
-    $\to$ if $(\leftarrow \cdot \to_A) \subseteq (\to_B^+ \cdot
-    \leftarrow)$ (resp. $(\leftarrow \cdot \to_A) \subseteq (\to_B^*
-    \cdot \leftarrow)$).
+     $A$ to $B$, $\to_A$ be a reduction relation over $A$ and $\to_B$
+     be a reduction relation over $B$. The reduction relation $\to_B$
+     {\it strongly} (resp. {\it weakly}) simulates $\to_A$ through
+     $\to$ if $(\leftarrow \cdot \to_A) \subseteq (\to_B^+ \cdot
+     \leftarrow)$ (resp. $(\leftarrow \cdot \to_A) \subseteq (\to_B^*
+     \cdot \leftarrow)$).
 
     \begin{tikzpicture}[scale=.45] \draw[ultra thick,myblue] (0,0)
     circle [x radius=1.5cm, y radius=4cm] (6,0) circle [x
@@ -165,8 +170,7 @@ A few comments about Coq are at a place. In the above definition, [Inductive] is
     .. node[left] {\scriptsize B} (b2.north);
 
     \draw[ultra thick,myblue] (12,0) circle [x radius=1.5cm, y
-                     radius=4cm] (18,0) circle [x radius=1.5cm, y
-                     radius=4cm];
+    radius=4cm] (18,0) circle [x radius=1.5cm, y radius=4cm];
                      
     \node[font=\color{myblue}\Large\bfseries] at (12,5) {A};
 
@@ -194,6 +198,11 @@ A few comments about Coq are at a place. In the above definition, [Inductive] is
     .. node[left] {\scriptsize B} (b2.north); \end{tikzpicture}
     \end{definition}%
 
+    In what follows, we present the Modular Strong Normalisation
+    Theorem and a draft of its proof. In addition, we highligth in
+    %{\color{blue}blue}% the name of the auxiliary results established
+    in the formalisation detailed in the next section.
+
     %\begin{theorem}[Modular Strong Normalisation Theorem]
       
       \noindent Let $\to$ be a relation from $A$ to $B$, $\to_1$ and
@@ -219,24 +228,23 @@ A few comments about Coq are at a place. In the above definition, [Inductive] is
 
       This proof follows the lines of %\cite{LengrandPhD}%, but using
       the standard definition $SN$ in (%\ref{def:sn}%). First of all,
-      hypothesis %\ref{hip:one}% and %\ref{hip:two}% allow us to conclude
-      that the composition $\cdan{(\to_1^* \cdot \to_2)}{(\to_2^* \cdot \to_1)}$ 
-      is strongly simulated by $\to_B$: in fact, from hypothesis %\ref{hip:two}% we
-      have that $\cdan{\to_1^*}{\to_2^*}$ is weakly simulated by $\to_B$. 
-      %\fab{Devemos explicitar o lema correspondente no texto (SimulWeakReflTrans)?}%. 
-      In addition,
-      the composition of two reduction relations that are,
+      hypothesis %\ref{hip:one}% and %\ref{hip:two}% allow us to
+      conclude that the composition $(\to_2^* \cdot \to_1)$ is
+      strongly simulated by $\to_B$: in fact, from hypothesis
+      %\ref{hip:two}% we have that $\to_2^*$ is weakly simulated by
+      $\to_B$ %{\color{blue}({\it SimulWeakReflTrans})}%.  In
+      addition, the composition of two reduction relations that are,
       respectively, strongly and weakly simulated by the same
       reduction relation is strongly simulated by this reduction
-      relation %\fab{(WeakStrongSimul)}%. Therefore, $\cdan{(\to_1^* \cdot \to_2)}{(\to_2^* \cdot \to_1)}$ 
-      is strongly
-      simulated by $\to_B$ through $\to$ %\fab{(RCSimul)}%, that together with the fact
-      that $a\in \leftarrow({SN}^{\to_B})$ allow us to conclude
-      that $a \in {SN}^{\cdan{\to_1^* \cdot \to_2}{\to_2^* \cdot \to_1}}$ %\fab{(SNbySimul)}%. 
-      Now, from hypothesis %\ref{hip:three}%, we have $a \in {SN}^{\to_2}$,
-      and we conclude from the fact that ${SN}^{\cdan{\to_1^* \cdot
-      \to_2}{\to_2^* \cdot \to_1}} \cap {SN}^{\to_2} = {SN}^{\to_1\cup \to_2}$
-      %\fab{(SNunion)}%. *)
+      relation %{\color{blue}({\it WeakStrongSimul})}%. Therefore,
+      $(\to_2^* \cdot \to_1)$ is strongly simulated by $\to_B$ through
+      $\to$ %{\color{blue}({\it RCSimul})}%, that together with the
+      fact that $a\in \leftarrow({SN}^{\to_B})$ allow us to conclude
+      that $a \in {SN}^{\to_2^* \cdot \to_1}$ %{\color{blue}({\it
+      SNbySimul})}%.  Now, from hypothesis %\ref{hip:three}%, we have
+      $a \in {SN}^{\to_2}$, and we conclude from the fact that
+      ${SN}^{\to_2^* \cdot \to_1} \cap {SN}^{\to_2} = {SN}^{\to_1\cup
+      \to_2}$ %{\color{blue}({\it SNunion})}%. *)
 
 (** * The Formalisation *)
 
@@ -790,9 +798,10 @@ Proof.
     + apply (refltailtransit b0); assumption.
     + assumption.
 Qed.
-
+(* end hide *)
 Lemma SimulWeakReflTrans {A B} (redA: Red A) (redB: Red B) (R: Rel A B)
   : WeakSimul redA redB R -> WeakSimul (refltrans redA) redB R.
+(* begin hide *)
 Proof.
   unfold WeakSimul.
   unfold Sub in *.
@@ -919,9 +928,10 @@ Proof.
     apply union_left; assumption.
   - apply inverseof. apply identity.
 Qed.
-
+(* end hide *)
 Lemma UnionReflStrongSimul {A} {redA red'A: Red A}:
   StrongSimul ((refltrans redA) # red'A) (redA !_! red'A) Id.
+(* begin hide *)
 Proof.
   unfold StrongSimul.
   unfold Sub.
@@ -964,8 +974,9 @@ Proof.
            assumption.
       * apply inverseof. apply identity.
 Qed.
-
+(* end hide *)
 Lemma inclUnion {A} {redA red'A: Red A}: forall a, (SN_ind redA a) -> (forall b, (((refltrans redA) # red'A) a b) -> SN_ind (redA !_! red'A) b) -> (SN_ind (redA !_! red'A) a).
+(* begin hide *)
 Proof.
   intros a HSN.
   induction HSN. clear H.
@@ -1005,10 +1016,11 @@ Proof.
       apply IHtrans.
       apply SNstable with a; assumption. 
 Qed.
-
-Lemma SNinclUnion {A} {redA red'A: Red A}: (forall b, SN_ind redA b -> forall c, red'A b c -> SN_ind redA c) ->
-                                           (forall a, (SN_ind ((refltrans redA) # red'A) a) ->
-                                                 (SN_ind redA a) -> (SN_ind (redA !_! red'A) a)).
+(* end hide *)
+Lemma SNinclUnion {A} {redA red'A: Red A}: (forall b, SN_ind redA b ->
+                               forall c, red'A b c -> SN_ind redA c) ->
+                   (forall a, (SN_ind ((refltrans redA) # red'A) a) ->
+                 (SN_ind redA a) -> (SN_ind (redA !_! red'A) a)).
 (* begin hide *)
 Proof.
   intros Hstable a HSNcomp.
@@ -1041,18 +1053,16 @@ Qed.
     Notation "R1 !_! R2" := (union R1 R2) (at level 40).  \end{alltt}%
 
     In addition, we say a predicate [P] is stable w.r.t. the reduction
-    relation [R] if [P b] holds, whenever [P a] holds, for all [a,b]
-    such that [R a b]. So, under the hypothesis of stability of
-    [SN_ind redA] w.r.t. the reduction relation [red'A], the predicate
+    relation [R] when, for all [a] and [b] such that [R a b], [P a]
+    implies [P b]. So, under the hypothesis of stability of [(SN_ind
+    redA)] w.r.t. the reduction relation [red'A], the predicate
     [SN_ind (redA !_! red'A)] can be decomposed as the conjunction
-    [(SN_ind ((refltrans redA) # red'A)) /\ (SN_ind redA)]:
- *)
+    [(SN_ind ((refltrans redA) # red'A)) /\ (SN_ind redA)]: *)
 
 Lemma SNunion {A} {redA red'A: Red A}:
   (forall b, SN_ind redA b -> forall c, red'A b c -> SN_ind redA c) ->
   forall a, (SN_ind (redA !_! red'A) a) <->
        (SN_ind ((refltrans redA) # red'A) a) /\ ((SN_ind redA) a).
-(* begin hide *)
 Proof. 
   intros Hstable a; split.
   - intro HSN. split.
@@ -1079,7 +1089,6 @@ Proof.
     }
     apply HSNunion1; assumption.
 Qed.
-(* end hide *)
 
 (** The Modular Strong Normalisation Theorem, here called
     [ModStrNorm], is then written in the Coq language as follows: *)
@@ -1088,8 +1097,8 @@ Theorem ModStrNorm {A B: Type} {redA red'A: Red A}
         {redB: Red B} {R: Rel A B}:
   (StrongSimul red'A redB R) ->
   (WeakSimul redA redB R) ->
-  (forall b: A, SN_ind redA b) -> forall a, Image (inverse R) (SN_ind redB) a ->
-                                 SN_ind (redA !_! red'A) a.
+  (forall b: A, SN_ind redA b) -> forall a:A, Image (inverse R) (SN_ind redB) a ->
+                                   SN_ind (redA !_! red'A) a.
 Proof.
   (** %{\color{blue} Let}% [A] %{\color{blue}and}% [B]
   %{\color{blue}be types}%, [redA] %{\color{blue}and}% [red'A]
@@ -1102,24 +1111,25 @@ Proof.
                                          [red'A] %{\color{blue}is
                                          strongly simulated by}%
                                          [redB]
-                                         %{\color{blue}through}%
-                                         [R]%{\color{blue}(hypothesis}%
+                                         %{\color{blue}through}% [R]
+                                         %{\color{blue}(hypothesis}%
                                          [Hstrong]%{\color{blue}),
                                          that}% [redA]
                                          %{\color{blue}is weakly
                                          simulated by}% [redB]
-                                         %{\color{blue}through}%
-                                         [R]%{\color{blue}(hypothesis}%
-                                         [Hweak]%{\color{blue}), that
+                                         %{\color{blue}through}% [R]
+                                         %{\color{blue}(hypothesis}%
+                                         [Hweak]%{\color{blue}),
+                                         that}% [SN_ind redA b]
+                                         %{\color{blue}holds for
                                          every}% [b:A]
-                                         %{\color{blue}is such that}%
-                                         [SN_ind redA
-                                         b]%{\color{blue}(hypothesis}%
+                                         %{\color{blue}(hypothesis}%
                                          [HSN]%{\color{blue}), and
                                          let}% [a:A] %{\color{blue}be
                                          an arbitrary element in the
                                          inverse image of}% [SN_ind
-                                         redB]%{\color{blue}(hypothesis}%
+                                         redB]
+                                         %{\color{blue}(hypothesis}%
                                          [HImage] %{\color{blue}). We
                                          need to prove that}% [SN_ind
                                          (redA !_! red'A)
@@ -1149,32 +1159,29 @@ Proof.
     apply HSN.
   }
   destruct Hsplit as [H Hunion]; clear H. (** %{\color{blue}Note that
-                    just one direction of this equivalence is needed.}% *)
+                                              just one direction of
+                                              this equivalence is
+                                              needed.}% *)
 
   apply Hunion; split. (** %{\color{blue}The proof of this conjunction
-  is split in two parts. We first need to prove that}% [SN_ind
-  (refltrans redA # red'A) a]%{\color{blue}, which can be proved by
-  lemma}% [SNbySimul]%{\color{blue}, as long as}% [(refltrans redA #
-  red'A)] %{\color{blue}is strongly simulated by}% [redB]
-  %{\color{blue}through}% [R]. *)
-  
-  - assert(HSNSimul: StrongSimul (refltrans redA # red'A) redB R ->
-                   forall a : A, Image (inverse R) (SN_ind redB) a ->
-                                 SN_ind (refltrans redA # red'A) a).
-  {
-   apply SNbySimul.
-  }
-  
-  apply HSNSimul.
-    + apply RCSimul; assumption. (** %{\color{blue}Now we need to
+                           is split in two parts. We prove that}%
+                           [SN_ind (refltrans redA # red'A)
+                           a]%{\color{blue}, which can be proved by
+                           lemma}% [SNbySimul]%{\color{blue}, as long
+                           as}% [(refltrans redA # red'A)]
+                           %{\color{blue}is strongly simulated by}%
+                           [redB] %{\color{blue}through}% [R]. *)
+
+  - generalize dependent HImage.
+    apply SNbySimul.
+    apply RCSimul; assumption. (** %{\color{blue}Now we need to
                                      prove that}% [(refltrans redA #
                                      red'A)] %{\color{blue}is strongly
                                      simulated by}% [redB]
                                      %{\color{blue}through}%
                                      [R]%{\color{blue}, which is
                                      achieved by lemma}% [RCSimul]. *)
-      
-    + assumption.
+
   - apply HSN. (** %{\color{blue}The second part of the conjunction
                    corresponds to the hypothesis}%
                    [HSN]%{\color{blue}, and we conclude.}% *)
@@ -1187,12 +1194,11 @@ Qed.
     Modular Strong Normalisation Theorem in the Coq Proof
     Assistant. The proof is constructive in the sense that it does not
     use the principle of excluded middle or any other classical rule,
-    such as proof by contradiction. In addition, no additioal Coq
-    libraries is used. The constructive approach is not the standard
-    way to prove termination of a reduction relation. In fact, the
-    most common way to prove termination of a reduction relation is by
-    showing that it does not have infinite reduction sequences, and
-    using proof by contradiction as the reasoning tool
+    such as proof by contradiction. The constructive approach is not
+    the standard way to prove termination of a reduction relation. In
+    fact, the most common way to prove termination of a reduction
+    relation is by showing that it does not have infinite reduction
+    sequences, and using proof by contradiction as the reasoning tool
     (cf. %\cite{terese03,BN98}%). For instance, a classical proof of
     the Modular Strong Normalisation Theorem is available at
     %\cite{kes09}%. Constructive proofs are usually more difficult and
@@ -1212,21 +1218,23 @@ Qed.
 
     The proofs developed in this formalisation follow the ideas
     presented in %\cite{LengrandPhD}%, where a theory of constructive
-    normalisation is developed. This theory is based on a definition
-    of strong normalisation that ... Instead of using Lengrand's
-    definition, we decided to use the standard inductive definition of
-    strong normalisation. A formal proof of the equivalence between
-    these definitions is also provided. In this way, we believe that
-    our presentation is easy to follow and ...
+    normalisation is developed. This theory is based on a different
+    definition of strong normalisation. Instead of using Lengrand's
+    definition, we used a more standard inductive definition of strong
+    normalisation (cf. %\cite{kes09}%). A formal proof of the
+    equivalence between these definitions of strong normalisation is
+    also provided. In this way, we have a simpler and straithforward
+    formalisation of the constructive normalisation theory.
 
     %\cdan{An interesting application of the Modular Strong
     Normalisation Theorem is given in %\cite{kes09}% to establish the
     termination of a calculus with explicit substitutions. Termination
     of calculus with explicit substitutions is a challenging problem
-    that...}{}%
+    that...
 
-     - This is part of a bigger project.  Compatible versions of Coq
+     - This is part of a bigger project.  OK
+     - Compatible versions of Coq ? 8.??
      - General explanation of how to compile and generate
-     - documentation.
+       documentation. (Github)}{}%
 
 *)
