@@ -1,6 +1,6 @@
 (** * Introduction *)
 
-(** It is well known that termination is not a modular property for
+(** It is well-known that termination is not a modular property for
     rewrite systems %\cite{toyama87}%.  A property $P$ of reduction
     relation systems is modular if given two systems $A$ and $B$, the
     property $P$ holds for the combined system built from $A$ and $B$
@@ -14,12 +14,12 @@
     explicit substitutions %\cite{Mellies95,Gu99}%. A calculus with
     explicit substitutions %\cite{Lins86,ACCL91,kes09}% presents some
     formalisation for the substitution operation, defined as a
-    meta-operation in the $\lambda$-calculus. In other words, for the
-    rule $(\lambda{x}. M) N \to_{\beta} M [x:=N]$, $M [x:=N]$
-    represents a term in such a calculus where the substitution is
+    meta-operation in the $\lambda$-calculus. In other words, for
+    rule $(\lambda{x}. M) N \to_{\beta} M [x:=N]$ in such a calculus, $M [x:=N]$
+    represents a term where the substitution is
     defined through a small-step semantics. PSN property in this
-    context guarantees that any strongly normalising term,
-    i.e. terminating, in the $\lambda$-calculus is also strongly
+    context guarantees that any strongly normalising,
+    i.e. terminating, term in the $\lambda$-calculus is also strongly
     normalising in the calculus with explicit substitutions.
  
     The Modular Strong Normalisation Theorem states the conditions for
@@ -59,22 +59,22 @@
     inductive definition of the strong normalisation property
     (cf. %\cite{kes09,LengrandPhD,Raams-phd}%), and we also prove the
     equivalence between these definitions. In this way, we understand
-    that we achieved a simpler and easier to follow formalisation. The
+    that we achieved a simpler and straighforward formalisation. The
     proof of the Modular Strong Normalisation Theorem follows the
     ideas in Lengrand's PhD thesis, but to the best of our knowledge,
     this is the first formalisation of this theorem.
 
-    The contributions of this work can be summarised as follows:
+    The contributions of this work are summarised below.
 
     %\begin{itemize}
 
       \item We provide a complete formalisation of the constructive
       normalisation theory based on the simulation technique developed
-      in \cite{LengrandPhD}.
+      in \cite{LengrandPhD}. In particular:
 
       \begin{itemize}
 
-      \item In particular, we built a constructive proof of the
+      \item We built a constructive proof of the
             Modular Strong Normalisation Theorem, and
 
       \item We proved the equivalence between Lengrand's definition of
@@ -314,22 +314,22 @@ Arguments compose {A B C red1 red2} _ _ _ _ _ .
 
     %\noindent% The corresponding induction principle, named %{\tt
     nat\_ind}\footnote{The name of the automatic induction principle
-    generated follows the pattern {\tt inductive\_definition\_ind},
-    i.e. the name of the inductive definition followed by the string
-    {\tt \_ind}.}%, is given by %\begin{alltt} forall P : nat \(\to\)
-    Prop, P 0 \(\to\) (forall n : nat, P n \(\to\) P (S n)) \(\to\)
-    forall n : nat, P n \end{alltt}%
+    generated follows the pattern {\tt name\_ind}, i.e. the name of
+    the inductive definition followed by the string {\tt \_ind}.}%, is
+    given by %\begin{alltt} forall P : nat \(\to\) Prop, P 0 \(\to\)
+    (forall n : nat, P n \(\to\) P (S n)) \(\to\) forall n : nat, P n
+    \end{alltt}%
 
     Therefore, in order to prove that a certain property %{\tt P}%
-    holds for all %{\tt n: nat}%, one needs to prove that %{\tt P 0}%
-    holds, and that if %{\tt P n}% holds then %{\tt P (S n)}% also
-    holds. In general, if %{\tt def}% is an inductive definition with
-    constructors %{\tt c1}%, %{\tt c2}%, %\ldots%, %{\tt ck}% then, in
-    order to prove that a property %{\tt P}% holds for every element
-    defined by %{\tt def}%, we need to show, in a certain sense, that
-    %{\tt P}% is compatible with each of its constructors. A more
-    precise and detailed explanation about Coq induction principles
-    can be found, for instance, in
+    holds for all %{\tt n: nat}%, one needs to prove that %{\tt (P
+    0)}% holds, and that if %{\tt (P n)}% holds then %{\tt (P (S n))}%
+    also holds. In general, if %{\tt def}% is an inductive definition
+    with constructors %{\tt c1}%, %{\tt c2}%, %\ldots%, %{\tt ck}%
+    then, in order to prove that a property %{\tt P}% holds for every
+    element defined by %{\tt def}%, we need to show, in a certain
+    sense, that %{\tt P}% is compatible with each of its
+    constructors. A more precise and detailed explanation about Coq
+    induction principles can be found, for instance, in
     %\cite{CoqTeam,BC04,cpdt,Pierce:SF}%.
 
     The inverse of a relation from [A] to [B] is inductively defined
@@ -382,14 +382,14 @@ Qed.
 (** The image of a predicate via a relation is inductively defined as
     follows: *)
 
-Inductive Image {A B} (R:Rel A B)(P: A -> Prop): B -> Prop
-  := image: forall a b, P a -> R a b -> Image R P b.
+Inductive Image {A B} (R:Rel A B)(P: A -> Prop): B -> Prop :=
+  image: forall a b, P a -> R a b -> Image R P b.
 (* begin hide *)
 Arguments image {A B R P} _ _ _ _.
 (* end hide *)
 (** The notions of weak and strong simulation of reduction relations
     are a straightforward translation to the Coq language
-    (cf. Def. %\ref{def:sws}%): *)
+    (cf. Definition %\ref{def:sws}%): *)
 
 Definition WeakSimul {A B} (redA: Red A) (redB: Red B) (R: Rel A B) := 
   ((inverse R) # redA) <# ((refltrans redB) # (inverse R)).
@@ -413,11 +413,11 @@ Definition patriarchal {A} (red:Red A) (P:A -> Prop): Prop
   := forall x, (forall y, red x y -> P y) -> P x.
 
 (** In this way, one says that a predicate [P] over [A] is patriarchal
-    w.r.t. a reduction relation over [A], if [P a] holds whenever, for
-    every [red]-reduct [b:A] of [a], [P b] holds. Now, an element
-    [a:A] is strongly normalising w.r.t. to the reduction relation
-    [red], when [P a] holds for every patriarchal predicate [P]
-    w.r.t. reduction relation [red]: *)
+    w.r.t. a reduction relation [red] over [A], if ([P a]) holds
+    whenever ([P b]) holds for every [red]-reduct [b] of [a]. Now, an
+    element [a] is strongly normalising w.r.t. to the reduction
+    relation [red], when [P a] holds for every patriarchal predicate
+    [P] w.r.t. reduction relation [red]: *)
 
 Definition SN {A:Type} (red:Red A) (a:A): Prop
   := forall P, patriarchal red P -> P a.
@@ -425,44 +425,44 @@ Definition SN {A:Type} (red:Red A) (a:A): Prop
 %\cite{lengrand-nt}%. Nevertheless, our proof code is different since
 library [ssreflect] is not used in the present development.
 
-    The definition bellow corresponds to the standard inductive
+    The definition bellow corresponds to the usual inductive
     definition of strong normalisation for reduction relations given
     in (%\ref{def:sn}%): *)
 
-Inductive SN_ind {A:Type} (red: Red A) (a:A): Prop :=
-  | sn_acc: (forall b, red a b -> SN_ind red b) -> SN_ind red a.
+Inductive SN' {A:Type} (red: Red A) (a:A): Prop :=
+  sn_acc: (forall b, red a b -> SN' red b) -> SN' red a.
 (** So, given an element [a:A] and a reduction relation [red] over
     [A], [a] is strongly normalising w.r.t. [red] if every one-step
     [red]-reduct [b] of [a] is strongly normalising w.r.t. [red]. This
-    means that in order to conclude that [SN_ind red a], one has to
-    prove first that [(forall b, red a b -> SN_ind red b)]. In addition,
-    note that predicate [SN_ind red] is patriarchal, and hence it is
-    straightforward that [SN] implies [SN_ind], i.e. that [SN_ind red
-    a] holds, whenever [SN red a] holds, for all reduction relation
-    over [A] and [a:A]. Note that formally, this inductive definition
+    means that in order to conclude that [SN' red a], one has to prove
+    first that [(forall b, red a b -> SN' red b)]. In addition, note that
+    predicate [SN' red] is patriarchal, and hence it is
+    straightforward that [SN] implies [SN'], i.e. that [SN' red a]
+    holds, whenever [SN red a] holds for all [a], and every reduction
+    relation over [A]. Note that formally, this inductive definition
     gives only one direction of the biconditional (%\ref{def:sn}%),
     but the other direction is straightforward: *)
   
-Lemma SNstable {A} {red: Red A}: forall a, SN_ind red a ->
-                                      forall b, red a b -> SN_ind red b.
+Lemma SNstable {A} {red: Red A}: forall a, SN' red a ->
+                                      forall b, red a b -> SN' red b.
 Proof.
   intros a HSN b Hred.
   inversion HSN; clear HSN.
   apply H; assumption. 
 Qed.
-(** This proof does the analysis of the definition [SN_ind] in order
-    to match the hypothesis [SN_ind red a], named [HSN], through the
+(** This proof does the analysis of the definition [SN'] in order
+    to match the hypothesis [SN' red a], named [HSN], through the
     [inversion] tactic, that (informally) replaces the hypothesis
-    [(SN_ind red a)] by the information it contains about it. In this
-    case, the known information comes from the definition of [SN_ind] 
+    [(SN' red a)] by the information it contains about it. In this
+    case, the known information comes from the definition of [SN'] 
     and exactly what we need to prove. *)
 
-(** The induction principle automatically generated for [SN_ind],
-    called [SN_ind_ind], is as follows:
+(** The induction principle automatically generated for [SN'],
+    called [SN'_ind], is as follows:
 
     %\begin{alltt} forall (A : Type) (red : Red A) (P : A -> Prop),
-    (forall c : A, (forall b : A, red c b -> SN_ind red b) -> (forall
-    b : A, red c b -> P b) -> P c) -> forall a : A, SN_ind red a -> P
+    (forall c : A, (forall b : A, red c b -> SN' red b) -> (forall
+    b : A, red c b -> P b) -> P c) -> forall a : A, SN' red a -> P
     a \end{alltt}%
 
     %\noindent% So, in order to conclude that some property [P] holds
@@ -475,11 +475,11 @@ Qed.
     (* %\dan{(na verdade o que temos no principio de inducao eh, supondo *)
     (* que 'a' seja SN e 'P' seja patriarchal, temos que P vale para *)
     (* a. Como isso se compara com a definicao de SN do Lengrand ?)}%. *) In
-    the proof of theorem [SN_indEquivSN], we establish the equivalence
+    the proof of theorem [SN'EquivSN], we establish the equivalence
     between these two definitions, and to do so, we use this induction
     principle. *)
 (* begin hide *)
-Lemma SNTrans {A} {red: Red A}: forall a, SN_ind red a -> SN_ind (trans red) a.
+Lemma SNTrans {A} {red: Red A}: forall a, SN' red a -> SN' (trans red) a.
 Proof.
   induction 1 as [? IHr IHTr]; apply sn_acc; intros ? HTrans;
     induction HTrans as [ ? ? ? | ? ? ? Hr Htr IHtr].
@@ -490,57 +490,58 @@ Proof.
 Qed.
 (* end hide *)
 
-(** The equivalence between definitions [SN] and [SN_ind] is an
+(** The equivalence between definitions [SN] and [SN'] is an
     important contribution of this work, we comment the proof steps in
     order to explain it in more detail. The comments are given in blue
     just after the proof commands they refer to. Note that type [A]
     and a reduction relation [R] over [A] are given as implicit
     arguments, i.e. they are inferred from the context. *)
 
-Theorem SN_indEquivSN {A:Type} {R : Red A} : forall t, SN_ind R t <-> SN R t.
+Theorem SN'EquivSN {A:Type} {R : Red A} : forall t, SN' R t <-> SN R t.
 Proof.
   intro t; split. (** %{\color{blue} These proof commands introduces a
-                      new skolem constant [t] to the proof context and
-                      splits the bi-implication in two steps. This
-                      means that we are considering}% [t]
-                      %{\color{blue}to be an arbitrary element of
+                      new skolem constant}% [t] %{\color{blue}to the
+                      proof context and splits the bi-implication in
+                      two steps. This means that we are considering}%
+                      [t] %{\color{blue}to be an arbitrary element of
                       set}% [A]%{\color{blue}, or more precisely,
                       let}% [t] %{\color{blue} be an element of type}%
                       [A]. *)
   
-  - intro HSN_ind. (** %{\color{blue} The first implication to be
-                       proved is}% [SN_ind R t -> SN R
-                       t]%{\color{blue}, so we assume}% [SN_ind R t]
+  - intro HSN'. (** %{\color{blue} The first implication to be
+                       proved is}% [SN' R t -> SN R
+                       t]%{\color{blue}, so we assume}% [SN' R t]
                        %{\color{blue} and we label this assumption
-                       as}% [HSN_ind]. *)
+                       as}% [HSN']. *)
 
-    apply SN_ind_ind with R. (** %{\color{blue}We proceed by induction
-                                 on the hypothesis}%
-                                 [HSN_ind]. %{\color{blue} This
+    apply SN'_ind with R. (** %{\color{blue}We proceed by induction on
+                                 the hypothesis}%
+                                 [HSN']. %{\color{blue} This
                                  corresponds to the application of the
-                                 induction principle}% [SN_ind_ind]
+                                 induction principle}% [SN'_ind]
                                  %{\color{blue} as explained above, in
                                  which reduction relation}% [red]
                                  %{\color{blue} is instantiated with}%
                                  [R]%{\color{blue}, and predicate}%
-                                 [P]%{\color{blue}, with}% [SN R]. *)
+                                 [P]%{\color{blue}, with}% ([SN
+                                 R]). *)
     
-    + intros a HredSN_ind HredSN. (** %{\color{blue} We call}%
-                                       [HredSN_ind] (%{\color{blue}
+    + intros a HredSN' HredSN. (** %{\color{blue} We call}%
+                                       [HredSN'] (%{\color{blue}
                                        resp.}% [HredSN])
                                        %{\color{blue}the hypothesis}%
-                                       [forall b : A, R a b -> SN_ind R b]
+                                       [forall b : A, R a b -> SN' R b]
                                        (%{\color{blue} resp.}% [forall b :
                                        A, R a b -> SN R b]). *)
       
-      clear HredSN_ind HSN_ind. (** %{\color{blue} Essentially, we
-                                    need to prove the predicate}% [SN
-                                    R] %{\color{blue}is patriarchal,
+      clear HredSN' HSN'. (** %{\color{blue} Essentially, we need to
+                                    prove the predicate}% ([SN R])
+                                    %{\color{blue}is patriarchal,
                                     which can be proved from the
                                     hypothesis}%
                                     [HredSN]%{\color{blue}. We then
                                     remove the unnecessary hypothesis
-                                    that depends on}% [SN_ind]. *)
+                                    that depends on}% [SN']. *)
       
       unfold SN in *. (** %{\color{blue}Unfolding the definition}%
                           [SN]%{\color{blue}, we need to prove that}%
@@ -566,56 +567,56 @@ Proof.
                                     which is exactly the content of
                                     the hypothesis}% [HredSN]. *)
       
-    + assumption. (** %{\color{blue}We conclude stating}% [SN_ind R
-                      t]%{\color{blue}, which is an initial
+    + assumption. (** %{\color{blue}We conclude stating}% ([SN' R
+                      t])%{\color{blue}, which is an initial
                       hypothesis.}% *)
     
   - intro HSN. (** %{\color{blue} On the other direction, suppose
-                   that}% [SN r t]%{\color{blue}, and call this
+                   that}% ([SN r t])%{\color{blue}, and call this
                    hypothesis}% [HSN]. %{\color{blue}We need to prove
-                   that}% [SN_ind R] %{\color{blue}is}%
+                   that}% ([SN' R]) %{\color{blue}is}%
                    [R]%{\color{blue}-patriarchal.}% *)
     
     apply HSN. (** %{\color{blue}Now we can instantiate the
                    universally quantified predicate of the definition
-                   of}% [SN] %{\color{blue}with}% [SN_ind
-                   R]%{\color{blue}. Proving that}% [SN_ind R]
+                   of}% [SN] %{\color{blue}with}% ([SN'
+                   R])%{\color{blue}. Proving that}% ([SN' R])
                    %{\color{blue}is patriarchal corresponds to prove
-                   that}% [forall x : A, (forall y : A, R x y -> SN_ind R
-                   y) -> SN_ind R x]. *)
+                   that}% [forall x : A, (forall y : A, R x y -> SN' R y) -> SN' R
+                   x]. *)
 
-    intros x HSN_ind. (** %{\color{blue}So, let}% [x] %{\color{blue}
-                          be an arbitrary element such that}% [SN_ind
-                          R] %{\color{blue}holds for every}%
+    intros x HSN'. (** %{\color{blue}So, let}% [x] %{\color{blue} be
+                          an arbitrary element such that}% ([SN' R])
+                          %{\color{blue}holds for every}%
                           [R]%{\color{blue}-reduct of}%
                           [x]%{\color{blue}. Call this fact}%
-                          [HSN_ind]. *)
+                          [HSN']. *)
 
     apply sn_acc; assumption. (** %{\color{blue}Now, a proof of}%
-                                  [SN_ind R x]
+                                  ([SN' R x])
                                   %{\color{blue}corresponds, by
                                   definition, to a proof that every}%
                                   [R]%{\color{blue}-reduct}% [y]
                                   %{\color{blue}of}% [x]
-                                  %{\color{blue}is such that}% [SN_ind
-                                  R y] %{\color{blue}, which is
-                                  exactly the content of the
-                                  hypothesis}% [HSN_ind]. *)
+                                  %{\color{blue}is such that}% ([SN' R
+                                  y]) %{\color{blue}, which is exactly
+                                  the content of the hypothesis}%
+                                  [HSN']. *)
 Qed.
 
 (** ** The Main Theorem *)
 
 (** In this section, we present the formal proof main steps of the
     Modular Strong Normalisation Theorem. The proof depends on some
-    results explained in what follows. The first result concerns
-    %\cdan{about}% the composition of weakly and strongly simulated
-    reductions. More precisely, if a reduction relation [redB] weakly
-    simulates a reduction relation [redA1] through [R], and strongly
-    simulates the reduction relation [redA2] through [R] then [redB]
-    strongly simulates the composition [redA1 # redA2] through
-    [R]. This result is intuitively clear, but formal/mechanical
-    proofs of even clear results requires a large amount of details
-    that we decided to explain its steps. *)
+    results explained in what follows. The first result concerns the
+    composition of weakly and strongly simulated reductions. More
+    precisely, if a reduction relation [redB] weakly simulates a
+    reduction relation [redA1] through [R], and strongly simulates the
+    reduction relation [redA2] through [R] then [redB] strongly
+    simulates the composition ([redA1 # redA2]) through [R]. This result
+    is intuitively clear, but formal/mechanical proofs of even clear
+    results requires a large amount of details that we decided to
+    explain its steps. *)
 
 Lemma WeakStrongSimul {A B} (redA1 redA2: Red A) (redB: Red B) (R: Rel A B):
   WeakSimul redA1 redB R ->
@@ -755,6 +756,7 @@ Proof.
                                                  redB]
                                                  %{\color{blue}via the
                                                  element}% [b2]. *)
+
     + assumption. (** %{\color{blue}And}% [b3] %{\color{blue}is
                                                  related to}% [b]
                                                  %{\color{blue}through}%
@@ -798,10 +800,9 @@ Proof.
     + apply (refltailtransit b0); assumption.
     + assumption.
 Qed.
-(* end hide *)
+
 Lemma SimulWeakReflTrans {A B} (redA: Red A) (redB: Red B) (R: Rel A B)
   : WeakSimul redA redB R -> WeakSimul (refltrans redA) redB R.
-(* begin hide *)
 Proof.
   unfold WeakSimul.
   unfold Sub in *.
@@ -827,10 +828,11 @@ Qed.
 (** The next result is a consequence of the lemma
     [WeakStrongSimul]. In fact, it is easy to prove that if [redA] is
     weakly simulated by [redB] through [R] then so is its reflexive
-    transitive closure. Then, by lemma [WeakStrongSimul] the
-    composition of [(refltrans redA)] with [red'A] that is strongly
-    simulated by [redB] through [R] is also strongly simulated by
-    [redB] through [R]. *)
+    transitive closure, which is the content of lemma
+    [SimulWeakReflTrans] available in the source code of the
+    formalisation. Then, by lemma [WeakStrongSimul] the composition of
+    [(refltrans redA)] with [red'A], a strongly simulated reduction
+    relation, is also strongly simulated by [redB] through [R]. *)
 
 Corollary RCSimul {A B} {redA red'A: Red A} {redB: Red B} {R: Rel A B}:
   (StrongSimul red'A redB R) ->
@@ -853,19 +855,19 @@ Qed.
     by simulation theorem, here called [SNbySimul], states that if a
     reduction relation over [A], say [redA], is strongly simulated by
     a reduction relation over [B], say [redB], through [R] then the
-    pre-image of any element that satisfies the predicate [SN_ind
-    redB] also satisfies [SN_ind redA]. A more detailed explanation of
-    this result can be found in %\cite{LengrandPhD}%. *)
+    pre-image of any element that satisfies the predicate ([SN' redB])
+    also satisfies ([SN' redA]). A more detailed explanation of this
+    result can be found in %\cite{LengrandPhD}%. *)
 
 Theorem SNbySimul {A B} {redA: Red A} {redB: Red B} {R: Rel A B}:
   StrongSimul redA redB R ->
-  forall a, Image (inverse R) (SN_ind redB) a -> SN_ind redA a.
+  forall a, Image (inverse R) (SN' redB) a -> SN' redA a.
 (* begin hide *)
 Proof.
   intros Hstrong a Hinv.
   inversion Hinv; subst. clear Hinv.
   inversion H0; subst. clear H0. 
-  assert (HSNTrans: SN_ind (trans redB) a0).
+  assert (HSNTrans: SN' (trans redB) a0).
   {
     apply SNTrans; assumption.
   }  
@@ -894,7 +896,7 @@ Qed.
 Inductive Id {A} : Red A :=
   identity: forall a:A, Id a a.
 
-Lemma HId {A} (red: Red A): forall a, SN_ind red a <-> Image (inverse Id) (SN_ind red) a.
+Lemma HId {A} (red: Red A): forall a, SN' red a <-> Image (inverse Id) (SN' red) a.
 Proof.
   split.
   - intros H.
@@ -928,10 +930,9 @@ Proof.
     apply union_left; assumption.
   - apply inverseof. apply identity.
 Qed.
-(* end hide *)
+
 Lemma UnionReflStrongSimul {A} {redA red'A: Red A}:
   StrongSimul ((refltrans redA) # red'A) (redA !_! red'A) Id.
-(* begin hide *)
 Proof.
   unfold StrongSimul.
   unfold Sub.
@@ -975,8 +976,10 @@ Proof.
       * apply inverseof. apply identity.
 Qed.
 (* end hide *)
-Lemma inclUnion {A} {redA red'A: Red A}: forall a, (SN_ind redA a) -> (forall b, (((refltrans redA) # red'A) a b) -> SN_ind (redA !_! red'A) b) -> (SN_ind (redA !_! red'A) a).
-(* begin hide *)
+
+(** TBD *)
+
+Lemma inclUnion {A} {redA red'A: Red A}: forall a, (SN' redA a) -> (forall b, (((refltrans redA) # red'A) a b) -> SN' (redA !_! red'A) b) -> (SN' (redA !_! red'A) a).
 Proof.
   intros a HSN.
   induction HSN. clear H.
@@ -1002,8 +1005,9 @@ Proof.
     + assumption.
 Qed.
 
+(* begin hide *)
 Lemma stabComp {A} {redA: Red A}: forall a,
-    SN_ind redA a -> forall b, refltrans redA a b -> SN_ind redA b.
+    SN' redA a -> forall b, refltrans redA a b -> SN' redA b.
 Proof.
   intros a HSN b Hrefl.
   generalize dependent HSN.
@@ -1017,77 +1021,164 @@ Proof.
       apply SNstable with a; assumption. 
 Qed.
 (* end hide *)
-Lemma SNinclUnion {A} {redA red'A: Red A}: (forall b, SN_ind redA b ->
-                               forall c, red'A b c -> SN_ind redA c) ->
-                   (forall a, (SN_ind ((refltrans redA) # red'A) a) ->
-                 (SN_ind redA a) -> (SN_ind (redA !_! red'A) a)).
-(* begin hide *)
+
+(** TBD *)
+
+Lemma SNinclUnion {A} {redA red'A: Red A}: (forall b, SN' redA b ->
+                               forall c, red'A b c -> SN' redA c) ->
+                   (forall a, (SN' ((refltrans redA) # red'A) a) ->
+                 (SN' redA a) -> (SN' (redA !_! red'A) a)).
 Proof.
-  intros Hstable a HSNcomp.
-  induction HSNcomp.
-  intros HSN.
-  apply inclUnion.
-  - assumption.
+  intros Hstable a HSNcomp. (** %{\color{blue} Assume the stability
+                               of}% [SN' redA]
+                               %{\color{blue}w.r.t. the reduction
+                               relation}% [red'A]%{\color{blue}, cand
+                               call}% [Hstable] %{\color{blue}this
+                               hypothesis. In addition, call}%
+                               [HSNcomp] %{\color{blue}the
+                               assumption}% [(SN' ((refltrans redA) #
+                               red'A) a)]%{\color{blue}, for an
+                               arbitrary element}% [a]. *)
+  
+  induction HSNcomp. (** %{\color{blue}We proceed by induction on the
+                         hypothesis}%
+                         [HSNcomp]. %{\color{blue}Therefore, we need
+                         to prove our goal, assuming that it holds for
+                         all}% [(refltrans redA #
+                         red'A)]%{\color{blue}-reduct of}%
+                         [a]%{\color{blue}, and we call}% [H0]
+                         %{\color{blue}this fact}%. *)
+  
+  intros HSN. (** %{\color{blue}Let}% [HSN] %{\color{blue}be the
+                  hypothesis}% [SN' redA a]. *)
+
+  apply inclUnion. (** %{\color{blue}By lemma}% [SNinclUnion]
+  %{\color{blue} we can prove}% [SN' (redA !_!  red'A) a]
+  %{\color{blue}if}% [SN' redA a] %{\color{blue}and}% [(forall b : A,
+  (refltrans redA # red'A) a b -> SN' (redA !_! red'A) b)]. *)
+
+  - assumption. (** %{\color{blue}The first fact is the hypothesis}%
+                    [HSN] *)
+    
   - intros b Hcomp.    
-    apply H0.
-    + assumption.
+    apply H0. 
+    + assumption. (** %{\color{blue}The second fact comes partially
+                   from the hypothesis}% [H0]%{\color{blue}, but we
+                   also have to prove}% [SN' redA b]. *)
+      
     + inversion Hcomp; subst. clear Hcomp.
-      assert(H': SN_ind redA b0).
+      assert(H': SN' redA b0).
       {
         apply stabComp with a; assumption.
       }
-      apply Hstable with b0; assumption.
+      apply Hstable with b0; assumption. (** %{\color{blue}We conclude
+                                             using the fact that}%
+                                             [SN' redA]
+                                             %{\color{blue}is stable
+                                             w.r.t}% [red'A]. *)
 Qed.
-(* end hide *)
 
 (** %\noindent% The next lemma gives a characterisation of the
-    predicate [SN_ind (redA !_! red'A)], where [redA !_! red'A]
-    denotes the union of the reduction relations [redA] and
-    [red'A]. The union of two reduction relations is defined as
-    follows:
+    predicate [SN' (redA !_! red'A)], where [redA !_! red'A] denotes
+    the union of the reduction relations [redA] and [red'A]. The union
+    of two reduction relations is inductively defined as follows:
 
-    %\begin{alltt} Inductive union {A} (red1 red2: Red A) : Red A := |
-    union_left: forall a b, red1 a b -> union red1 red2 a b |
-    union_right: forall a b, red2 a b -> union red1 red2 a b.
+    %\begin{alltt} 
+    Inductive union {A} (red1 red2: Red A) : Red A := 
+    | union_left: forall a b, red1 a b -> union red1 red2 a b 
+    | union_right: forall a b, red2 a b -> union red1 red2 a b.
 
-    Notation "R1 !_! R2" := (union R1 R2) (at level 40).  \end{alltt}%
+    Notation "R1 !_! R2" := (union R1 R2) (at level 40).  
+    \end{alltt}% *)
 
-    In addition, we say a predicate [P] is stable w.r.t. the reduction
-    relation [R] when, for all [a] and [b] such that [R a b], [P a]
-    implies [P b]. So, under the hypothesis of stability of [(SN_ind
-    redA)] w.r.t. the reduction relation [red'A], the predicate
-    [SN_ind (redA !_! red'A)] can be decomposed as the conjunction
-    [(SN_ind ((refltrans redA) # red'A)) /\ (SN_ind redA)]: *)
+    (** Another important property used in the next lemma is called
+    %{\it stability}%. We say a predicate [P] is stable w.r.t. the
+    reduction relation [R] when, for all [a] and [b] such that [R a
+    b], [P a] implies [P b]. So, under the hypothesis of stability of
+    [(SN' redA)] w.r.t. the reduction relation [red'A], the predicate
+    [SN' (redA !_! red'A)] can be decomposed as the conjunction
+
+         [(SN' ((refltrans redA) # red'A)) /\ (SN' redA)]: *)
 
 Lemma SNunion {A} {redA red'A: Red A}:
-  (forall b, SN_ind redA b -> forall c, red'A b c -> SN_ind redA c) ->
-  forall a, (SN_ind (redA !_! red'A) a) <->
-       (SN_ind ((refltrans redA) # red'A) a) /\ ((SN_ind redA) a).
+  (forall b, SN' redA b -> forall c, red'A b c -> SN' redA c) ->
+  forall a, (SN' (redA !_! red'A) a) <->
+       (SN' ((refltrans redA) # red'A) a) /\ ((SN' redA) a).
 Proof. 
-  intros Hstable a; split.
-  - intro HSN. split.
-    + assert (HSsimul: StrongSimul (refltrans redA # red'A) (redA !_! red'A) Id).
-      {
-        apply UnionReflStrongSimul.
-      }
-      apply HId in HSN.
-      generalize dependent HSN.
-      apply SNbySimul; assumption.
-    + assert (HSsimul: StrongSimul redA (redA !_! red'A) Id).
-      {
-        apply UnionStrongSimul.
-      }
-      apply HId in HSN.
-      generalize dependent HSN.
-      apply SNbySimul; assumption.
+  intros Hstable a; split. (** %{\color{blue}The proof of this lemma
+  is as follows: Suppose that}% ([SN' redA]) %{\color{blue}is stable
+  w.r.t. the reduction relation}% [red'A]%{\color{blue}. Call this
+  hypothesis}% [Hstable]. %{\color{blue}Split the bi-implication in
+  two cases:}% *)
+  
+  - intro HSN. split. (** %{\color{blue}In the first case, call}%
+                          [HSN] %{\color{blue}the hypothesis}% 
+
+                          [SN' (redA !_! red'A) a]. *)
+    
+    + apply HId in HSN.
+      generalize dependent HSN. (** %{\color{blue}In order to match
+                                    the structure of lemma}%
+                                    [SNbySimul]%{\color{blue}, we
+                                    rewrite}% [SN' (redA !_! red'A) a]
+                                    %{\color{blue}as}% [Image (inverse
+                                    Id) (SN' (redA !_! red'A)) a]. *)
+
+      apply SNbySimul. (** %{\color{blue}By lemma}%
+                           [SNbySimul]%{\color{blue}, we then need to
+                           prove that}% [(refltrans redA # red'A)]
+                           %{\color{blue}is strongly simulated by}%
+                           [(redA !_! red'A)] %{\color{blue}through
+                           some relation}%. *)
+
+      apply UnionReflStrongSimul. (** %{\color{blue}This fact is
+                                      proved in lemma}%
+                                      [UnionReflStrongSimul]
+                                      %{\color{blue}using the identity
+                                      relation over}%
+                                      [A]%{\color{blue}, that is}%
+                                      [(refltrans redA # red'A)]
+                                      %{\color{blue}is strongly
+                                      simulated by}% [(redA !_!
+                                      red'A)] %{\color{blue}through}%
+                                      [Id].  *)
+
+    + apply HId in HSN.
+      generalize dependent HSN. (** %{\color{blue}The second component
+                                    of the conjunction requires a
+                                    similar strategy to match lemma}%
+                                    [SNbySimul]. *)
+      
+      apply SNbySimul.
+      apply UnionStrongSimul . (** %{\color{blue} We conclude using
+                                   the fact that a reduction relation
+                                   is strongly simulated by the union
+                                   of itself with any other reduction
+                                   relation through the identity
+                                   relation. This fact is formalised
+                                   in lemma}% [UnionStrongSimul]. *)
+
   - intro Hand.
-    destruct Hand as [Hcomp HredA].
-    assert (HSNunion1: (SN_ind ((refltrans redA) # red'A) a) ->
-                       (SN_ind redA a) -> (SN_ind (redA !_! red'A) a)).
-    {
-      apply SNinclUnion; assumption.
-    }
-    apply HSNunion1; assumption.
+    destruct Hand as [Hcomp HredA]. (** %{\color{blue}On
+                                                    the other
+                                                    direction, call}%
+                                                    [Hcomp]
+                                                    %{\color{blue}(resp.}%
+                                                    [HredA]
+                                                    %{\color{blue})
+                                                    the hypothesis}%
+                                                    [SN' (refltrans
+                                                    redA # red'A) a]
+                                                    %{\color{blue}(resp.}%
+                                                    [SN' redA a]
+                                                    %{\color{blue})}%. *)
+
+    generalize dependent HredA.
+    generalize dependent a.
+    apply SNinclUnion; assumption. (** %{\color{blue}We conclude
+                                       that}% [SN' (redA !_! red'A) a]
+                                       %{\color{blue}by lemma}%
+                                       [SNinclUnion]. *)
 Qed.
 
 (** The Modular Strong Normalisation Theorem, here called
@@ -1097,8 +1188,8 @@ Theorem ModStrNorm {A B: Type} {redA red'A: Red A}
         {redB: Red B} {R: Rel A B}:
   (StrongSimul red'A redB R) ->
   (WeakSimul redA redB R) ->
-  (forall b: A, SN_ind redA b) -> forall a:A, Image (inverse R) (SN_ind redB) a ->
-                                   SN_ind (redA !_! red'A) a.
+  (forall b: A, SN' redA b) -> forall a:A, Image (inverse R) (SN' redB) a ->
+                                   SN' (redA !_! red'A) a.
 Proof.
   (** %{\color{blue} Let}% [A] %{\color{blue}and}% [B]
   %{\color{blue}be types}%, [redA] %{\color{blue}and}% [red'A]
@@ -1120,27 +1211,27 @@ Proof.
                                          %{\color{blue}through}% [R]
                                          %{\color{blue}(hypothesis}%
                                          [Hweak]%{\color{blue}),
-                                         that}% [SN_ind redA b]
+                                         that}% [SN' redA b]
                                          %{\color{blue}holds for
                                          every}% [b:A]
                                          %{\color{blue}(hypothesis}%
                                          [HSN]%{\color{blue}), and
                                          let}% [a:A] %{\color{blue}be
                                          an arbitrary element in the
-                                         inverse image of}% [SN_ind
+                                         inverse image of}% [SN'
                                          redB]
                                          %{\color{blue}(hypothesis}%
                                          [HImage] %{\color{blue}). We
-                                         need to prove that}% [SN_ind
+                                         need to prove that}% [SN'
                                          (redA !_! red'A)
                                          a]%{\color{blue}. By lemma}%
                                          [SNunion] %{\color{blue}this
                                          is equivalent to prove that}%
-                                         [SN_ind (refltrans redA #
-                                         red'A) a /\ SN_ind redA
+                                         [SN' (refltrans redA #
+                                         red'A) a /\ SN' redA
                                          a]%{\color{blue}, under the
                                          hypothesis of stability of}%
-                                         [SN_ind redA]
+                                         [SN' redA]
                                          %{\color{blue}w.r.t. the
                                          reduction relation}%
                                          [red'A]%{\color{blue}, which
@@ -1149,10 +1240,10 @@ Proof.
                                          %{\color{blue}since every
                                          element of}% [A]
                                          %{\color{blue}satisfies the
-                                         predicate}% [SN_ind redA]. *)
+                                         predicate}% [SN' redA]. *)
 
-  assert(Hsplit: SN_ind (redA !_! red'A) a <->
-                    SN_ind (refltrans redA # red'A) a /\ SN_ind redA a).
+  assert(Hsplit: SN' (redA !_! red'A) a <->
+                    SN' (refltrans redA # red'A) a /\ SN' redA a).
   {
     apply SNunion.
     intros b HSN' c Hred.
@@ -1165,7 +1256,7 @@ Proof.
 
   apply Hunion; split. (** %{\color{blue}The proof of this conjunction
                            is split in two parts. We prove that}%
-                           [SN_ind (refltrans redA # red'A)
+                           [SN' (refltrans redA # red'A)
                            a]%{\color{blue}, which can be proved by
                            lemma}% [SNbySimul]%{\color{blue}, as long
                            as}% [(refltrans redA # red'A)]
@@ -1196,11 +1287,12 @@ Qed.
     use the principle of excluded middle or any other classical rule,
     such as proof by contradiction. The constructive approach is not
     the standard way to prove termination of a reduction relation. In
-    fact, the most common way to prove termination of a reduction
-    relation is by showing that it does not have infinite reduction
-    sequences, and using proof by contradiction as the reasoning tool
+    fact, the %\cdan{most common way}{usual technique}% to prove termination of a reduction
+    relation is %\odan{by}% showing that it does not have infinite reduction
+    sequences %\cdan{, and using proof by contradiction as the reasoning tool}{through a proof by contradiction}%
     (cf. %\cite{terese03,BN98}%). For instance, a classical proof of
-    the Modular Strong Normalisation Theorem is available at
+    the Modular Strong Normalisation Theorem is %\cdan{available}{presented}% 
+    at
     %\cite{kes09}%. Constructive proofs are usually more difficult and
     elaborate than classical ones, but the former are preferred in the
     context of Computer Science.
@@ -1211,7 +1303,7 @@ Qed.
     non-trivial result in abstract reduction systems that uses the
     well-known technique of termination by simulation, i.e. the
     termination of a reduction system is obtained by simulating its
-    steps via another reduction relation that is known to be
+    steps via another reduction relation %\odan{that is}% known to be
     terminating. The theorem is, for instance, applied in
     %\cite{kes09}% to establish the PSN property of a calculus with
     explicit substitutions.
@@ -1221,7 +1313,7 @@ Qed.
     normalisation is developed. This theory is based on a different
     definition of strong normalisation. Instead of using Lengrand's
     definition, we used a more standard inductive definition of strong
-    normalisation (cf. %\cite{kes09}%). A formal proof of the
+    normalisation (cf. %\cite{kes09,LengrandPhD,Raams-phd}%). A formal proof of the
     equivalence between these definitions of strong normalisation is
     also provided. In this way, we have a simpler and straithforward
     formalisation of the constructive normalisation theory.

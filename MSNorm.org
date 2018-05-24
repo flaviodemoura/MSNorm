@@ -18,6 +18,7 @@ bibliography:~/Dropbox/bibliography/references.bib
 ** cite:LengrandPhD
 ** cite:lengSNInd05
 ** cite:raamsdonk99:_perpet_reduc_calcul 
+** cite:Raams-phd
 ** cite:GirardPT 
 ** cite:kes09
 ** cite:BN98 
