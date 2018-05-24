@@ -1,6 +1,6 @@
 (** * Introduction *)
 
-(** It is well known that termination is not a modular property for
+(** It is well-known that termination is not a modular property for
     rewrite systems %\cite{toyama87}%.  A property $P$ of reduction
     relation systems is modular if given two systems $A$ and $B$, the
     property $P$ holds for the combined system built from $A$ and $B$
@@ -14,12 +14,12 @@
     explicit substitutions %\cite{Mellies95,Gu99}%. A calculus with
     explicit substitutions %\cite{Lins86,ACCL91,kes09}% presents some
     formalisation for the substitution operation, defined as a
-    meta-operation in the $\lambda$-calculus. In other words, for the
-    rule $(\lambda{x}. M) N \to_{\beta} M [x:=N]$, $M [x:=N]$
-    represents a term in such a calculus where the substitution is
+    meta-operation in the $\lambda$-calculus. In other words, for
+    rule $(\lambda{x}. M) N \to_{\beta} M [x:=N]$ in such a calculus, $M [x:=N]$
+    represents a term where the substitution is
     defined through a small-step semantics. PSN property in this
-    context guarantees that any strongly normalising term,
-    i.e. terminating, in the $\lambda$-calculus is also strongly
+    context guarantees that any strongly normalising,
+    i.e. terminating, term in the $\lambda$-calculus is also strongly
     normalising in the calculus with explicit substitutions.
  
     The Modular Strong Normalisation Theorem states the conditions for
@@ -59,22 +59,22 @@
     inductive definition of the strong normalisation property
     (cf. %\cite{kes09,LengrandPhD,Raams-phd}%), and we also prove the
     equivalence between these definitions. In this way, we understand
-    that we achieved a simpler and easier to follow formalisation. The
+    that we achieved a simpler and straighforward formalisation. The
     proof of the Modular Strong Normalisation Theorem follows the
     ideas in Lengrand's PhD thesis, but to the best of our knowledge,
     this is the first formalisation of this theorem.
 
-    The contributions of this work can be summarised as follows:
+    The contributions of this work are summarised below.
 
     %\begin{itemize}
 
       \item We provide a complete formalisation of the constructive
       normalisation theory based on the simulation technique developed
-      in \cite{LengrandPhD}.
+      in \cite{LengrandPhD}. In particular:
 
       \begin{itemize}
 
-      \item In particular, we built a constructive proof of the
+      \item We built a constructive proof of the
             Modular Strong Normalisation Theorem, and
 
       \item We proved the equivalence between Lengrand's definition of
@@ -1196,11 +1196,12 @@ Qed.
     use the principle of excluded middle or any other classical rule,
     such as proof by contradiction. The constructive approach is not
     the standard way to prove termination of a reduction relation. In
-    fact, the most common way to prove termination of a reduction
-    relation is by showing that it does not have infinite reduction
-    sequences, and using proof by contradiction as the reasoning tool
+    fact, the %\cdan{most common way}{usual technique}% to prove termination of a reduction
+    relation is %\odan{by}% showing that it does not have infinite reduction
+    sequences %\cdan{, and using proof by contradiction as the reasoning tool}{through a proof by contradiction}%
     (cf. %\cite{terese03,BN98}%). For instance, a classical proof of
-    the Modular Strong Normalisation Theorem is available at
+    the Modular Strong Normalisation Theorem is %\cdan{available}{presented}% 
+    at
     %\cite{kes09}%. Constructive proofs are usually more difficult and
     elaborate than classical ones, but the former are preferred in the
     context of Computer Science.
@@ -1211,7 +1212,7 @@ Qed.
     non-trivial result in abstract reduction systems that uses the
     well-known technique of termination by simulation, i.e. the
     termination of a reduction system is obtained by simulating its
-    steps via another reduction relation that is known to be
+    steps via another reduction relation %\odan{that is}% known to be
     terminating. The theorem is, for instance, applied in
     %\cite{kes09}% to establish the PSN property of a calculus with
     explicit substitutions.
@@ -1221,7 +1222,7 @@ Qed.
     normalisation is developed. This theory is based on a different
     definition of strong normalisation. Instead of using Lengrand's
     definition, we used a more standard inductive definition of strong
-    normalisation (cf. %\cite{kes09}%). A formal proof of the
+    normalisation (cf. %\cite{kes09,LengrandPhD,Raams-phd}%). A formal proof of the
     equivalence between these definitions of strong normalisation is
     also provided. In this way, we have a simpler and straithforward
     formalisation of the constructive normalisation theory.
