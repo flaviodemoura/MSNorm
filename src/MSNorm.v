@@ -1022,7 +1022,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** TBD *)
+(** TBD The next result... *)
 
 Lemma SNinclUnion {A} {redA red'A: Red A}: (forall b, SN' redA b ->
                                forall c, red'A b c -> SN' redA c) ->
