@@ -977,32 +977,91 @@ Proof.
 Qed.
 (* end hide *)
 
-(** TBD *)
+(** The next lemma shows that predicate [SN' (redA !_! red'A)] is
+    patriarchal w.r.t. the reduction relation [((refltrans redA) #
+    red'A)]. *)
 
 Lemma inclUnion {A} {redA red'A: Red A}: forall a, (SN' redA a) -> (forall b, (((refltrans redA) # red'A) a b) -> SN' (redA !_! red'A) b) -> (SN' (redA !_! red'A) a).
 Proof.
-  intros a HSN.
-  induction HSN. clear H.
-  intros Hyp.
-  apply sn_acc.
-  intros b0 Hunion.
-  inversion Hunion; subst.
-  - apply H0.
-    + assumption.
-    + intros b' Hrefl.
-      apply Hyp.
-      inversion Hrefl; subst.
-      apply compose with b.
-      * apply refltailtransit with b0.
-        ** apply transSub in H.
-           apply atleast1 in H.
-           assumption.
+  intros a HSN. (** %{\color{blue}Given an arbitrary element}%
+                    [a]%{\color{blue}, let}% [HSN] %{\color{blue}be
+                    the hypothesis}% [SN' redA a]. *)
+  
+  induction HSN. clear H. (** %{\color{blue}We proceed by induction
+                              on}% [HSN]%{\color{blue}. This, means
+                              that we can assume that our goal holds
+                              for all one-step}%
+                              [redA]%{\color{blue}-reduct of}%
+                              [a]%{\color{blue}. Call this
+                              assumption}% [H0]. *)
+  
+  intro H. (** %{\color{blue}Let}% [H] %{\color{blue}be the
+               hypothesis}% [forall b : A, (refltrans redA # red'A) a b ->
+               SN' (redA !_!  red'A) b] *)
+  
+  apply sn_acc. (** %{\color{blue}Applying the definition}% [SN']
+  %{\color{blue}to our goal}% [SN' (redA !_! red'A) a]%{\color{blue},
+  means that this property must also be proved for all one-step}%
+  [(redA !_!  red'A)]%{\color{blue}-reduct of}% [a] %{\color{blue},
+  i.e. we need to prove}% [forall b : A, (redA !_! red'A) a b -> SN' (redA
+  !_! red'A) b]. *)
+  
+  intros b Hunion. (** %{\color{blue}Let}% [b] %{\color{blue}be a
+                       one-step}% [(redA !_!
+                       red'A)]%{\color{blue}-reduct of}%
+                       [a]%{\color{blue}, and}% [Hunion]
+                       %{\color{blue}the hypothesis}% [(redA !_!
+                       red'A) a b]. *)
+  
+  inversion Hunion; subst. (** %{\color{blue}Since}% [(redA !_! red'A)
+                               a b] %{\color{blue}we have that
+                               either}% [redA a b] %{\color{blue}or}
+                               [red'A a b]. *)
+
+  - apply H0. (** %{\color{blue}In the first case the hypothesis}%
+                  [H0] %{\color{blue}reduces our proof to two
+                  subgoals.}% *)
+    
+    + assumption. (** %{\color{blue}The first one}% [redA a b]
+    %{\color{blue}is closed by assumption}% *)
+      
+    + intros b' Hrefl. (** %{\color{blue}The second subgoal is}% [SN'
+                           (redA !_! red'A) b'] %{\color{blue}where}%
+                           [b'] %{\color{blue}is a}% [(redA !_!
+                           red'A)]%{\color{blue}reduct of}% [b]. *)
+      
+      apply H. (** %{\color{blue}Applying the hypothesis}%
+                   [H]%{\color{blue}, we need to prove}% [(refltrans
+                   redA # red'A) a b']. *)
+
+      inversion Hrefl; subst. (** %{\color{blue}From the composition
+                                  expressed in hypothesis}%
+                                  [Hrefl]%{\color{blue}, we have that
+                                  there is an element}% [b0]
+                                  %{\color{blue}such that}% [refltrans
+                                  redA b b0] %{\color{blue}and}%
+                                  [red'A b0 b']. *)
+
+      apply compose with b0. (** %{\color{blue}Similarly, our goal can
+                                 be decomposed with the above
+                                 element}% [b0]%{\color{blue}, leading
+                                 to two subcases:}% *)
+
+      * apply refltailtransit with b. (** %{\color{blue}The first
+                                          subcase}% [refltrans redA a
+                                          b0] %{\color{blue}is proved
+                                          from hypothesis}% [redA a b]
+                                          %{\color{blue}and}%
+                                          [refltrans redA b b0]. *)
+        ** apply atleast1.
+           apply singl; assumption.
         ** assumption.
       * assumption.
-  - apply Hyp.
+  - apply H.
     apply compose with a.
     + apply reflex.
-    + assumption.
+    + assumption. (** %{\color{blue}The second subcase is closed by
+                      assumption.}% *)
 Qed.
 
 (* begin hide *)
@@ -1022,7 +1081,10 @@ Proof.
 Qed.
 (* end hide *)
 
-(** TBD The next result... *)
+(** The following lemma states the conditions for a union of two
+    reduction relations [redA] and [red'A] to be strongly
+    normalising. It corresponds to one direction of the bi-implication
+    of lemma [SNunion] below. *)
 
 Lemma SNinclUnion {A} {redA red'A: Red A}: (forall b, SN' redA b ->
                                forall c, red'A b c -> SN' redA c) ->
@@ -1287,12 +1349,11 @@ Qed.
     use the principle of excluded middle or any other classical rule,
     such as proof by contradiction. The constructive approach is not
     the standard way to prove termination of a reduction relation. In
-    fact, the %\cdan{most common way}{usual technique}% to prove termination of a reduction
-    relation is %\odan{by}% showing that it does not have infinite reduction
-    sequences %\cdan{, and using proof by contradiction as the reasoning tool}{through a proof by contradiction}%
+    fact, the usual technique to prove termination of a reduction
+    relation is showing that it does not have infinite reduction
+    sequences through a proof by contradiction
     (cf. %\cite{terese03,BN98}%). For instance, a classical proof of
-    the Modular Strong Normalisation Theorem is %\cdan{available}{presented}% 
-    at
+    the Modular Strong Normalisation Theorem is presented at
     %\cite{kes09}%. Constructive proofs are usually more difficult and
     elaborate than classical ones, but the former are preferred in the
     context of Computer Science.
@@ -1303,30 +1364,31 @@ Qed.
     non-trivial result in abstract reduction systems that uses the
     well-known technique of termination by simulation, i.e. the
     termination of a reduction system is obtained by simulating its
-    steps via another reduction relation %\odan{that is}% known to be
-    terminating. The theorem is, for instance, applied in
-    %\cite{kes09}% to establish the PSN property of a calculus with
-    explicit substitutions.
+    steps via another reduction relation known to be terminating. The
+    theorem is, for instance, applied in %\cite{kes09}% to establish
+    the PSN property of a calculus with explicit substitutions.
 
     The proofs developed in this formalisation follow the ideas
     presented in %\cite{LengrandPhD}%, where a theory of constructive
     normalisation is developed. This theory is based on a different
     definition of strong normalisation. Instead of using Lengrand's
     definition, we used a more standard inductive definition of strong
-    normalisation (cf. %\cite{kes09,LengrandPhD,Raams-phd}%). A formal proof of the
-    equivalence between these definitions of strong normalisation is
-    also provided. In this way, we have a simpler and straithforward
-    formalisation of the constructive normalisation theory.
+    normalisation (cf. %\cite{kes09,LengrandPhD,Raams-phd}%). A formal
+    proof of the equivalence between these definitions of strong
+    normalisation is also provided. In this way, we have a simpler and
+    straithforward formalisation of the constructive normalisation
+    theory. *)
 
-    %\cdan{An interesting application of the Modular Strong
-    Normalisation Theorem is given in %\cite{kes09}% to establish the
-    termination of a calculus with explicit substitutions. Termination
-    of calculus with explicit substitutions is a challenging problem
-    that...
+    (*
+       
+       An interesting application of the Modular Strong Normalisation
+       Theorem is given in %\cite{kes09}% to establish the termination
+       of a calculus with explicit substitutions. Termination of
+       calculus with explicit substitutions is a challenging problem
+       that...
 
-     - This is part of a bigger project.  OK
-     - Compatible versions of Coq ? 8.??
-     - General explanation of how to compile and generate
-       documentation. (Github)}{}%
+     - This is part of a bigger project.  OK Compatible versions of
+     - Coq ? 8.??  General explanation of how to compile and generate
+     - documentation. (Github) 
 
-*)
+     *)
