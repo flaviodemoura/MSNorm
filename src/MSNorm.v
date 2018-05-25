@@ -93,28 +93,29 @@
 (** * The Modular Strong Normalisation Theorem *)
 
 (** In this section, we present the Modular Strong Normalisation
-    Theorem whose formalisation %\cdan{will be}{is}% detailed in the next
-    section. This is an abstract theorem about termination of
-    reduction relations through the well-known simulation technique
-    %\cite{BN98}%. In order to fix notation, let [A] and [B] be
-    sets. A relation from [A] to [B] is a subset of $A\times B$. If
-    $R$ is a relation from [A] to [B] then we write $R\ a\ b$ instead
-    of $(a,b) \in R$ and, in this case, we say that $a$ %{\it
-    reduces}% to $b$ %\dan{or that $b$ is a $R$-%{\it reduct}% of $a$}%. Using arrows to denote relations and $\to$ being
-    a relation from [A] to [B] then $\leftarrow$ denotes the inverse
-    relation from [B] to [A]. If $\to_1$ is a relation from $A$ to
-    $B$ and $\to_2$ is a relation from $B$ to $C$, then the
-    composition of $\to_1$ with $\to_2$, written $\to_1\cdot \to_2$,
-    is a relation from $A$ to $C$. A relation from a set to itself is
-    a %{\it reduction relation over a set}%, i.e. a reduction relation
-    over A is a subset of $A\times A$. If $\to_A$ is a reduction
-    relation over $A$, then a %{\it reduction sequence}% is a sequence
-    of the form $a_0 \to_A a_1 \to_A a_2 \to_A \ldots$ A reduction
-    sequence $a_0 \to_A a_1 \to_A a_2 \to_A \ldots \to_A a_n\ (n\geq
-    0)$ is a $n$-step reduction from $a_0$. A reduction sequence is
-    finite if it is a $n$-step reduction for some $n \in \mathbb{N}$,
-    and infinite otherwise. We write $\to_A^+$ (resp. $\to_A^*$) for
-    the transitive (resp. reflexive transitive) closure of $\to_A$.
+    Theorem whose formalisation is detailed in the next section. This
+    is an abstract theorem about termination of reduction relations
+    through the well-known simulation technique %\cite{BN98}%. In
+    order to fix notation, let [A] and [B] be sets. A relation from
+    [A] to [B] is a subset of $A\times B$. If $R$ is a relation from
+    [A] to [B] then we write $R\ a\ b$ instead of $(a,b) \in R$ and,
+    in this case, we say that $a$ %{\it reduces}% to $b$ or that $b$
+    is a $R$-%{\it reduct}% of $a$. Using arrows to denote relations
+    and $\to$ being a relation from [A] to [B] then $\leftarrow$
+    denotes the inverse relation from [B] to [A]. If $\to_1$ is a
+    relation from $A$ to $B$ and $\to_2$ is a relation from $B$ to
+    $C$, then the composition of $\to_1$ with $\to_2$, written
+    $\to_1\cdot \to_2$, is a relation from $A$ to $C$. A relation from
+    a set to itself is a %{\it reduction relation over a set}%, i.e. a
+    reduction relation over A is a subset of $A\times A$. If $\to_A$
+    is a reduction relation over $A$, then a %{\it reduction
+    sequence}% is a sequence of the form $a_0 \to_A a_1 \to_A a_2
+    \to_A \ldots$ A reduction sequence $a_0 \to_A a_1 \to_A a_2 \to_A
+    \ldots \to_A a_n\ (n\geq 0)$ is a $n$-step reduction from $a_0$. A
+    reduction sequence is finite if it is a $n$-step reduction for
+    some $n \in \mathbb{N}$, and infinite otherwise. We write
+    $\to_A^+$ (resp. $\to_A^*$) for the transitive (resp. reflexive
+    transitive) closure of $\to_A$.
     
     An element $a\in A$ is %{\it strongly normalising}% w.r.t. $\to_A$
     if every reduction sequence starting from $a$ is finite, and in
@@ -200,9 +201,8 @@ are arbitrary sets:
 
     In what follows, we present the Modular Strong Normalisation
     Theorem and a draft of its proof. In addition, we highligth in
-    %{\color{blue}blue}% the names of the %\cdan{auxiliary}{corresponding}% 
-    results established
-    in the formalisation, detailed in the next section.
+    %{\color{blue}blue}% the names of the corresponding results
+    established in the formalisation, detailed in the next section.
 
     %\begin{theorem}[Modular Strong Normalisation Theorem]
       
@@ -281,13 +281,14 @@ Definition Red (A : Type) := Rel A A.
 
 Definition Sub {A B} (R1 R2: Rel A B) : Prop := forall a b, R1 a b -> R2 a b.
 (** In the above definition, [A] and [B] first appear between curly
-    brackets, %\cdan{which means}{meaning}% that these arguments are %{\it
-    implicit}%. Implicit arguments are %\dan{the}% types of polymorphic functions
-    %\cdan{that}{which}% can be inferred from the context. Therefore, [Sub] requires
-    two relations as %\dan{explicit}% arguments %\cdan{, and}{while}% Coq automatically infers its
-    type. %\cdan{A m}{M}%ore convenient notations can be easily defined for objects
-    we are constructing. %\cdan{In}{For instance, in}% the [Sub] predicate case we define an
-    infix notation as follows: *)
+    brackets, meaning that these arguments are %{\it
+    implicit}%. Implicit arguments are the types of polymorphic
+    functions which can be inferred from the context. Therefore, [Sub]
+    requires two relations as explicit arguments while Coq
+    automatically infers its type. More convenient notations can be
+    easily defined for objects we are constructing. For instance, in
+    the [Sub] predicate case we define an infix notation as follows:
+    *)
 
 Notation "R1 <# R2" := (Sub R1 R2) (at level 50).
 (** Now one can write [R1 <# R2] instead of [Sub R1 R2]. In addition,
@@ -304,16 +305,14 @@ Notation "R1 # R2" := (comp R1 R2) (at level 40).
 (* begin hide *)
 Arguments compose {A B C red1 red2} _ _ _ _ _ .
 (* end hide *)
-(** %\noindent% Note that [comp] is %\cdan{defined inductively. 
-    The inductive
-    definition [comp] has}{inductively defined with}% just one 
-    constructor, named [compose], that
-    explicitly builds the composite relation from [A] to [C] from the
-    given relations [red1] and [red2]. In addition, it is important to
-    know that Coq automatically generates an inductive principle for
-    every inductive definition. For instance, the natural numbers
-    %{\tt nat}% are inductively defined as: %\begin{alltt} Inductive
-    nat : Set := O : nat | S : nat \(\to\) nat \end{alltt}%
+(** %\noindent% Note that [comp] is inductively defined with just one
+    constructor, named [compose], that explicitly builds the composite
+    relation from [A] to [C] from the given relations [red1] and
+    [red2]. In addition, it is important to know that Coq
+    automatically generates an inductive principle for every inductive
+    definition. For instance, the natural numbers %{\tt nat}% are
+    inductively defined as: %\begin{alltt} Inductive nat : Set := O :
+    nat | S : nat \(\to\) nat \end{alltt}%
 
     %\noindent% The corresponding induction principle, named %{\tt
     nat\_ind}\footnote{The name of the automatic induction principle
@@ -330,13 +329,11 @@ Arguments compose {A B C red1 red2} _ _ _ _ _ .
     with constructors %{\tt c1}%, %{\tt c2}%, %\ldots%, %{\tt ck}%
     then, in order to prove that a property %{\tt P}% holds for every
     element defined by %{\tt def}%, we need to show, in a certain
-    sense, that %{\tt P}% is %\cdan{compatible with}{closed for}% each of its
-    constructors. %\cdan{A}{For a}% more precise and detailed explanation about Coq
-    induction principles %\cdan{can be found, for instance, in}{see}%
-    %\cite{CoqTeam,BC04,cpdt,Pierce:SF}%.
+    sense, that %{\tt P}% is closed for each of its constructors. For
+    a more precise and detailed explanation about Coq induction
+    principles see %\cite{CoqTeam,BC04,cpdt,Pierce:SF}%.
 
-    The inverse of a relation from [A] to [B] is 
-    %\cdan{inductively defined}{defined by induction}%
+    The inverse of a relation from [A] to [B] is defined by induction
     as the corresponding relation from [B] to [A]: *)
 
 Inductive inverse {A B} (R: Rel A B) : Rel B A :=
@@ -363,9 +360,9 @@ Proof.
 Qed.
 (* end hide *)
 (** The reflexive transitive closure of a reduction relation is
-    obtained from its transitive closure %\cdan{by}{just}% adding reflexivity,
-    i.e. by adding the fact that each element of the %\cdan{relation}{set}% reduces
-    to itself (in 0 steps): *)
+    obtained from its transitive closure just adding reflexivity,
+    i.e. by adding the fact that each element of the set reduces to
+    itself (in 0 steps): *)
 
 Inductive refltrans {A} (red: Red A) : Red A :=
 | reflex: forall a,  refltrans red a a
@@ -391,8 +388,8 @@ Inductive Image {A B} (R:Rel A B)(P: A -> Prop): B -> Prop :=
 (* begin hide *)
 Arguments image {A B R P} _ _ _ _.
 (* end hide *)
-(** The notions of weak and strong simulation %\cdan{of}{for}% reduction relations
-    are a straightforward translation to the Coq %\cdan{language}{syntax}%
+(** The notions of weak and strong simulation for reduction relations
+    are a straightforward translation to the Coq syntax
     (cf. Definition %\ref{def:sws}%): *)
 
 Definition WeakSimul {A B} (redA: Red A) (redB: Red B) (R: Rel A B) := 
@@ -410,8 +407,8 @@ Definition StrongSimul {A B} (redA: Red A) (redB: Red B) (R: Rel A B) :=
     theory of normalisation in the sense that it does not rely on
     classical logic. In this theory, the notion of strong
     normalisation for reduction relations is defined by a second-order
-    formula %\odan{which is}% based on a stability predicate called
-    [patriarchal] (cf. %\cite{LengrandPhD,lengSNInd05}%). *)
+    formula based on a stability predicate called [patriarchal]
+    (cf. %\cite{LengrandPhD,lengSNInd05}%). *)
 
 Definition patriarchal {A} (red:Red A) (P:A -> Prop): Prop
   := forall x, (forall y, red x y -> P y) -> P x.
@@ -438,14 +435,13 @@ Inductive SN' {A:Type} (red: Red A) (a:A): Prop :=
 (** So, given an element [a:A] and a reduction relation [red] over
     [A], [a] is strongly normalising w.r.t. [red] if every one-step
     [red]-reduct [b] of [a] is strongly normalising w.r.t. [red]. This
-    means that in order to conclude %\odan{that}% [SN' red a], one has to prove
+    means that in order to conclude [SN' red a], one has to prove
     first that [(forall b, red a b -> SN' red b)]. In addition, note that
-    predicate [SN' red] is patriarchal hence it is
-    straightforward that [SN] implies [SN'], i.e. that [SN' red a]
-    holds whenever [SN red a] holds %\odan{for all [a], and every reduction
-    relation over [A]}%. %\cdan{Note that formally, this}{This}% inductive definition
-    gives only one direction of the biconditional in (%\ref{def:sn}%),
-    but the other direction is straightforward: *)
+    predicate [SN' red] is patriarchal hence it is straightforward
+    that [SN] implies [SN'], i.e. that [SN' red a] holds whenever ([SN
+    red a]) holds. This inductive definition gives only one direction
+    of the biconditional in (%\ref{def:sn}%), but the other direction
+    is straightforward: *)
   
 Lemma SNstable {A} {red: Red A}: forall a, SN' red a ->
                                       forall b, red a b -> SN' red b.
@@ -454,34 +450,33 @@ Proof.
   inversion HSN; clear HSN.
   apply H; assumption. 
 Qed.
-(** This proof %\cdan{does the analysis of the}{analyse}% definition [SN'] in order
-    to match the hypothesis [SN' red a], %\cdan{named}{labelled}% [HSN], through the
-    [inversion] tactic, that (informally) replaces %\odan{the}% hypothesis
-    [(SN' red a)] by the information it contains %\odan{about it}%. In this
-    case, the known information comes from [SN'] definition 
-    and exactly what we need to prove. *)
+(** This proof analyses definition [SN'] in order to match the
+    hypothesis [SN' red a], labelled [HSN], through the [inversion]
+    tactic, that (informally) replaces hypothesis [(SN' red a)] by the
+    information it contains. In this case, the known information comes
+    from [SN'] definition and exactly what we need to prove. *)
 
-(** The induction principle automatically generated for [SN'],
-    called [SN'_ind], is as follows:
+(** The induction principle automatically generated for [SN'], called
+    [SN'_ind], is as follows:
 
     %\begin{alltt} forall (A : Type) (red : Red A) (P : A -> Prop),
-    (forall c : A, (forall b : A, red c b -> SN' red b) -> (forall
-    b : A, red c b -> P b) -> P c) -> forall a : A, SN' red a -> P
-    a \end{alltt}%
+    (forall c : A, (forall b : A, red c b -> SN' red b) -> (forall b :
+    A, red c b -> P b) -> P c) -> forall a : A, SN' red a -> P a
+    \end{alltt}%
 
-    %\noindent% %\cdan{So, in order}{Then,}% to conclude that some property [P] holds
-    for any strongly normalising element [a], we need to prove that
-    [P] holds for any strongly normalising [c], given it holds for
-    every [red]-reduct [b] of [c]. In other words, we need to prove
-    that [P] is patriarchal and holds for every strongly normalising
-    [red]-reduct of [c].
+    %\noindent% Then, to conclude that some property [P] holds for any
+    strongly normalising element [a], we need to prove that [P] holds
+    for any strongly normalising [c], given it holds for every
+    [red]-reduct [b] of [c]. In other words, we need to prove that [P]
+    is patriarchal and holds for every strongly normalising
+    [red]-reduct of [c]. *)
 
-    (* %\dan{(na verdade o que temos no principio de inducao eh, supondo *)
-    (* que 'a' seja SN e 'P' seja patriarchal, temos que P vale para *)
-    (* a. Como isso se compara com a definicao de SN do Lengrand ?)}%. *) In
-    the proof of theorem [SN'EquivSN], we establish the equivalence
-    between these two definitions, and to do so, we use this induction
-    principle. *)
+    (* %\dan{(na verdade o que temos no principio de inducao eh,
+    supondo *) (* que 'a' seja SN e 'P' seja patriarchal, temos que P
+    vale para *) (* a. Como isso se compara com a definicao de SN do
+    Lengrand ?)}%. In the proof of theorem [SN'EquivSN], we
+    establish the equivalence between these two definitions, and to do
+    so, we use this induction principle. *)
 (* begin hide *)
 Lemma SNTrans {A} {red: Red A}: forall a, SN' red a -> SN' (trans red) a.
 Proof.
@@ -494,12 +489,13 @@ Proof.
 Qed.
 (* end hide *)
 
-(** %\cdan{The e}{E}%quivalence between definitions [SN] and [SN'] is an
-    important contribution of this work, we %\dan{thus}% comment the proof steps in
-    order to explain it in more detail. %\cdan{The comments}{Comments}% are given in %{\color{blue} blue}%
-    just after %\odan{the}% proof commands they refer to. Note that type [A]
-    and a reduction relation [R] over [A] are given as implicit
-    arguments, i.e. they are inferred from the context. *)
+(** Equivalence between definitions [SN] and [SN'] is an important
+    contribution of this work, we thus comment the proof steps in
+    order to explain it in more detail. Comments are given in
+    %{\color{blue} blue}% just after proof commands they refer
+    to. Note that type [A] and a reduction relation [R] over [A] are
+    given as implicit arguments, i.e. they are inferred from the
+    context. *)
 
 Theorem SN'EquivSN {A:Type} {R : Red A} : forall t, SN' R t <-> SN R t.
 Proof.
@@ -981,32 +977,91 @@ Proof.
 Qed.
 (* end hide *)
 
-(** TBD *)
+(** The next lemma shows that predicate [SN' (redA !_! red'A)] is
+    patriarchal w.r.t. the reduction relation [((refltrans redA) #
+    red'A)]. *)
 
 Lemma inclUnion {A} {redA red'A: Red A}: forall a, (SN' redA a) -> (forall b, (((refltrans redA) # red'A) a b) -> SN' (redA !_! red'A) b) -> (SN' (redA !_! red'A) a).
 Proof.
-  intros a HSN.
-  induction HSN. clear H.
-  intros Hyp.
-  apply sn_acc.
-  intros b0 Hunion.
-  inversion Hunion; subst.
-  - apply H0.
-    + assumption.
-    + intros b' Hrefl.
-      apply Hyp.
-      inversion Hrefl; subst.
-      apply compose with b.
-      * apply refltailtransit with b0.
-        ** apply transSub in H.
-           apply atleast1 in H.
-           assumption.
+  intros a HSN. (** %{\color{blue}Given an arbitrary element}%
+                    [a]%{\color{blue}, let}% [HSN] %{\color{blue}be
+                    the hypothesis}% [SN' redA a]. *)
+  
+  induction HSN. clear H. (** %{\color{blue}We proceed by induction
+                              on}% [HSN]%{\color{blue}. This, means
+                              that we can assume that our goal holds
+                              for all one-step}%
+                              [redA]%{\color{blue}-reduct of}%
+                              [a]%{\color{blue}. Call this
+                              assumption}% [H0]. *)
+  
+  intro H. (** %{\color{blue}Let}% [H] %{\color{blue}be the
+               hypothesis}% [forall b : A, (refltrans redA # red'A) a b ->
+               SN' (redA !_!  red'A) b] *)
+  
+  apply sn_acc. (** %{\color{blue}Applying the definition}% [SN']
+  %{\color{blue}to our goal}% [SN' (redA !_! red'A) a]%{\color{blue},
+  means that this property must also be proved for all one-step}%
+  [(redA !_!  red'A)]%{\color{blue}-reduct of}% [a] %{\color{blue},
+  i.e. we need to prove}% [forall b : A, (redA !_! red'A) a b -> SN' (redA
+  !_! red'A) b]. *)
+  
+  intros b Hunion. (** %{\color{blue}Let}% [b] %{\color{blue}be a
+                       one-step}% [(redA !_!
+                       red'A)]%{\color{blue}-reduct of}%
+                       [a]%{\color{blue}, and}% [Hunion]
+                       %{\color{blue}the hypothesis}% [(redA !_!
+                       red'A) a b]. *)
+  
+  inversion Hunion; subst. (** %{\color{blue}Since}% [(redA !_! red'A)
+                               a b] %{\color{blue}we have that
+                               either}% [redA a b] %{\color{blue}or}
+                               [red'A a b]. *)
+
+  - apply H0. (** %{\color{blue}In the first case the hypothesis}%
+                  [H0] %{\color{blue}reduces our proof to two
+                  subgoals.}% *)
+    
+    + assumption. (** %{\color{blue}The first one}% [redA a b]
+    %{\color{blue}is closed by assumption}% *)
+      
+    + intros b' Hrefl. (** %{\color{blue}The second subgoal is}% [SN'
+                           (redA !_! red'A) b'] %{\color{blue}where}%
+                           [b'] %{\color{blue}is a}% [(redA !_!
+                           red'A)]%{\color{blue}reduct of}% [b]. *)
+      
+      apply H. (** %{\color{blue}Applying the hypothesis}%
+                   [H]%{\color{blue}, we need to prove}% [(refltrans
+                   redA # red'A) a b']. *)
+
+      inversion Hrefl; subst. (** %{\color{blue}From the composition
+                                  expressed in hypothesis}%
+                                  [Hrefl]%{\color{blue}, we have that
+                                  there is an element}% [b0]
+                                  %{\color{blue}such that}% [refltrans
+                                  redA b b0] %{\color{blue}and}%
+                                  [red'A b0 b']. *)
+
+      apply compose with b0. (** %{\color{blue}Similarly, our goal can
+                                 be decomposed with the above
+                                 element}% [b0]%{\color{blue}, leading
+                                 to two subcases:}% *)
+
+      * apply refltailtransit with b. (** %{\color{blue}The first
+                                          subcase}% [refltrans redA a
+                                          b0] %{\color{blue}is proved
+                                          from hypothesis}% [redA a b]
+                                          %{\color{blue}and}%
+                                          [refltrans redA b b0]. *)
+        ** apply atleast1.
+           apply singl; assumption.
         ** assumption.
       * assumption.
-  - apply Hyp.
+  - apply H.
     apply compose with a.
     + apply reflex.
-    + assumption.
+    + assumption. (** %{\color{blue}The second subcase is closed by
+                      assumption.}% *)
 Qed.
 
 (* begin hide *)
@@ -1026,7 +1081,10 @@ Proof.
 Qed.
 (* end hide *)
 
-(** TBD The next result... *)
+(** The following lemma states the conditions for a union of two
+    reduction relations [redA] and [red'A] to be strongly
+    normalising. It corresponds to one direction of the bi-implication
+    of lemma [SNunion] below. *)
 
 Lemma SNinclUnion {A} {redA red'A: Red A}: (forall b, SN' redA b ->
                                forall c, red'A b c -> SN' redA c) ->
@@ -1291,12 +1349,11 @@ Qed.
     use the principle of excluded middle or any other classical rule,
     such as proof by contradiction. The constructive approach is not
     the standard way to prove termination of a reduction relation. In
-    fact, the %\cdan{most common way}{usual technique}% to prove termination of a reduction
-    relation is %\odan{by}% showing that it does not have infinite reduction
-    sequences %\cdan{, and using proof by contradiction as the reasoning tool}{through a proof by contradiction}%
+    fact, the usual technique to prove termination of a reduction
+    relation is showing that it does not have infinite reduction
+    sequences through a proof by contradiction
     (cf. %\cite{terese03,BN98}%). For instance, a classical proof of
-    the Modular Strong Normalisation Theorem is %\cdan{available}{presented}% 
-    at
+    the Modular Strong Normalisation Theorem is presented at
     %\cite{kes09}%. Constructive proofs are usually more difficult and
     elaborate than classical ones, but the former are preferred in the
     context of Computer Science.
@@ -1307,30 +1364,31 @@ Qed.
     non-trivial result in abstract reduction systems that uses the
     well-known technique of termination by simulation, i.e. the
     termination of a reduction system is obtained by simulating its
-    steps via another reduction relation %\odan{that is}% known to be
-    terminating. The theorem is, for instance, applied in
-    %\cite{kes09}% to establish the PSN property of a calculus with
-    explicit substitutions.
+    steps via another reduction relation known to be terminating. The
+    theorem is, for instance, applied in %\cite{kes09}% to establish
+    the PSN property of a calculus with explicit substitutions.
 
     The proofs developed in this formalisation follow the ideas
     presented in %\cite{LengrandPhD}%, where a theory of constructive
     normalisation is developed. This theory is based on a different
     definition of strong normalisation. Instead of using Lengrand's
     definition, we used a more standard inductive definition of strong
-    normalisation (cf. %\cite{kes09,LengrandPhD,Raams-phd}%). A formal proof of the
-    equivalence between these definitions of strong normalisation is
-    also provided. In this way, we have a simpler and straithforward
-    formalisation of the constructive normalisation theory.
+    normalisation (cf. %\cite{kes09,LengrandPhD,Raams-phd}%). A formal
+    proof of the equivalence between these definitions of strong
+    normalisation is also provided. In this way, we have a simpler and
+    straithforward formalisation of the constructive normalisation
+    theory. *)
 
-    %\cdan{An interesting application of the Modular Strong
-    Normalisation Theorem is given in %\cite{kes09}% to establish the
-    termination of a calculus with explicit substitutions. Termination
-    of calculus with explicit substitutions is a challenging problem
-    that...
+    (*
+       
+       An interesting application of the Modular Strong Normalisation
+       Theorem is given in %\cite{kes09}% to establish the termination
+       of a calculus with explicit substitutions. Termination of
+       calculus with explicit substitutions is a challenging problem
+       that...
 
-     - This is part of a bigger project.  OK
-     - Compatible versions of Coq ? 8.??
-     - General explanation of how to compile and generate
-       documentation. (Github)}{}%
+     - This is part of a bigger project.  OK Compatible versions of
+     - Coq ? 8.??  General explanation of how to compile and generate
+     - documentation. (Github) 
 
-*)
+     *)
