@@ -611,8 +611,8 @@ Qed.
 (** ** The Main Theorem *)
 
 (** In this section, we present the formal proof main steps of the
-    Modular Strong Normalisation Theorem. The proof depends on some
-    results explained in what follows. The first result concerns the
+    Modular Strong Normalisation Theorem%\cdan{. The proof depends on some
+    results explained in what follows.}{, including some result }% The first result concerns the
     composition of weakly and strongly simulated reductions. More
     precisely, if a reduction relation [redB] weakly simulates a
     reduction relation [redA1] through [R], and strongly simulates the
