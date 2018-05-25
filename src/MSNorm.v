@@ -442,9 +442,9 @@ Inductive SN' {A:Type} (red: Red A) (a:A): Prop :=
     first that [(forall b, red a b -> SN' red b)]. In addition, note that
     predicate [SN' red] is patriarchal hence it is
     straightforward that [SN] implies [SN'], i.e. that [SN' red a]
-    holds, whenever [SN red a] holds for all [a], and every reduction
-    relation over [A]. Note that formally, this inductive definition
-    gives only one direction of the biconditional (%\ref{def:sn}%),
+    holds whenever [SN red a] holds %\odan{for all [a], and every reduction
+    relation over [A]}%. %\cdan{Note that formally, this}{This}% inductive definition
+    gives only one direction of the biconditional in (%\ref{def:sn}%),
     but the other direction is straightforward: *)
   
 Lemma SNstable {A} {red: Red A}: forall a, SN' red a ->
@@ -454,11 +454,11 @@ Proof.
   inversion HSN; clear HSN.
   apply H; assumption. 
 Qed.
-(** This proof does the analysis of the definition [SN'] in order
-    to match the hypothesis [SN' red a], named [HSN], through the
-    [inversion] tactic, that (informally) replaces the hypothesis
-    [(SN' red a)] by the information it contains about it. In this
-    case, the known information comes from the definition of [SN'] 
+(** This proof %\cdan{does the analysis of the}{analyse}% definition [SN'] in order
+    to match the hypothesis [SN' red a], %\cdan{named}{labelled}% [HSN], through the
+    [inversion] tactic, that (informally) replaces %\odan{the}% hypothesis
+    [(SN' red a)] by the information it contains %\odan{about it}%. In this
+    case, the known information comes from [SN'] definition 
     and exactly what we need to prove. *)
 
 (** The induction principle automatically generated for [SN'],
@@ -469,7 +469,7 @@ Qed.
     b : A, red c b -> P b) -> P c) -> forall a : A, SN' red a -> P
     a \end{alltt}%
 
-    %\noindent% So, in order to conclude that some property [P] holds
+    %\noindent% %\cdan{So, in order}{Then,}% to conclude that some property [P] holds
     for any strongly normalising element [a], we need to prove that
     [P] holds for any strongly normalising [c], given it holds for
     every [red]-reduct [b] of [c]. In other words, we need to prove
@@ -494,10 +494,10 @@ Proof.
 Qed.
 (* end hide *)
 
-(** The equivalence between definitions [SN] and [SN'] is an
-    important contribution of this work, we comment the proof steps in
-    order to explain it in more detail. The comments are given in blue
-    just after the proof commands they refer to. Note that type [A]
+(** %\cdan{The e}{E}%quivalence between definitions [SN] and [SN'] is an
+    important contribution of this work, we %\dan{thus}% comment the proof steps in
+    order to explain it in more detail. %\cdan{The comments}{Comments}% are given in %{\color{blue} blue}%
+    just after %\odan{the}% proof commands they refer to. Note that type [A]
     and a reduction relation [R] over [A] are given as implicit
     arguments, i.e. they are inferred from the context. *)
 
@@ -506,7 +506,7 @@ Proof.
   intro t; split. (** %{\color{blue} These proof commands introduces a
                       new skolem constant}% [t] %{\color{blue}to the
                       proof context and splits the bi-implication in
-                      two steps. This means that we are considering}%
+                      two steps. This means we are considering}%
                       [t] %{\color{blue}to be an arbitrary element of
                       set}% [A]%{\color{blue}, or more precisely,
                       let}% [t] %{\color{blue} be an element of type}%
@@ -545,7 +545,7 @@ Proof.
                                     hypothesis}%
                                     [HredSN]%{\color{blue}. We then
                                     remove the unnecessary hypothesis
-                                    that depends on}% [SN']. *)
+                                    depending on}% [SN']. *)
       
       unfold SN in *. (** %{\color{blue}Unfolding the definition}%
                           [SN]%{\color{blue}, we need to prove that}%
@@ -557,13 +557,13 @@ Proof.
                          patriarchal predicated.}% *)
 
       apply Hpat. (** %{\color{blue}Since}% [P] %{\color{blue}is
-                      patriarchal, we have that it holds for all}%
+                      patriarchal, we have that it holds for any}%
                       [R]%{\color{blue}-reduct of}% [a]. *)
 
       intros b Hred. (** %{\color{blue}Let}% [b] %{\color{blue}be an}%
                          [R]%{\color{blue}-reduct of}% [a]. *)
       
-      apply HredSN; assumption. (** %{\color{blue}Therefore, we have}%
+      apply HredSN; assumption. (** %{\color{blue}Therefore, we have that}%
                                     [a] [R]%{\color{blue}-reduces to}%
                                     [b] %{\color{blue}and}% [P]
                                     %{\color{blue}is}%
