@@ -105,7 +105,7 @@
     denotes the inverse relation from [B] to [A]. If $\to_1$ is a
     relation from $A$ to $B$ and $\to_2$ is a relation from $B$ to
     $C$, then the composition of $\to_1$ with $\to_2$, written
-    $\to_1\cdot \to_2$, is a relation from $A$ to $C$. A relation from
+    $\to_1 \# \to_2$, is a relation from $A$ to $C$. A relation from
     a set to itself is a %{\it reduction relation over a set}%, i.e. a
     reduction relation over A is a subset of $A\times A$. If $\to_A$
     is a reduction relation over $A$, then a %{\it reduction
@@ -139,9 +139,9 @@ are arbitrary sets:
      $A$ to $B$, $\to_A$ be a reduction relation over $A$ and $\to_B$
      be a reduction relation over $B$. The reduction relation $\to_B$
      {\it strongly} (resp. {\it weakly}) simulates $\to_A$ through
-     $\to$ if $(\leftarrow \cdot \to_A) \subseteq (\to_B^+ \cdot
-     \leftarrow)$ (resp. $(\leftarrow \cdot \to_A) \subseteq (\to_B^*
-     \cdot \leftarrow)$).
+     $\to$ if $(\leftarrow \# \to_A) \subseteq (\to_B^+ \#
+     \leftarrow)$ (resp. $(\leftarrow \# \to_A) \subseteq (\to_B^*
+     \# \leftarrow)$).
 
     \begin{tikzpicture}[scale=.45] \draw[ultra thick,myblue] (0,0)
     circle [x radius=1.5cm, y radius=4cm] (6,0) circle [x
@@ -158,10 +158,10 @@ are arbitrary sets:
     \node[left= 0.00002cm of aux] (aux2) {}; \node[right= 0.000002cm
     of aux2, red] (aux3) {+};
  
-    \draw[<-] (a1.east) .. controls +(up:0cm) and +(left:1cm)
+    \draw[->] (a1.east) .. controls +(up:0cm) and +(left:1cm)
     .. node[above,sloped] {} (b1.west);
 
-    \draw[<-,red] (a2.east) .. controls +(up:0cm) and +(left:1cm)
+    \draw[->,red] (a2.east) .. controls +(up:0cm) and +(left:1cm)
     .. node[above,sloped] {} (b2.west);
 
     \draw[->] (a1.south) .. controls +(up:0cm) and +(left:0cm)
@@ -186,10 +186,10 @@ are arbitrary sets:
     aux] (aux2) {}; \node[right= 0.000002cm of aux2, red] (aux3) {*};
 
 
-    \draw[<-] (a1.east) .. controls +(up:0cm) and +(left:1cm)
+    \draw[->] (a1.east) .. controls +(up:0cm) and +(left:1cm)
     .. node[above,sloped] {} (b1.west);
 
-    \draw[<-,red] (a2.east) .. controls +(up:0cm) and +(left:1cm)
+    \draw[->,red] (a2.east) .. controls +(up:0cm) and +(left:1cm)
     .. node[above,sloped] {} (b2.west);
 
     \draw[->] (a1.south) .. controls +(up:0cm) and +(left:0cm)
@@ -227,25 +227,29 @@ are arbitrary sets:
       ({SN}^{\to_B}) \mbox{ implies } a \in {SN}^{\to_1\cup \to_2}.$$
       \end{theorem}%
 
-      This proof follows the lines of %\cite{LengrandPhD}%, but using
-      the standard $SN$ definition in (%\ref{def:sn}%). First of all,
-      hypothesis %\ref{hip:one}% and %\ref{hip:two}% allow us to
-      conclude that the composition $(\to_2^* \cdot \to_1)$ is
+      %\begin{proof}
+      This proof follows the lines of \cite{LengrandPhD}, but using
+      the standard $SN$ definition in (\ref{def:sn}). First of all,
+      hypothesis \ref{hip:one} and \ref{hip:two} allow us to
+      conclude that the composition $(\to_2^* \# \to_1)$ is
       strongly simulated by $\to_B$: in fact, from hypothesis
-      %\ref{hip:two}% we have that $\to_2^*$ is weakly simulated by
-      $\to_B$ %{\color{blue}({\it SimulWeakReflTrans})}%.  In
+      \ref{hip:two} we have that $\to_2^*$ is weakly simulated by
+      $\to_B$ {\color{blue}({\it SimulWeakReflTrans})}.  In
       addition, the composition of two reduction relations that are,
       respectively, strongly and weakly simulated by the same
       reduction relation is strongly simulated by this reduction
-      relation %{\color{blue}({\it WeakStrongSimul})}%. Therefore,
-      $(\to_2^* \cdot \to_1)$ is strongly simulated by $\to_B$ through
-      $\to$ %{\color{blue}({\it RCSimul})}%, that together with the
+      relation {\color{blue}({\it WeakStrongSimul})}. Therefore,
+      $(\to_2^* \# \to_1)$ is strongly simulated by $\to_B$ through
+      $\to$ {\color{blue}({\it RCSimul})}, that together with the
       fact that $a\in \leftarrow({SN}^{\to_B})$ allow us to conclude
-      that $a \in {SN}^{\to_2^* \cdot \to_1}$ %{\color{blue}({\it
-      SNbySimul})}%.  Now, from hypothesis %\ref{hip:three}%, we have
+      that $a \in {SN}^{\to_2^* \# \to_1}$ {\color{blue}({\it
+      SNbySimul})}.  Now, from hypothesis \ref{hip:three}, we have
       $a \in {SN}^{\to_2}$, and we conclude from the fact that
-      ${SN}^{\to_2^* \cdot \to_1} \cap {SN}^{\to_2} = {SN}^{\to_1\cup
-      \to_2}$ %{\color{blue}({\it SNunion})}%. *)
+      ${SN}^{\to_2^* \# \to_1} \cap {SN}^{\to_2} = {SN}^{\to_1\cup
+      \to_2}$ {\color{blue}({\it SNunion})}. \hfill$\Box$
+      \end{proof}%
+
+      *)
 
 (** * The Formalisation *)
 
@@ -311,8 +315,14 @@ Arguments compose {A B C red1 red2} _ _ _ _ _ .
     [red2]. In addition, it is important to know that Coq
     automatically generates an inductive principle for every inductive
     definition. For instance, the natural numbers %{\tt nat}% are
-    inductively defined as: %\begin{alltt} Inductive nat : Set := O :
-    nat | S : nat \(\to\) nat \end{alltt}%
+    inductively defined as: 
+
+    %\begin{alltt} 
+
+    Inductive nat : Set := 
+      O : nat | S : nat \(\to\) nat 
+
+    \end{alltt}%
 
     %\noindent% The corresponding induction principle, named %{\tt
     nat\_ind}\footnote{The name of the automatic induction principle
@@ -338,6 +348,7 @@ Arguments compose {A B C red1 red2} _ _ _ _ _ .
 
 Inductive inverse {A B} (R: Rel A B) : Rel B A :=
   inverseof: forall a b, R a b -> inverse R b a.
+
 (** The transitive closure of a reduction relation [red] over [A] is
     constructed, as usual, by adding to [red] all possible reductions
     with at least one step starting from each $a\in A$: *)
@@ -410,8 +421,8 @@ Definition StrongSimul {A B} (redA: Red A) (redB: Red B) (R: Rel A B) :=
     formula based on a stability predicate called [patriarchal]
     (cf. %\cite{LengrandPhD,lengSNInd05}%). *)
 
-Definition patriarchal {A} (red:Red A) (P:A -> Prop): Prop
-  := forall x, (forall y, red x y -> P y) -> P x.
+Definition patriarchal {A} (red:Red A) (P:A -> Prop): Prop :=
+  forall x, (forall y, red x y -> P y) -> P x.
 
 (** In this way, one says that a predicate [P] over [A] is patriarchal
     w.r.t. a reduction relation [red] over [A], if ([P a]) holds
@@ -420,8 +431,9 @@ Definition patriarchal {A} (red:Red A) (P:A -> Prop): Prop
     relation [red], when ([P a]) holds for every patriarchal predicate
     [P] w.r.t. reduction relation [red]: *)
 
-Definition SN {A:Type} (red:Red A) (a:A): Prop
-  := forall P, patriarchal red P -> P a.
+Definition SN {A:Type} (red:Red A) (a:A): Prop :=
+  forall P, patriarchal red P -> P a.
+
 (** Most of the Coq code presented so far can be found at
 %\cite{lengrand-nt}%. Nevertheless, our proof code is different since
 library [ssreflect] is not used in the present development.
@@ -460,8 +472,9 @@ Qed.
     [SN'_ind], is as follows:
 
     %\begin{alltt} forall (A : Type) (red : Red A) (P : A -> Prop),
-    (forall c : A, (forall b : A, red c b -> SN' red b) -> (forall b :
-    A, red c b -> P b) -> P c) -> forall a : A, SN' red a -> P a
+    (forall c : A, (forall b : A, red c b -> SN' red b) -> 
+    (forall b : A, red c b -> P b) -> P c) -> 
+    forall a : A, SN' red a -> P a
     \end{alltt}%
 
     %\noindent% Then, to conclude that some property [P] holds for any
@@ -607,19 +620,16 @@ Qed.
 (** ** The Main Theorem *)
 
 (** In this section, we present the formal proof main steps of the
-    Modular Strong Normalisation Theorem%\cdan{. The proof depends on some
-    results explained in what follows.}{, including some results the proof depends.}% 
-    The first result concerns the
-    composition of weakly and strongly simulated reductions. More
-    precisely, if a reduction relation [redB] weakly simulates a
-    reduction relation [redA1] through [R] and strongly simulates the
-    reduction relation [redA2] through [R], then [redB] strongly
-    simulates the composition ([redA1 # redA2]) through [R]. %\cdan{This result
-    is}{Although}% intuitively clear, %\cdan{but formal/mechanical proofs of even clear
-    results}{the proof}% requires a large amount of details %\odan{that}% we decided to
-    explain %\odan{explicit its steps}%. *)
+    Modular Strong Normalisation Theorem, including some results the
+    proof depends. The first result concerns the composition of weakly
+    and strongly simulated reductions. More precisely, if a reduction
+    relation [redB] weakly simulates a reduction relation [redA1]
+    through [R] and strongly simulates the reduction relation [redA2]
+    through [R], then [redB] strongly simulates the composition
+    ([redA1 # redA2]) through [R]. Although intuitively clear, the
+    proof requires a large amount of details we decided to explain. *)
 
-Lemma WeakStrongSimul {A B} (redA1 redA2: Red A) (redB: Red B) (R: Rel A B):
+Lemma WeakStrongSimul {A B} (redA1 redA2:Red A)(redB:Red B)(R:Rel A B):
   WeakSimul redA1 redB R ->
   StrongSimul redA2 redB R ->
   StrongSimul (redA1 # redA2) redB R.
@@ -825,13 +835,11 @@ Proof.
 Qed.  
 (* end hide *)
 
-(** The next result is a consequence of lemma
-    [WeakStrongSimul]. In fact, it is easy to prove that if [redA] is
-    weakly simulated by [redB] through [R] then so is its reflexive
-    transitive closure%\cdan{, which is the content of lemma
-    [SimulWeakReflTrans] available in the source code of the
-    formalisation}{(cf. lemma
-    [SimulWeakReflTrans] in the formalisation source code)}%. Then, by lemma [WeakStrongSimul] the composition of
+(** The next result is a consequence of lemma [WeakStrongSimul]. In
+    fact, it is easy to prove that if [redA] is weakly simulated by
+    [redB] through [R] then so is its reflexive transitive
+    closure(cf. lemma [SimulWeakReflTrans] in the formalisation source
+    code). Then, by lemma [WeakStrongSimul] the composition of
     [(refltrans redA)] with [red'A], a strongly simulated reduction
     relation, is also strongly simulated by [redB] through [R]. *)
 
@@ -852,13 +860,13 @@ Qed.
 (* end hide *)
 
 (** The second result is known as strong normalisation by simulation,
-    proved in %\cite{lengrand-nt}%. The %\odan{strong normalisation
-    by simulation}% theorem, here called [SNbySimul], states that if a
-    reduction relation over [A], say [redA], is strongly simulated by
-    a reduction relation over [B], say [redB], through [R] then the
-    pre-image of any element that satisfies the predicate ([SN' redB])
-    also satisfies ([SN' redA]). A more detailed explanation of this
-    result can be found in %\cite{LengrandPhD}%. *)
+    proved in %\cite{lengrand-nt}%. The theorem, here called
+    [SNbySimul], states that if a reduction relation over [A], say
+    [redA], is strongly simulated by a reduction relation over [B],
+    say [redB], through [R] then the pre-image of any element that
+    satisfies the predicate ([SN' redB]) also satisfies ([SN'
+    redA]). A more detailed explanation of this result can be found in
+    %\cite{LengrandPhD}%. *)
 
 Theorem SNbySimul {A B} {redA: Red A} {redB: Red B} {R: Rel A B}:
   StrongSimul redA redB R ->
@@ -910,13 +918,17 @@ Proof.
     inversion H; subst. clear H.
     assumption.
 Qed.
+(* end hide *)
+
+(** The union of two reduction relations is inductively defined as
+    follows: *)
 
 Inductive union {A} (red1 red2: Red A) : Red A :=
  | union_left: forall a b,  red1 a b -> union red1 red2 a b
  | union_right: forall a b,  red2 a b -> union red1 red2 a b.
 
 Notation "R1 !_! R2" := (union R1 R2) (at level 40).
-
+(* begin hide *)
 Lemma UnionStrongSimul {A} {redA red'A: Red A}:
   StrongSimul redA (redA !_! red'A) Id.
 Proof.
@@ -982,7 +994,11 @@ Qed.
     patriarchal w.r.t. the reduction relation [((refltrans redA) #
     red'A)]. *)
 
-Lemma inclUnion {A} {redA red'A: Red A}: forall a, (SN' redA a) -> (forall b, (((refltrans redA) # red'A) a b) -> SN' (redA !_! red'A) b) -> (SN' (redA !_! red'A) a).
+Lemma inclUnion {A} {redA red'A: Red A}:
+  forall a, (SN' redA a) ->
+       (forall b, (((refltrans redA) # red'A) a b) ->
+             SN' (redA !_! red'A) b) ->
+       (SN' (redA !_! red'A) a).
 Proof.
   intros a HSN. (** %{\color{blue}Given an arbitrary element}%
                     [a]%{\color{blue}, let}% [HSN] %{\color{blue}be
@@ -1054,6 +1070,7 @@ Proof.
                                           from hypothesis}% [redA a b]
                                           %{\color{blue}and}%
                                           [refltrans redA b b0]. *)
+        
         ** apply atleast1.
            apply singl; assumption.
         ** assumption.
@@ -1139,27 +1156,16 @@ Proof.
                                              [SN' redA]
                                              %{\color{blue}is stable
                                              w.r.t}% [red'A]. *)
+
 Qed.
 
 (** %\noindent% The next lemma gives a characterisation of the
-    predicate [SN' (redA !_! red'A)], where [redA !_! red'A] denotes
-    the union of the reduction relations [redA] and [red'A]. The union
-    of two reduction relations is inductively defined as follows:
-
-    %\begin{alltt} 
-    Inductive union {A} (red1 red2: Red A) : Red A := 
-    | union_left: forall a b, red1 a b -> union red1 red2 a b 
-    | union_right: forall a b, red2 a b -> union red1 red2 a b.
-
-    Notation "R1 !_! R2" := (union R1 R2) (at level 40).  
-    \end{alltt}% *)
-
-    (** Another important property used in the next lemma is called
-    %{\it stability}%. We say a predicate [P] is stable w.r.t. the
-    reduction relation [R] when, for all [a] and [b] such that [R a
-    b], [P a] implies [P b]. %\cdan{So, under the}{Under}% hypothesis of stability of
-    [(SN' redA)] w.r.t. the reduction relation [red'A], %\odan{the}% predicate
-    [SN' (redA !_! red'A)] can %\dan{then}% be decomposed as the conjunction
+    predicate [SN' (redA !_! red'A)]. Another important property used
+    is called %{\it stability}%. We say a predicate [P] is stable
+    w.r.t. the reduction relation [R] when, for all [a] and [b] such
+    that [R a b], [P a] implies [P b]. Under hypothesis of stability
+    of [(SN' redA)] w.r.t. the reduction relation [red'A], predicate
+    [SN' (redA !_!  red'A)] can then be decomposed as the conjunction
     [(SN' ((refltrans redA) # red'A)) /\ (SN' redA)]: *)
 
 Lemma SNunion {A} {redA red'A: Red A}:
@@ -1179,8 +1185,7 @@ Proof.
                           [SN' (redA !_! red'A) a]. *)
     
     + apply HId in HSN.
-      generalize dependent HSN. (** %{\color{blue}In order \cdan{to match
-                                    the structure of}{use} lemma}%
+      generalize dependent HSN. (** %{\color{blue}In order use lemma}%
                                     [SNbySimul]%{\color{blue}, we
                                     rewrite}% [SN' (redA !_! red'A) a]
                                     %{\color{blue}as}% [Image (inverse
@@ -1208,7 +1213,7 @@ Proof.
     + apply HId in HSN.
       generalize dependent HSN. (** %{\color{blue}The second component
                                     of the conjunction requires a
-                                    similar strategy to \cdan{match}{use} lemma}%
+                                    similar strategy to use lemma}%
                                     [SNbySimul]. *)
       
       apply SNbySimul.
@@ -1221,8 +1226,7 @@ Proof.
                                    in lemma}% [UnionStrongSimul]. *)
 
   - intro Hand.
-    destruct Hand as [Hcomp HredA]. (** %{\color{blue}On
-                                                    the other
+    destruct Hand as [Hcomp HredA]. (** %{\color{blue}On the other
                                                     direction, call}%
                                                     [Hcomp]
                                                     %{\color{blue}(resp.}%
@@ -1232,8 +1236,8 @@ Proof.
                                                     [SN' (refltrans
                                                     redA # red'A) a]
                                                     %{\color{blue}(resp.}%
-                                                    [SN' redA a]
-                                                    %{\color{blue})}%. *)
+                                                    [SN' redA
+                                                    a]%{\color{blue})}%. *)
 
     generalize dependent HredA.
     generalize dependent a.
@@ -1241,10 +1245,11 @@ Proof.
                                        that}% [SN' (redA !_! red'A) a]
                                        %{\color{blue}by lemma}%
                                        [SNinclUnion]. *)
+
 Qed.
 
 (** The Modular Strong Normalisation Theorem, here called
-    [ModStrNorm], is %\cdan{then written in the Coq language}{specified in Coq's syntax} as follows: *)
+    [ModStrNorm], is specified in Coq's syntax as follows: *)
 
 Theorem ModStrNorm {A B: Type} {redA red'A: Red A}
         {redB: Red B} {R: Rel A B}:
@@ -1338,6 +1343,7 @@ Proof.
   - apply HSN. (** %{\color{blue}The second part of the conjunction
                    corresponds to the hypothesis}%
                    [HSN]%{\color{blue}, and we conclude.}% *)
+
 Qed.
 (* end hide *)
 
