@@ -8,3 +8,5 @@ This repository contains the source file of the Coq formalisation of the Modular
 The source file is located in the src directory: src/MSNorm.v.
 
 The documentation of the formalisation can be automatically generated using "make coq" and then "make pdf".
+
+The formalisation is compatible with Coq 8.8.0.
