@@ -12,7 +12,6 @@
 *.ind
 *.log
 *.out
-*.pdf
 *.glob
 *.v.tex
 *latexmk
