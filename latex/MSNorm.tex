@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[british]{babel}
-\usepackage{lmodern}
+%\usepackage{lmodern}
 %\usepackage{fullpage}
 \usepackage{coqdoc}
 \usepackage{amsmath,amssymb}
@@ -42,11 +42,10 @@ Raphael S. Ramos\inst{1} \and Fabrício S. Paranhos\inst{2}}
 Instituto de Informática, Universidade Federal de Goiás, Brazil \\
 \email{daniel@inf.ufg.br,paranhos.s.f@gmail.com}}
 
-\makeindex
-
 \begin{document}
 
 \maketitle
+\pagestyle{plain}
 
 \begin{abstract}
   Modularity is a desirable property of rewrite systems because it
@@ -59,7 +58,7 @@ Instituto de Informática, Universidade Federal de Goiás, Brazil \\
   the computational point of view due to the corresponding algorithmic
   content of proofs.
 \end{abstract}
-\include{MSNorm.v}
+\input{MSNorm.v}
 
 %\clearpage
 %\addcontentsline{toc}{chapter}{Bibliography}

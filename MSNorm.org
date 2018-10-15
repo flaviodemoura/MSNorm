@@ -12,6 +12,8 @@ bibliography:~/Dropbox/bibliography/references.bib
 
 * Some ideas for further developments
 ** Prove other modular results concerning SN (see cite:terese03 p.163)
+* Submitted ICTAC 2018
+** Rejected [[file:~/Dropbox/UnB/Reescrita/MSNorm/ICTAC2018notification.pdf][Notification]]
 * References
 ** cite:DK08
 ** cite:terese03

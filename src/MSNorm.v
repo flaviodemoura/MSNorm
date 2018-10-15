@@ -54,7 +54,7 @@
     a non-trivial expansion of the normalisation theory formalised by
     Lengrand. In fact, the strong normalisation property defined in
     %\cite{LengrandPhD}% uses a specialized inductive principle that
-    should hold for all predicate, i.e. through a second order
+    should hold for all predicates, i.e. through a second order
     formula. On the other hand, in this work we use only the standard
     inductive definition of the strong normalisation property
     (cf. %\cite{kes09,LengrandPhD,Raams-phd}%), and we also prove the
@@ -95,7 +95,7 @@
 (** In this section, we present the Modular Strong Normalisation
     Theorem whose formalisation is detailed in the next section. This
     is an abstract theorem about termination of reduction relations
-    through the well-known simulation technique %\cite{BN98}%. In
+    through the well-known simulation technique%~\cite{BN98}%. In
     order to fix notation, let [A] and [B] be sets. A relation from
     [A] to [B] is a subset of $A\times B$. If $R$ is a relation from
     [A] to [B] then we write $R\ a\ b$ instead of $(a,b) \in R$ and,
@@ -304,7 +304,7 @@ Notation "R1 <# R2" := (Sub R1 R2) (at level 50).
     composing its steps: *)
 
 Inductive comp {A B C} (red1: Rel A B)(red2: Rel B C) : Rel A C :=
-  compose: forall b a c,  red1 a b -> red2 b c -> comp red1 red2 a c.
+  compose: forall a b c,  red1 a b -> red2 b c -> comp red1 red2 a c.
 Notation "R1 # R2" := (comp R1 R2) (at level 40).
 (* begin hide *)
 Arguments compose {A B C red1 red2} _ _ _ _ _ .
@@ -438,7 +438,7 @@ Definition SN {A:Type} (red:Red A) (a:A): Prop :=
 %\cite{lengrand-nt}%. Nevertheless, our proof code is different since
 library [ssreflect] is not used in the present development.
 
-    The definition bellow corresponds to the usual inductive
+    The definition below corresponds to the usual inductive
     definition of strong normalisation for reduction relations, given
     in (%\ref{def:sn}%): *)
 
@@ -563,7 +563,7 @@ Proof.
                           *)
 
       intros P Hpat. (** %{\color{blue}Let}% [P] %{\color{blue}be a
-                         patriarchal predicated.}% *)
+                         patriarchal predicate.}% *)
 
       apply Hpat. (** %{\color{blue}Since}% [P] %{\color{blue}is
                       patriarchal, we have that it holds for any}%
